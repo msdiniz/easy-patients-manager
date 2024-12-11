@@ -1,0 +1,18 @@
+{
+  "id": "2",
+  "fullName": "Jane Smith",
+  "dob": "1985-05-15",
+  "gender": "Female",
+  "emails": [{"email": "jane.smith@example.com", "type": "work"}],
+  "addresses": [{"address": "456 Elm St", "type": "home"}],
+  "phones": [{"phone": "555-5678", "type": "mobile"}],
+  "cpf": "234.567.890-11",
+  "bloodType": "A",
+  "rhFactor": "-",
+  "ethnicGroup": "Asian",
+  "bookmark": "Pacientes",
+  "observation": "Allergic to penicillin",
+  "notes": "",
+  "howPatientWasReferred": "Online Search",
+  "dateOfFirstContact": "2023-02-10"
+}

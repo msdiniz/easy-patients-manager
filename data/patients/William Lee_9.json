@@ -1,0 +1,18 @@
+{
+  "id": "9",
+  "fullName": "William Lee",
+  "dob": "1982-06-05",
+  "gender": "Male",
+  "emails": [{"email": "william.lee@example.com", "type": "personal"}],
+  "addresses": [{"address": "606 Willow St", "type": "home"}],
+  "phones": [{"phone": "555-7890", "type": "mobile"}],
+  "cpf": "901.234.567-88",
+  "bloodType": "O",
+  "rhFactor": "+",
+  "ethnicGroup": "Asian",
+  "bookmark": "Pacientes",
+  "observation": "",
+  "notes": "",
+  "howPatientWasReferred": "Friend",
+  "dateOfFirstContact": "2023-09-10"
+}

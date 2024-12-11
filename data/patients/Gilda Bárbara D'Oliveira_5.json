@@ -1,0 +1,18 @@
+{
+  "id": "5",
+   "fullName": "Gilda Bárbara D'Oliveira",
+    "dob": "1980-03-14",
+    "gender": "Male",
+    "emails": [{"email": "gilda.b.oliveira@example.com", "type": "personal"}],
+  "addresses": [{"address": "202 Maple St", "type": "home"}],
+  "phones": [{"phone": "555-6789", "type": "mobile"}],
+  "cpf": "567.890.123-44",
+  "bloodType": "O",
+  "rhFactor": "-",
+  "ethnicGroup": "Caucasian",
+  "bookmark": "Pacientes",
+  "observation": "",
+  "notes": "Hypertension",
+  "howPatientWasReferred": "Friend",
+  "dateOfFirstContact": "2023-05-20"
+}

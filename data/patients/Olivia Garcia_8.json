@@ -1,0 +1,18 @@
+{
+  "id": "8",
+  "fullName": "Olivia Garcia",
+  "dob": "1993-04-18",
+  "gender": "Female",
+  "emails": [{"email": "olivia.garcia@example.com", "type": "work"}],
+  "addresses": [{"address": "505 Spruce St", "type": "home"}],
+  "phones": [{"phone": "555-6543", "type": "mobile"}],
+  "cpf": "890.123.456-77",
+  "bloodType": "AB",
+  "rhFactor": "+",
+  "ethnicGroup": "Hispanic",
+  "bookmark": "Pacientes",
+  "observation": "",
+  "notes": "",
+  "howPatientWasReferred": "Advertisement",
+  "dateOfFirstContact": "2023-08-30"
+}

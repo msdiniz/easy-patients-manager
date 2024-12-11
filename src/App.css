@@ -1,0 +1,49 @@
+/* src/App.css */
+.App {
+  text-align: center;
+}
+
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #282c34;
+  color: white;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+}
+
+.patient-list {
+  width: 30%;
+  border-right: 1px solid #ccc;
+  padding: 10px;
+}
+
+.patient-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.patient-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.patient-list li.selected {
+  background-color: #d3d3d3; /* Light gray background for selected patient */
+}
+
+.patient-details {
+  flex: 1;
+  padding: 10px;
+}

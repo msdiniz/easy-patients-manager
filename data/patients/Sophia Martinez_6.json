@@ -1,0 +1,18 @@
+{
+  "id": "6",
+  "fullName": "Sophia Martinez",
+  "dob": "1995-09-10",
+  "gender": "Female",
+  "emails": [{"email": "sophia.martinez@example.com", "type": "work"}],
+  "addresses": [{"address": "303 Birch St", "type": "home"}],
+  "phones": [{"phone": "555-9876", "type": "mobile"}],
+  "cpf": "678.901.234-55",
+  "bloodType": "A",
+  "rhFactor": "+",
+  "ethnicGroup": "Hispanic",
+  "bookmark": "Pacientes",
+  "observation": "",
+  "notes": "",
+  "howPatientWasReferred": "Online Search",
+  "dateOfFirstContact": "2023-06-15"
+}

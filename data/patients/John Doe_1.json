@@ -1,0 +1,18 @@
+{
+  "id": "1",
+  "fullName": "John Doe",
+  "dob": "1990-01-01",
+  "gender": "Male",
+  "emails": [{"email": "john.doe@example.com", "type": "personal"}],
+  "addresses": [{"address": "123 Main St", "type": "home"}],
+  "phones": [{"phone": "555-1234", "type": "mobile"}],
+  "cpf": "123.456.789-00",
+  "bloodType": "O",
+  "rhFactor": "+",
+  "ethnicGroup": "Caucasian",
+  "bookmark": "Pacientes",
+  "observation": "",
+  "notes": "",
+  "howPatientWasReferred": "Friend",
+  "dateOfFirstContact": "2023-01-01"
+}
