@@ -22,7 +22,11 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   };
 
-  const filteredPatients = patients.filter(patient =>
+  const sortedPatients = patients.sort((a, b) => {
+    return normalizeString(a.fullName).localeCompare(normalizeString(b.fullName));
+  });
+
+  const filteredPatients = sortedPatients.filter(patient =>
     normalizeString(patient.fullName).toLowerCase().includes(normalizeString(searchTerm).toLowerCase())
   );
 

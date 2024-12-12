@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { PatientList } from './PatientList';
 import { PatientDetails } from './PatientDetails';
 import { Patient } from '../models/Patient';
+import logo from '../assets/96x96.png';
 
 export const MainLayout: React.FC = () => {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
@@ -10,7 +11,7 @@ export const MainLayout: React.FC = () => {
   return (
     <div className="main-layout">
       <header>
-        <img src="logo.png" alt="Logo" />
+        <img src={logo} alt="Logo" />
         <h1>EasyPatientsManager</h1>
         <button>Login/Logout</button>
         <button>Close</button>
