@@ -1,9 +1,9 @@
 import React from 'react';
-import { Patient } from '../models/Patient';
+import { DetailedPatient } from '../models/Patient';
 import './PatientForm.css'; // Import the CSS file
 
 interface PatientFormProps {
-  patient: Patient;
+  patient: DetailedPatient;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onSave: () => void;
   onCancel: () => void;
@@ -11,6 +11,7 @@ interface PatientFormProps {
 }
 
 export const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, onCancel, isFormValid }) => {
+  console.log('Patient received by form:', patient);
   return (
     <form className="patient-form">
       <div className="form-group">

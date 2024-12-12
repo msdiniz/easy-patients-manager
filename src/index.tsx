@@ -1,8 +1,6 @@
-// src/main.tsx
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './components/App';
-import './index.css'; // Optional: if you have global styles
 
 console.log('Rendering App component');
 

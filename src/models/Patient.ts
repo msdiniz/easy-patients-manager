@@ -19,18 +19,93 @@ export interface Patient {
   fullName: string;
   dob: string;
   gender: string;
-  emails: Email[];
-  addresses: Address[];
-  phones: Phone[];
   cpf: string;
+  bookmark: string;
+  dateOfFirstContact: string;
+  // Add optional properties
+  bloodType?: string;
+  rhFactor?: string;
+  ethnicGroup?: string;
+  observation?: string;
+  notes?: string;
+  howPatientWasReferred?: string;
+}
+
+export interface DetailedPatient extends Patient {
   bloodType: string;
   rhFactor: string;
   ethnicGroup: string;
-  bookmark: string;
   observation: string;
   notes: string;
   howPatientWasReferred: string;
-  dateOfFirstContact: string;
+}
+
+export interface PatientDetails extends Patient {
+  emails: Email[];
+  addresses: Address[];
+  phones: Phone[];
+  bloodType: string;
+  rhFactor: string;
+  ethnicGroup: string;
+  observation: string;
+  notes: string;
+  howPatientWasReferred: string;
+}
+
+export class PatientFactory {
+  static createNewForPatientList(fullName: string = "", formatName: boolean = true): Patient {
+    return {
+      id: "",
+      fullName: formatName ? Patient.properCase(fullName) : fullName,
+      dob: "",
+      gender: "",
+      cpf: "",
+      bookmark: "",
+      dateOfFirstContact: ""
+    };
+  }
+
+  static createNewForPatientDetail(fullName: string = "", formatName: boolean = true): PatientDetails {
+    return {
+      id: "",
+      fullName: formatName ? Patient.properCase(fullName) : fullName,
+      dob: "",
+      gender: "",
+      cpf: "",
+      bookmark: "",
+      dateOfFirstContact: "",
+      emails: [],
+      addresses: [],
+      phones: [],
+      bloodType: "",
+      rhFactor: "",
+      ethnicGroup: "",
+      observation: "",
+      notes: "",
+      howPatientWasReferred: ""
+    };
+  }
+}
+
+export class Patient {
+  // ...existing code...
+
+  static properCase(name: string): string {
+    const lowerCaseWords = ['d', 'da', 'das', 'de', 'do', 'dos', 'e', 'van', 'von'];
+    return name
+      .toLowerCase()
+      .split(' ')
+      .map(word => {
+        if (lowerCaseWords.includes(word)) {
+          return word;
+        }
+        if (word.length > 1 && word[1] === "'") {
+          return word[0].toUpperCase() + "'" + word[2].toUpperCase() + word.slice(3);
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(' ');
+  }
 }
 
 // models/Staff.ts

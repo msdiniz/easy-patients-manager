@@ -1,24 +1,21 @@
 // src/components/PatientList.tsx
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Patient } from '../models/Patient';
+import React, { useState } from 'react';
+import { Patient, DetailedPatient } from '../models/Patient';
+import { PatientFactory } from '../models/Patient';
+import { transformToDetailedPatient } from '../utils/transformPatient';
 import './PatientList.css'; // Import the CSS file
 
 interface PatientListProps {
-  onSelectPatient: (patient: Patient | null) => void;
+  onSelectPatient: (patient: DetailedPatient | null) => void;
   selectedPatientId: string | null;
-  onAddPatient: (patient: Patient) => void;
+  patients: DetailedPatient[];
 }
 
-export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPatientId, onAddPatient }) => {
-  const [patients, setPatients] = useState<Patient[]>([]);
+export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPatientId, patients = [] }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [useProperCase, setUseProperCase] = useState(true);
 
-  useEffect(() => {
-    axios.get('/data/patients.json').then(response => {
-      setPatients(response.data);
-    });
-  }, []);
+  console.log('Patients received by PatientList:', patients);
 
   const normalizeString = (str: string) => {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -37,42 +34,22 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     return nameParts.length >= 2 && nameParts.every(part => part.length >= 2);
   };
 
-  const properCase = (name: string) => {
-    const lowerCaseWords = ['d', 'da', 'das', 'de', 'do', 'dos', 'e', 'van', 'von'];
-    return name
-      .toLowerCase()
-      .split(' ')
-      .map(word => {
-        if (lowerCaseWords.includes(word)) {
-          return word;
-        }
-        if (word.length > 1 && word[1] === "'") {
-          return word[0].toUpperCase() + "'" + word[2].toUpperCase() + word.slice(3);
-        }
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      })
-      .join(' ');
-  };
-
   const handleNewPatient = () => {
     if (isValidName(searchTerm)) {
-      const newPatient: Patient = {
-        id: '',
-        fullName: properCase(searchTerm),
-        dob: '',
-        gender: '',
-        cpf: '',
-        bloodType: '',
-        rhFactor: '',
-        ethnicGroup: '',
-        bookmark: '',
-        observation: '',
-        notes: '',
-        howPatientWasReferred: '',
-        dateOfFirstContact: ''
-      };
-      onSelectPatient(newPatient);
+      const newPatient: Patient = PatientFactory.createNewForPatientList(searchTerm, useProperCase);
+      const detailedPatient: DetailedPatient = transformToDetailedPatient(newPatient);
+      onSelectPatient(detailedPatient);
     }
+  };
+
+  const handleSelectPatient = (patient: Patient) => {
+    const detailedPatient: DetailedPatient = transformToDetailedPatient(patient);
+    onSelectPatient(detailedPatient);
+  };
+
+  const handlePatientClick = (patient: Patient) => {
+    console.log('Patient being passed to detail view:', patient);
+    handleSelectPatient(patient);
   };
 
   return (
@@ -83,6 +60,16 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
         value={searchTerm}
         onChange={e => setSearchTerm(e.target.value)}
       />
+      <div className="checkbox-container">
+        <label>
+          <input
+            type="checkbox"
+            checked={useProperCase}
+            onChange={e => setUseProperCase(e.target.checked)}
+          />
+          Use Proper Case
+        </label>
+      </div>
       <div className="button-container">
         {searchTerm && isValidName(searchTerm) && (
           <button onClick={handleNewPatient}>New Patient</button>
@@ -95,7 +82,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
         {filteredPatients.map(patient => (
           <li
             key={patient.id}
-            onClick={() => onSelectPatient(patient)}
+            onClick={() => handlePatientClick(patient)}
             className={patient.id === selectedPatientId ? 'selected' : ''}
           >
             {patient.fullName}

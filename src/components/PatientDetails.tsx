@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Patient } from '../models/Patient';
+import { PatientFactory, PatientDetails as PatientDetailsType } from '../models/Patient';
 import { PatientForm } from './PatientForm';
 import { PatientInfo } from './PatientInfo';
 import './PatientDetails.css'; // Import the CSS file
@@ -12,7 +13,7 @@ interface Props {
 }
 
 export const PatientDetails: React.FC<Props> = ({ patient, onSaveNewPatient }) => {
-  const [patientDetails, setPatientDetails] = useState<Patient | null>(null);
+  const [patientDetails, setPatientDetails] = useState<PatientDetailsType | null>(PatientFactory.createNewForPatientDetail());
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export const PatientDetails: React.FC<Props> = ({ patient, onSaveNewPatient }) =
         }
         setIsEditing(false); // Ensure we start in view mode for existing patients
       } else {
-        setPatientDetails(patient);
+        setPatientDetails(PatientFactory.createNewForPatientDetail());
         setIsEditing(true); // Start in edit mode for new patients
       }
     }
@@ -56,14 +57,14 @@ export const PatientDetails: React.FC<Props> = ({ patient, onSaveNewPatient }) =
 
   const handleCancel = () => {
     setIsEditing(false);
-    setPatientDetails(patient);
+    setPatientDetails(patient ? { ...PatientFactory.createNewForPatientDetail(), ...patient } : null);
   };
 
   if (!patientDetails) {
     return <div className="patient-details">Select a patient to view details</div>;
   }
 
-  const isFormValid = patientDetails.fullName && patientDetails.gender && patientDetails.dob && new Date(patientDetails.dob) < new Date();
+  const isFormValid: boolean = !!(patientDetails.fullName && patientDetails.gender && patientDetails.dob && new Date(patientDetails.dob) < new Date());
 
   return (
     <div className="patient-details">
