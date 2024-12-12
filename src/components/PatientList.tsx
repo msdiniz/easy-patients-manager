@@ -5,11 +5,12 @@ import { Patient } from '../models/Patient';
 import './PatientList.css'; // Import the CSS file
 
 interface PatientListProps {
-  onSelectPatient: (patient: Patient) => void;
+  onSelectPatient: (patient: Patient | null) => void;
   selectedPatientId: string | null;
+  onAddPatient: (patient: Patient) => void;
 }
 
-export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPatientId }) => {
+export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPatientId, onAddPatient }) => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -36,6 +37,55 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     return nameParts.length >= 2 && nameParts.every(part => part.length >= 2);
   };
 
+  const properCase = (name: string) => {
+    const lowerCaseWords = ['d', 'da', 'das', 'de', 'do', 'dos', 'e', 'van', 'von'];
+    return name
+      .toLowerCase()
+      .split(' ')
+      .map(word => {
+        if (lowerCaseWords.includes(word)) {
+          return word;
+        }
+        if (word.length > 1 && word[1] === "'") {
+          return word[0].toUpperCase() + "'" + word[2].toUpperCase() + word.slice(3);
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(' ');
+  };
+
+  const handleNewPatient = () => {
+    if (isValidName(searchTerm)) {
+      const newPatient: Patient = {
+        id: '',
+        fullName: properCase(searchTerm),
+        dob: '',
+        gender: '',
+        cpf: '',
+        bloodType: '',
+        rhFactor: '',
+        ethnicGroup: '',
+        bookmark: '',
+        observation: '',
+        notes: '',
+        howPatientWasReferred: '',
+        dateOfFirstContact: ''
+      };
+      onSelectPatient(newPatient);
+    }
+  };
+
+  const handleAddPatient = (patient: Patient) => {
+    const newPatientWithId = { ...patient, id: (patients.length + 1).toString() };
+    const updatedPatients = [...patients, newPatientWithId].sort((a, b) => normalizeString(a.fullName).localeCompare(normalizeString(b.fullName)));
+    setPatients(updatedPatients);
+    console.log('New patient added:', newPatientWithId);
+  };
+
+  useEffect(() => {
+    onAddPatient(handleAddPatient);
+  }, [patients]);
+
   return (
     <div className="patient-list">
       <input
@@ -46,7 +96,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
       />
       <div className="button-container">
         {searchTerm && isValidName(searchTerm) && (
-          <button>New Patient</button>
+          <button onClick={handleNewPatient}>New Patient</button>
         )}
         {searchTerm && (
           <button onClick={() => setSearchTerm('')}>Clear</button>
