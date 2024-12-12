@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Patient, DetailedPatient } from '../models/Patient';
 import { PatientFactory } from '../models/Patient';
 import { transformToDetailedPatient } from '../utils/transformPatient';
-import './PatientList.css'; // Import the CSS file
+import './PatientList.css'; // Ensure component-specific styles are imported
 
 interface PatientListProps {
   onSelectPatient: (patient: DetailedPatient | null) => void;

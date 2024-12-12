@@ -1,4 +1,3 @@
-// src/App.tsx
 import React from 'react';
 import { MainLayout } from './components/MainLayout';
 import './App.css'; // Optional: if you have specific styles for App
