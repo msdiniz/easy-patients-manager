@@ -29,13 +29,8 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     normalizeString(patient.fullName).toLowerCase().includes(normalizeString(searchTerm).toLowerCase())
   );
 
-  const isValidName = (name: string) => {
-    const nameParts = name.trim().split(/\s+/);
-    return nameParts.length >= 2 && nameParts.every(part => part.length >= 2);
-  };
-
   const handleNewPatient = () => {
-    if (isValidName(searchTerm)) {
+    if (Patient.isValidName(searchTerm)) {
       const newPatient: Patient = PatientFactory.createNewForPatientList(searchTerm, useProperCase);
       const detailedPatient: DetailedPatient = transformToDetailedPatient(newPatient);
       onSelectPatient(detailedPatient);
@@ -71,7 +66,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
         </label>
       </div>
       <div className="button-container">
-        {searchTerm && isValidName(searchTerm) && (
+        {searchTerm && Patient.isValidName(searchTerm) && (
           <button onClick={handleNewPatient}>New Patient</button>
         )}
         {searchTerm && (

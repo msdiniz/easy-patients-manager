@@ -106,6 +106,11 @@ export class Patient {
       })
       .join(' ');
   }
+
+  static isValidName(name: string): boolean {
+    const nameParts = name.trim().split(/\s+/);
+    return nameParts.length >= 2 && nameParts.every(part => part.length >= 2);
+  }
 }
 
 // models/Staff.ts

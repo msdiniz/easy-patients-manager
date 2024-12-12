@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PatientList } from './PatientList';
-import { PatientDetails } from './PatientDetails';
 import { PatientInfo } from './PatientInfo';
 import { PatientForm } from './PatientForm';
 import { Patient, DetailedPatient } from '../models/Patient';
@@ -83,11 +82,14 @@ export const MainLayout: React.FC = () => {
       console.log('Patient saved:', selectedPatient);
       let updatedPatients;
       if (isAdding) {
-        updatedPatients = [...patients, selectedPatient];
+        const newPatientWithId = { ...selectedPatient, id: (patients.length + 1).toString() };
+        updatedPatients = [...patients, newPatientWithId];
+        console.log('Adding new patient:', newPatientWithId);
       } else {
         updatedPatients = patients.map(p =>
           p.id === selectedPatient.id ? selectedPatient : p
         );
+        console.log('Updating existing patient:', selectedPatient);
       }
       setPatients(updatedPatients);
       localStorage.setItem('patients', JSON.stringify(updatedPatients));
@@ -111,6 +113,7 @@ export const MainLayout: React.FC = () => {
       <header>
         <img src={logo} alt="Logo" />
         <h1>EasyPatientsManager</h1>
+        <button onClick={handleAddPatient}>Add Patient</button>
         <button>Login/Logout</button>
         <button>Close</button>
       </header>
@@ -122,7 +125,7 @@ export const MainLayout: React.FC = () => {
         />
         {selectedPatient && (
           <div className="patient-details">
-            {isEditing ? (
+            {isEditing || isAdding ? (
               <PatientForm
                 patient={selectedPatient}
                 onChange={handleChange}
