@@ -75,17 +75,6 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     }
   };
 
-  const handleAddPatient = (patient: Patient) => {
-    const newPatientWithId = { ...patient, id: (patients.length + 1).toString() };
-    const updatedPatients = [...patients, newPatientWithId].sort((a, b) => normalizeString(a.fullName).localeCompare(normalizeString(b.fullName)));
-    setPatients(updatedPatients);
-    console.log('New patient added:', newPatientWithId);
-  };
-
-  useEffect(() => {
-    onAddPatient(handleAddPatient);
-  }, [patients]);
-
   return (
     <div className="patient-list">
       <input

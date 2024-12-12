@@ -35,8 +35,10 @@ export const PatientDetails: React.FC<Props> = ({ patient, onSaveNewPatient }) =
   }, [patient]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setPatientDetails({ ...patientDetails, [name]: value });
+    if (patientDetails) {
+      const { name, value } = e.target;
+      setPatientDetails({ ...patientDetails, [name]: value });
+    }
   };
 
   const handleSave = () => {
