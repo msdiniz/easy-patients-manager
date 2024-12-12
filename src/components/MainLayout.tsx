@@ -4,6 +4,7 @@ import axios from 'axios';
 import { PatientList } from './PatientList';
 import { PatientDetails } from './PatientDetails';
 import { PatientInfo } from './PatientInfo';
+import { PatientForm } from './PatientForm';
 import { Patient, DetailedPatient } from '../models/Patient';
 import { transformToDetailedPatient } from '../utils/transformPatient';
 import logo from '../assets/96x96.png';
@@ -12,6 +13,8 @@ import logo from '../assets/96x96.png';
 export const MainLayout: React.FC = () => {
   const [selectedPatient, setSelectedPatient] = useState<DetailedPatient | null>(null);
   const [patients, setPatients] = useState<DetailedPatient[]>([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
     console.log('MainLayout component mounted');
@@ -41,14 +44,29 @@ export const MainLayout: React.FC = () => {
   const handleSelectPatient = (patient: DetailedPatient | null) => {
     console.log('Patient selected in MainLayout:', patient);
     setSelectedPatient(patient);
+    setIsEditing(false);
+    setIsAdding(false);
   };
 
-  const handleAddPatient = (patient: DetailedPatient) => {
-    console.log('Patient added:', patient);
-    const updatedPatients = [...patients, patient];
-    setPatients(updatedPatients);
-    localStorage.setItem('patients', JSON.stringify(updatedPatients));
-    console.log('Saved patients to localStorage:', updatedPatients);
+  const handleAddPatient = () => {
+    const newPatient: DetailedPatient = {
+      id: '',
+      fullName: '',
+      dob: '',
+      gender: '',
+      cpf: '',
+      bookmark: '',
+      dateOfFirstContact: '',
+      bloodType: '',
+      rhFactor: '',
+      ethnicGroup: '',
+      observation: '',
+      notes: '',
+      howPatientWasReferred: ''
+    };
+    setSelectedPatient(newPatient);
+    setIsEditing(true);
+    setIsAdding(true);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -63,18 +81,27 @@ export const MainLayout: React.FC = () => {
   const handleSave = () => {
     if (selectedPatient) {
       console.log('Patient saved:', selectedPatient);
-      const updatedPatients = patients.map(p =>
-        p.id === selectedPatient.id ? selectedPatient : p
-      );
+      let updatedPatients;
+      if (isAdding) {
+        updatedPatients = [...patients, selectedPatient];
+      } else {
+        updatedPatients = patients.map(p =>
+          p.id === selectedPatient.id ? selectedPatient : p
+        );
+      }
       setPatients(updatedPatients);
       localStorage.setItem('patients', JSON.stringify(updatedPatients));
       console.log('Saved patients to localStorage:', updatedPatients);
       setSelectedPatient(null);
+      setIsEditing(false);
+      setIsAdding(false);
     }
   };
 
   const handleCancel = () => {
     setSelectedPatient(null);
+    setIsEditing(false);
+    setIsAdding(false);
   };
 
   const isFormValid = selectedPatient !== null && selectedPatient.fullName.trim() !== '';
@@ -94,18 +121,23 @@ export const MainLayout: React.FC = () => {
           patients={patients}
         />
         {selectedPatient && (
-          <PatientInfo patient={selectedPatient} /> // Render PatientInfo instead of PatientForm
+          <div className="patient-details">
+            {isEditing ? (
+              <PatientForm
+                patient={selectedPatient}
+                onChange={handleChange}
+                onSave={handleSave}
+                onCancel={handleCancel}
+                isFormValid={isFormValid}
+              />
+            ) : (
+              <PatientInfo
+                patient={selectedPatient}
+                onEdit={() => setIsEditing(true)}
+              />
+            )}
+          </div>
         )}
-        {/* Uncomment the following lines if you want to render PatientForm for editing */}
-        {/* {selectedPatient && (
-          <PatientForm
-            patient={selectedPatient}
-            onChange={handleChange}
-            onSave={handleSave}
-            onCancel={handleCancel}
-            isFormValid={isFormValid}
-          />
-        )} */}
       </div>
     </div>
   );

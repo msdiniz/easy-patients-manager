@@ -4,9 +4,10 @@ import './PatientInfo.css'; // Import the CSS file
 
 interface PatientInfoProps {
   patient: DetailedPatient;
+  onEdit: () => void;
 }
 
-export const PatientInfo: React.FC<PatientInfoProps> = ({ patient }) => {
+export const PatientInfo: React.FC<PatientInfoProps> = ({ patient, onEdit }) => {
   return (
     <div className="patient-info">
       <h2>{patient.fullName}</h2>
@@ -20,6 +21,7 @@ export const PatientInfo: React.FC<PatientInfoProps> = ({ patient }) => {
       <p>Notes: {patient.notes}</p>
       <p>How Patient Was Referred: {patient.howPatientWasReferred}</p>
       <p>Date of First Contact: {patient.dateOfFirstContact}</p>
+      <button onClick={onEdit}>Edit</button>
     </div>
   );
 };
