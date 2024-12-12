@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Patient } from '../models/Patient';
+import './PatientDetails.css'; // Import the CSS file
 
 interface Props {
   patient: Patient | null;
@@ -21,6 +22,7 @@ export const PatientDetails: React.FC<Props> = ({ patient }) => {
           setPatientDetails(response.data);
         });
       }
+      setIsEditing(false); // Reset edit mode when a new patient is selected
     }
   }, [patient]);
 
@@ -37,6 +39,10 @@ export const PatientDetails: React.FC<Props> = ({ patient }) => {
     }
   };
 
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+
   if (!patientDetails) {
     return <div className="patient-details">Select a patient to view details</div>;
   }
@@ -44,7 +50,7 @@ export const PatientDetails: React.FC<Props> = ({ patient }) => {
   return (
     <div className="patient-details">
       {isEditing ? (
-        <form>
+        <form className="patient-form">
           <div className="form-group">
             <label>Full Name:</label>
             <input type="text" name="fullName" value={patientDetails.fullName} onChange={handleInputChange} />
@@ -93,10 +99,13 @@ export const PatientDetails: React.FC<Props> = ({ patient }) => {
             <label>Date of First Contact:</label>
             <input type="date" name="dateOfFirstContact" value={patientDetails.dateOfFirstContact} onChange={handleInputChange} />
           </div>
-          <button type="button" onClick={handleSave}>Save</button>
+          <div className="button-container">
+            <button type="button" onClick={handleSave}>Save</button>
+            <button type="button" onClick={handleCancel}>Cancel</button>
+          </div>
         </form>
       ) : (
-        <div>
+        <div className="patient-info">
           <h2>{patientDetails.fullName}</h2>
           <p>DOB: {patientDetails.dob}</p>
           <p>Gender: {patientDetails.gender}</p>

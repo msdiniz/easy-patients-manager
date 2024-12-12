@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Patient } from '../models/Patient';
+import './PatientList.css'; // Import the CSS file
 
 interface PatientListProps {
   onSelectPatient: (patient: Patient) => void;
@@ -30,6 +31,11 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     normalizeString(patient.fullName).toLowerCase().includes(normalizeString(searchTerm).toLowerCase())
   );
 
+  const isValidName = (name: string) => {
+    const nameParts = name.trim().split(/\s+/);
+    return nameParts.length >= 2 && nameParts.every(part => part.length >= 2);
+  };
+
   return (
     <div className="patient-list">
       <input
@@ -38,7 +44,14 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
         value={searchTerm}
         onChange={e => setSearchTerm(e.target.value)}
       />
-      <button>New Patient</button>
+      <div className="button-container">
+        {searchTerm && isValidName(searchTerm) && (
+          <button>New Patient</button>
+        )}
+        {searchTerm && (
+          <button onClick={() => setSearchTerm('')}>Clear</button>
+        )}
+      </div>
       <ul>
         {filteredPatients.map(patient => (
           <li

@@ -1,0 +1,55 @@
+.patient-list {
+    text-align: left;
+    width: 30%;
+    min-width: 250px; /* Set a minimum width to prevent deformation */
+  }
+  
+  .patient-list input {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .patient-list button {
+    padding: 10px 15px;
+    margin-top: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    white-space: nowrap; /* Prevent text wrapping */
+    flex-shrink: 0; /* Prevent button from shrinking */
+    min-width: 60px; /* Ensure buttons have a minimum width */
+    flex: 1; /* Allow buttons to grow and fill available space */
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 0;
+    gap: 10px; /* Add space between buttons */
+  }
+  
+  .button-container button {
+    width: 20%;
+  }
+
+  .patient-list button:hover {
+    background-color: #0056b3;
+  }
+
+  .patient-list ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .patient-list li {
+    padding: 10px;
+    cursor: pointer;
+    text-align: left;
+  }
+  
+  .patient-list li.selected {
+    background-color: #d3d3d3; /* Light gray background for selected patient */
+  }
