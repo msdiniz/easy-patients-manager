@@ -93,6 +93,7 @@ export class Patient {
   static properCase(name: string): string {
     const lowerCaseWords = ['d', 'da', 'das', 'de', 'do', 'dos', 'e', 'van', 'von'];
     return name
+      .trim() // Trim the input before applying proper case
       .toLowerCase()
       .split(' ')
       .map(word => {

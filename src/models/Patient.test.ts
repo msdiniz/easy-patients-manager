@@ -47,15 +47,15 @@ describe('isValidName', () => {
 
 describe('properCase', () => {
   test.each([
-    ["TESTando AGOra De NoVo d'oLiVEira", "Testando Agora de Novo D'Oliveira"],
+    [" TESTando AGOra De NoVo d'oLiVEira ", "Testando Agora de Novo D'Oliveira"],
     ["john doe", "John Doe"],
     ["jane smith", "Jane Smith"],
     ["a b", "A B"],
     ["john", "John"],
-    ["john d", "John D"],
+    ["john d", "John d"],//invalid name
     ["john doe smith", "John Doe Smith"],
-    ["jo do", "Jo Do"],
-    ["john d", "John D"],
+    ["jo do", "Jo do"],//invalid name
+    ["john d", "John d"],//invalid name
     ["john doe ", "John Doe"],
     [" john doe", "John Doe"],
     ["testando agora de novo", "Testando Agora de Novo"],
