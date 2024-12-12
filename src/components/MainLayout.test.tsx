@@ -1,6 +1,4 @@
-// import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-// import '@testing-library/jest-dom/extend-expect';
 import '@testing-library/jest-dom';
 import { MainLayout } from './MainLayout';
 
@@ -12,15 +10,15 @@ describe('MainLayout Integration Test', () => {
     fireEvent.click(screen.getByText('Add Patient'));
 
     // Fill out the form
-    fireEvent.change(screen.getByPlaceholderText('Full Name'), { target: { value: 'John Doe' } });
-    fireEvent.change(screen.getByPlaceholderText('Date of Birth'), { target: { value: '1990-01-01' } });
-    fireEvent.change(screen.getByPlaceholderText('Gender'), { target: { value: 'Male' } });
-    fireEvent.change(screen.getByPlaceholderText('CPF'), { target: { value: '123.456.789-00' } });
+    fireEvent.change(screen.getByLabelText('Full Name:'), { target: { value: 'Johnatan Doester' } });
+    fireEvent.change(screen.getByLabelText('DOB:'), { target: { value: '1940-01-01' } });
+    fireEvent.change(screen.getByLabelText('Gender:'), { target: { value: 'Male' } });
+    fireEvent.change(screen.getByLabelText('CPF:'), { target: { value: '333.444.789-00' } });
 
     // Click the "Save" button
     fireEvent.click(screen.getByText('Save'));
 
     // Check if the new patient is added to the PatientList
-    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('Johnatan Doester')).toBeInTheDocument();
   });
 });

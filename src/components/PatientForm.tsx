@@ -15,52 +15,52 @@ export const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onS
   return (
     <form className="patient-form">
       <div className="form-group">
-        <label>Full Name:</label>
-        <input type="text" name="fullName" value={patient.fullName} onChange={onChange} />
+        <label htmlFor="fullName">Full Name:</label>
+        <input id="fullName" type="text" name="fullName" value={patient.fullName} onChange={onChange} />
       </div>
       <div className="form-group">
-        <label>DOB:</label>
-        <input type="date" name="dob" value={patient.dob} onChange={onChange} />
+        <label htmlFor="dob">DOB:</label>
+        <input id="dob" type="date" name="dob" value={patient.dob} onChange={onChange} />
       </div>
       <div className="form-group">
-        <label>Gender:</label>
-        <input type="text" name="gender" value={patient.gender} onChange={onChange} />
+        <label htmlFor="gender">Gender:</label>
+        <input id="gender" type="text" name="gender" value={patient.gender} onChange={onChange} />
       </div>
       <div className="form-group">
-        <label>CPF:</label>
-        <input type="text" name="cpf" value={patient.cpf} onChange={onChange} />
+        <label htmlFor="cpf">CPF:</label>
+        <input id="cpf" type="text" name="cpf" value={patient.cpf} onChange={onChange} />
       </div>
       <div className="form-group">
-        <label>Blood Type:</label>
-        <input type="text" name="bloodType" value={patient.bloodType} onChange={onChange} />
+        <label htmlFor="bloodType">Blood Type:</label>
+        <input id="bloodType" type="text" name="bloodType" value={patient.bloodType} onChange={onChange} />
       </div>
       <div className="form-group">
-        <label>Rh Factor:</label>
-        <input type="text" name="rhFactor" value={patient.rhFactor} onChange={onChange} />
+        <label htmlFor="rhFactor">Rh Factor:</label>
+        <input id="rhFactor" type="text" name="rhFactor" value={patient.rhFactor} onChange={onChange} />
       </div>
       <div className="form-group">
-        <label>Ethnic Group:</label>
-        <input type="text" name="ethnicGroup" value={patient.ethnicGroup} onChange={onChange} />
+        <label htmlFor="ethnicGroup">Ethnic Group:</label>
+        <input id="ethnicGroup" type="text" name="ethnicGroup" value={patient.ethnicGroup} onChange={onChange} />
       </div>
       <div className="form-group">
-        <label>Bookmark:</label>
-        <input type="text" name="bookmark" value={patient.bookmark} onChange={onChange} />
+        <label htmlFor="bookmark">Bookmark:</label>
+        <input id="bookmark" type="text" name="bookmark" value={patient.bookmark} onChange={onChange} />
       </div>
       <div className="form-group">
-        <label>Observation:</label>
-        <textarea name="observation" value={patient.observation} onChange={onChange} />
+        <label htmlFor="observation">Observation:</label>
+        <textarea id="observation" name="observation" value={patient.observation} onChange={onChange} />
       </div>
       <div className="form-group">
-        <label>Notes:</label>
-        <textarea name="notes" value={patient.notes} onChange={onChange} />
+        <label htmlFor="notes">Notes:</label>
+        <textarea id="notes" name="notes" value={patient.notes} onChange={onChange} />
       </div>
       <div className="form-group">
-        <label>How Patient Was Referred:</label>
-        <input type="text" name="howPatientWasReferred" value={patient.howPatientWasReferred} onChange={onChange} />
+        <label htmlFor="howPatientWasReferred">How Patient Was Referred:</label>
+        <input id="howPatientWasReferred" type="text" name="howPatientWasReferred" value={patient.howPatientWasReferred} onChange={onChange} />
       </div>
       <div className="form-group">
-        <label>Date of First Contact:</label>
-        <input type="date" name="dateOfFirstContact" value={patient.dateOfFirstContact} onChange={onChange} />
+        <label htmlFor="dateOfFirstContact">Date of First Contact:</label>
+        <input id="dateOfFirstContact" type="date" name="dateOfFirstContact" value={patient.dateOfFirstContact} onChange={onChange} />
       </div>
       <div className="button-container">
         <button type="button" onClick={onSave} disabled={!isFormValid}>Save</button>
