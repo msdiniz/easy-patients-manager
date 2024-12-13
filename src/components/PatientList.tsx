@@ -65,14 +65,12 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
         onChange={e => setSearchTerm(e.target.value)}
       />
       <div className="checkbox-container">
-        <label>
-          <input
-            type="checkbox"
-            checked={useProperCase}
-            onChange={e => setUseProperCase(e.target.checked)}
-          />
-          Use Proper Case
-        </label>
+        <input
+          type="checkbox"
+          checked={useProperCase}
+          onChange={e => setUseProperCase(e.target.checked)}
+        />
+        <label>Use Proper Case</label>
       </div>
       <div className="button-container">
         {searchTerm && PatientUtils.isValidName(searchTerm) && (

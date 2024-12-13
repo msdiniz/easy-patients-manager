@@ -36,7 +36,7 @@
 }
 
 .patient-list button:hover {
-  background-color: #0056b3;
+  background-color: #0a62c0;
 }
 
 .patient-list ul {
@@ -53,4 +53,13 @@
 .patient-list li.selected {
   background-color: #d3d3d3; /* Light gray background for selected patient */
   font-weight: bold; /* Bold text for selected patient */
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-container label {
+  margin-left: 8px; /* Add some space between the checkbox and the label */
 }
