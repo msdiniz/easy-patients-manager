@@ -8,6 +8,9 @@ interface PatientInfoProps {
 }
 
 export const PatientInfo: React.FC<PatientInfoProps> = ({ patient, onEdit }) => {
+  if (!patient) {
+    return <div>No patient selected</div>;
+  }
   return (
     <div className="patient-info">
       <h2>{patient.fullName}</h2>

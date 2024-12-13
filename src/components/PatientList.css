@@ -51,5 +51,8 @@
   }
   
   .patient-list li.selected {
-    background-color: #d3d3d3; /* Light gray background for selected patient */
+    .patient-list li.selected {
+      background-color: #d3d3d3; /* Light gray background for selected patient */
+      font-weight: bold; /* Bold text for selected patient */
   }
+}

@@ -43,3 +43,4 @@ const store = configureStore({
 
 export default store;
 export type RootState = ReturnType<typeof store.getState>;
+export type { PatientState }; // Ensure PatientState is exported
