@@ -1,4 +1,3 @@
-// src/models/PatientFactory.ts
 import { Patient, PatientDetails } from './PatientModels';
 import { PatientUtils } from './PatientUtils';
 

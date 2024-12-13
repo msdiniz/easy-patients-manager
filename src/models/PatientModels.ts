@@ -1,4 +1,5 @@
 // src/models/PatientModels.ts
+
 export interface Email {
   email: string;
   type: string;
@@ -22,21 +23,6 @@ export interface Patient {
   cpf: string;
   bookmark: string;
   dateOfFirstContact: string;
-  bloodType?: string;
-  rhFactor?: string;
-  ethnicGroup?: string;
-  observation?: string;
-  notes?: string;
-  howPatientWasReferred?: string;
-}
-
-export interface DetailedPatient extends Patient {
-  bloodType: string;
-  rhFactor: string;
-  ethnicGroup: string;
-  observation: string;
-  notes: string;
-  howPatientWasReferred: string;
 }
 
 export interface PatientDetails extends Patient {

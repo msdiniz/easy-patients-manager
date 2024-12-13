@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Patient, DetailedPatient } from '../../models/PatientModels';
+import { Patient, PatientDetails } from '../../models/PatientModels';
 import { PatientFactory } from '../../models/PatientFactory';
 import { transformToDetailedPatient } from '../../utils/transformPatient';
 import './PatientList.css'; // Ensure component-specific styles are imported
@@ -8,9 +8,9 @@ import { PatientUtils } from '../../models/PatientUtils';
 import { setSelectedPatient, setIsEditing, setIsAdding } from '../../store';
 
 interface PatientListProps {
-  onSelectPatient: (patient: DetailedPatient | null) => void;
+  onSelectPatient: (patient: PatientDetails | null) => void;
   selectedPatientId: string | null;
-  patients: DetailedPatient[];
+  patients: Patient[];
 }
 
 export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPatientId, patients = [] }) => {
@@ -37,7 +37,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   const handleNewPatient = () => {
     if (PatientUtils.isValidName(searchTerm)) {
       const newPatient: Patient = PatientFactory.createNewForPatientList(searchTerm, useProperCase);
-      const detailedPatient: DetailedPatient = transformToDetailedPatient(newPatient);
+      const detailedPatient: PatientDetails = transformToDetailedPatient(newPatient);
       dispatch(setSelectedPatient(detailedPatient));
       dispatch(setIsEditing(true));
       dispatch(setIsAdding(true));
@@ -46,7 +46,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   };
 
   const handleSelectPatient = (patient: Patient) => {
-    const detailedPatient: DetailedPatient = transformToDetailedPatient(patient);
+    const detailedPatient: PatientDetails = transformToDetailedPatient(patient);
     console.log('Selected Patient:', detailedPatient);
     dispatch(setSelectedPatient(detailedPatient));
     onSelectPatient(detailedPatient);
@@ -55,6 +55,11 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   const handlePatientClick = (patient: Patient) => {
     console.log('Patient being passed to detail view:', patient);
     handleSelectPatient(patient);
+  };
+  
+  const clearLocalStorage = () => {
+    localStorage.clear();
+    window.location.reload(); // Reload the page to fetch data from JSON files
   };
 
   return (
@@ -73,6 +78,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
         />
         <label>Use Proper Case</label>
       </div>
+      <button onClick={clearLocalStorage}>Reset Data</button>
       <div className="checkbox-container">                
         <input
             type="checkbox"

@@ -1,13 +1,13 @@
 import React from 'react';
-import { DetailedPatient } from '../models/PatientModels';
+import { PatientDetails } from '../models/PatientModels';
 import './PatientInfo.css'; // Import the CSS file
 
 interface PatientInfoProps {
-  patient: DetailedPatient;
+  patient: PatientDetails;
   onEdit: () => void;
 }
 
-export const PatientInfo: React.FC<PatientInfoProps> = ({ patient, onEdit }) => {
+const PatientInfo: React.FC<PatientInfoProps> = ({ patient, onEdit }) => {
   if (!patient) {
     return <div>No patient selected</div>;
   }
@@ -28,3 +28,5 @@ export const PatientInfo: React.FC<PatientInfoProps> = ({ patient, onEdit }) => 
     </div>
   );
 };
+
+export default React.memo(PatientInfo);

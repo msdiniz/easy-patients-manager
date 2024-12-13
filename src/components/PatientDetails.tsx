@@ -1,10 +1,10 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { PatientInfo } from './PatientInfo';
+import PatientInfo from './PatientInfo'; // Ensure the default import is used
 import PatientForm from "./Form/PatientForm";
 import { getSelectedPatient, getIsEditing, getIsAdding } from '../store/selectors';
 import { setIsEditing, setSelectedPatient, setPatients, RootState, setIsAdding } from '../store/index';
-import { DetailedPatient } from '../models/PatientModels';
+import { PatientDetails as DetailedPatient } from '../models/PatientModels';
 import { PatientUtils } from '../models/PatientUtils';
 
 const PatientDetails: React.FC = () => {
