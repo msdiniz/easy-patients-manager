@@ -1,5 +1,5 @@
 import { transformToDetailedPatient } from './transformPatient';
-import { Patient, DetailedPatient } from '../models/Patient';
+import { Patient, DetailedPatient } from '../models/PatientModels';
 
 describe('transformToDetailedPatient', () => {
   it('should transform a Patient to a DetailedPatient with default values', () => {

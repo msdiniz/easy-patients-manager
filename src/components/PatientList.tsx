@@ -1,9 +1,10 @@
 // src/components/PatientList.tsx
 import React, { useState } from 'react';
-import { Patient, DetailedPatient } from '../models/Patient';
-import { PatientFactory } from '../models/Patient';
+import { Patient, DetailedPatient } from '../models/PatientModels';
+import { PatientFactory } from '../models/PatientFactory';
 import { transformToDetailedPatient } from '../utils/transformPatient';
 import './PatientList.css'; // Ensure component-specific styles are imported
+import { PatientUtils } from '../models/PatientUtils';
 
 interface PatientListProps {
   onSelectPatient: (patient: DetailedPatient | null) => void;
@@ -30,7 +31,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   );
 
   const handleNewPatient = () => {
-    if (Patient.isValidName(searchTerm)) {
+    if (PatientUtils.isValidName(searchTerm)) {
       const newPatient: Patient = PatientFactory.createNewForPatientList(searchTerm, useProperCase);
       const detailedPatient: DetailedPatient = transformToDetailedPatient(newPatient);
       onSelectPatient(detailedPatient);
@@ -67,7 +68,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
         </label>
       </div>
       <div className="button-container">
-        {searchTerm && Patient.isValidName(searchTerm) && (
+        {searchTerm && PatientUtils.isValidName(searchTerm) && (
           <button onClick={handleNewPatient}>New Patient</button>
         )}
         {searchTerm && (

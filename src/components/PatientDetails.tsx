@@ -1,8 +1,9 @@
 // src/components/PatientDetails.tsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Patient } from '../models/Patient';
-import { PatientFactory, PatientDetails as PatientDetailsType } from '../models/Patient';
+import { Patient } from '../models/PatientModels';
+import { PatientDetails as PatientDetailsType } from '../models/PatientModels';
+import { PatientFactory } from '../models/PatientFactory';
 import { PatientForm } from './PatientForm';
 import { PatientInfo } from './PatientInfo';
 import './PatientDetails.css'; // Import the CSS file

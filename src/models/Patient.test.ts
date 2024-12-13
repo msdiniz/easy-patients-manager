@@ -1,4 +1,6 @@
-import { PatientFactory, Patient } from './Patient';
+import { Patient } from '../models/PatientModels';
+import { PatientFactory } from '../models/PatientFactory';
+import { PatientUtils } from '../models/PatientUtils';
 
 describe('PatientFactory', () => {
   it('should create a new patient with proper case fullName', () => {
@@ -41,7 +43,7 @@ describe('isValidName', () => {
     ['Testando Agora de Novo', true],
     ["Testando Agora D'Novo", true],
   ])('validates name "%s" as %s', (input, expected) => {
-    expect(Patient.isValidName(input)).toBe(expected);
+    expect(PatientUtils.isValidName(input)).toBe(expected);
   });
 });
 
@@ -61,6 +63,6 @@ describe('properCase', () => {
     ["testando agora de novo", "Testando Agora de Novo"],
     ["testando agora d'novo", "Testando Agora D'Novo"],
   ])('properly cases name "%s" to "%s"', (input, expected) => {
-    expect(Patient.properCase(input)).toBe(expected);
+    expect(PatientUtils.properCase(input)).toBe(expected);
   });
 });

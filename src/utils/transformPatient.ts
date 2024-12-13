@@ -1,4 +1,4 @@
-import { Patient, DetailedPatient } from '../models/Patient';
+import { Patient, DetailedPatient } from '../models/PatientModels';
 
 export const transformToDetailedPatient = (patient: Patient): DetailedPatient => {
   return {

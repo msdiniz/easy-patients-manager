@@ -1,4 +1,3 @@
-// src/components/MainLayout.tsx
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,7 +13,8 @@ import {
   setIsAdding,
   RootState
 } from '../store';
-import { Patient } from '../models/Patient';
+import { Patient, DetailedPatient } from '../models/PatientModels';
+import { PatientFactory } from '../models/PatientFactory';
 
 export const MainLayout: React.FC = () => {
   const dispatch = useDispatch();
@@ -49,39 +49,29 @@ export const MainLayout: React.FC = () => {
     console.log('isEditing:', isEditing, 'isAdding:', isAdding);
   }, [isEditing, isAdding]);
 
-  const handleSelectPatient = (patient: any) => {
-    console.log('Patient selected in MainLayout:', patient);
-    dispatch(setSelectedPatient(patient));
-    if (isEditing || isAdding) {
-      dispatch(setIsEditing(false));
-      dispatch(setIsAdding(false));
+  const handleSelectPatient = (patient: DetailedPatient | null) => {
+    if (patient) {
+      console.log('Patient selected in MainLayout:', patient);
+      dispatch(setSelectedPatient(patient));
+      if (isEditing || isAdding) {
+        dispatch(setIsEditing(false));
+        dispatch(setIsAdding(false));
+      }
+    } else {
+      dispatch(setSelectedPatient(null));
     }
   };
 
   const handleAddPatient = () => {
     console.log('BEGIN: handleAddPatient called');
-    const newPatient = {
-      id: '',
-      fullName: '',
-      dob: '',
-      gender: '',
-      cpf: '',
-      bookmark: '',
-      dateOfFirstContact: '',
-      bloodType: '',
-      rhFactor: '',
-      ethnicGroup: '',
-      observation: '',
-      notes: '',
-      howPatientWasReferred: ''
-    };
+    const newPatient = PatientFactory.createNewForPatientDetail();
     dispatch(setSelectedPatient(newPatient));
     dispatch(setIsEditing(true));
     dispatch(setIsAdding(true));
     console.log('END: handleAddPatient called');
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (selectedPatient) {
       dispatch(setSelectedPatient({
         ...selectedPatient,
@@ -95,7 +85,16 @@ export const MainLayout: React.FC = () => {
       console.log('Patient saved:', selectedPatient);
       let updatedPatients;
       if (isAdding) {
-        const newPatientWithId = { ...selectedPatient, id: (patients.length + 1).toString() };
+        const newPatientWithId: DetailedPatient = {
+          ...selectedPatient,
+          id: (patients.length + 1).toString(),
+          bloodType: selectedPatient.bloodType || '',
+          rhFactor: selectedPatient.rhFactor || '',
+          ethnicGroup: selectedPatient.ethnicGroup || '',
+          observation: selectedPatient.observation || '',
+          notes: selectedPatient.notes || '',
+          howPatientWasReferred: selectedPatient.howPatientWasReferred || ''
+        };
         updatedPatients = [...patients, newPatientWithId];
         console.log('Adding new patient:', newPatientWithId);
         dispatch(setSelectedPatient(newPatientWithId)); // Ensure the new patient is selected
@@ -105,7 +104,7 @@ export const MainLayout: React.FC = () => {
         );
         console.log('Updating existing patient:', selectedPatient);
       }
-      dispatch(setPatients(updatedPatients));
+      dispatch(setPatients(updatedPatients as DetailedPatient[]));
       localStorage.setItem('patients', JSON.stringify(updatedPatients));
       console.log('Saved patients to localStorage:', updatedPatients);
       dispatch(setIsEditing(false));
@@ -137,13 +136,13 @@ export const MainLayout: React.FC = () => {
         <PatientList
           onSelectPatient={handleSelectPatient}
           selectedPatientId={selectedPatient?.id || null}
-          patients={patients}
+          patients={patients as DetailedPatient[]}
         />
         {selectedPatient && (
           <div className="patient-details">
             {isEditing || isAdding ? (
               <PatientForm
-                patient={selectedPatient}
+                patient={selectedPatient as DetailedPatient} // Ensure the type is DetailedPatient
                 onChange={handleChange}
                 onSave={handleSave}
                 onCancel={handleCancel}
@@ -151,7 +150,7 @@ export const MainLayout: React.FC = () => {
               />
             ) : (
               <PatientInfo
-                patient={selectedPatient}
+                patient={selectedPatient as DetailedPatient} // Ensure the type is DetailedPatient
                 onEdit={() => {
                   dispatch(setIsEditing(true));
                   console.log('onEdit called');
