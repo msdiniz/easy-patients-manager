@@ -1,54 +1,64 @@
 // src/components/MainLayout.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
 import { PatientList } from './PatientList';
 import { PatientInfo } from './PatientInfo';
 import { PatientForm } from './PatientForm';
-import { Patient, DetailedPatient } from '../models/Patient';
 import { transformToDetailedPatient } from '../utils/transformPatient';
 import logo from '../assets/96x96.png';
-// import './MainLayout.css'; // Ensure component-specific styles are imported if it exists
+import {
+  setSelectedPatient,
+  setPatients,
+  setIsEditing,
+  setIsAdding,
+} from '../store';
 
 export const MainLayout: React.FC = () => {
-  const [selectedPatient, setSelectedPatient] = useState<DetailedPatient | null>(null);
-  const [patients, setPatients] = useState<DetailedPatient[]>([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isAdding, setIsAdding] = useState(false);
+  const dispatch = useDispatch();
+  const { selectedPatient, patients, isEditing, isAdding } = useSelector((state) => state);
 
   useEffect(() => {
     console.log('MainLayout component mounted');
     const storedPatients = localStorage.getItem('patients');
     console.log('Checking localStorage for patients:', storedPatients);
     if (storedPatients) {
-      const parsedPatients = JSON.parse(storedPatients).map((patient: Patient) => transformToDetailedPatient(patient));
+      const parsedPatients = JSON.parse(storedPatients).map((patient) => transformToDetailedPatient(patient));
       console.log('Loaded patients from localStorage:', parsedPatients);
-      setPatients(parsedPatients);
+      dispatch(setPatients(parsedPatients));
     } else {
       axios.get('/data/patients.json')
         .then(response => {
-          const transformedPatients = response.data.map((patient: Patient) => transformToDetailedPatient(patient));
+          const transformedPatients = response.data.map((patient) => transformToDetailedPatient(patient));
           console.log('Loaded patients from JSON file:', transformedPatients);
-          setPatients(transformedPatients);
+          dispatch(setPatients(transformedPatients));
         })
         .catch(error => {
           console.error('Error loading patients from JSON file:', error);
         });
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     console.log('Current patients state:', patients);
   }, [patients]);
 
-  const handleSelectPatient = (patient: DetailedPatient | null) => {
+  useEffect(() => {
+    console.log('isEditing:', isEditing, 'isAdding:', isAdding);
+  }, [isEditing, isAdding]);
+
+  const handleSelectPatient = (patient) => {
     console.log('Patient selected in MainLayout:', patient);
-    setSelectedPatient(patient);
-    setIsEditing(false);
-    setIsAdding(false);
+    dispatch(setSelectedPatient(patient));
+    if (isEditing || isAdding) {
+      dispatch(setIsEditing(false));
+      dispatch(setIsAdding(false));
+    }
   };
 
   const handleAddPatient = () => {
-    const newPatient: DetailedPatient = {
+    console.log('BEGIN: handleAddPatient called');
+    const newPatient = {
       id: '',
       fullName: '',
       dob: '',
@@ -63,17 +73,18 @@ export const MainLayout: React.FC = () => {
       notes: '',
       howPatientWasReferred: ''
     };
-    setSelectedPatient(newPatient);
-    setIsEditing(true);
-    setIsAdding(true);
+    dispatch(setSelectedPatient(newPatient));
+    dispatch(setIsEditing(true));
+    dispatch(setIsAdding(true));
+    console.log('END: handleAddPatient called');
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e) => {
     if (selectedPatient) {
-      setSelectedPatient({
+      dispatch(setSelectedPatient({
         ...selectedPatient,
         [e.target.name]: e.target.value,
-      });
+      }));
     }
   };
 
@@ -85,25 +96,25 @@ export const MainLayout: React.FC = () => {
         const newPatientWithId = { ...selectedPatient, id: (patients.length + 1).toString() };
         updatedPatients = [...patients, newPatientWithId];
         console.log('Adding new patient:', newPatientWithId);
+        dispatch(setSelectedPatient(newPatientWithId)); // Ensure the new patient is selected
       } else {
         updatedPatients = patients.map(p =>
           p.id === selectedPatient.id ? selectedPatient : p
         );
         console.log('Updating existing patient:', selectedPatient);
       }
-      setPatients(updatedPatients);
+      dispatch(setPatients(updatedPatients));
       localStorage.setItem('patients', JSON.stringify(updatedPatients));
       console.log('Saved patients to localStorage:', updatedPatients);
-      setSelectedPatient(null);
-      setIsEditing(false);
-      setIsAdding(false);
+      dispatch(setIsEditing(false));
+      dispatch(setIsAdding(false));
     }
   };
 
   const handleCancel = () => {
-    setSelectedPatient(null);
-    setIsEditing(false);
-    setIsAdding(false);
+    dispatch(setSelectedPatient(null));
+    dispatch(setIsEditing(false));
+    dispatch(setIsAdding(false));
   };
 
   const isFormValid = selectedPatient !== null && selectedPatient.fullName.trim() !== '';
@@ -113,7 +124,10 @@ export const MainLayout: React.FC = () => {
       <header>
         <img src={logo} alt="Logo" />
         <h1>EasyPatientsManager</h1>
-        <button onClick={handleAddPatient}>Add Patient</button>
+        <button onClick={() => {
+          console.log('Add Patient button clicked');
+          handleAddPatient();
+        }}>Add Patient</button>
         <button>Login/Logout</button>
         <button>Close</button>
       </header>
@@ -134,9 +148,9 @@ export const MainLayout: React.FC = () => {
                 isFormValid={isFormValid}
               />
             ) : (
-              <PatientInfo
-                patient={selectedPatient}
-                onEdit={() => setIsEditing(true)}
+                  setIsEditing(true);
+                  console.log('onEdit called');
+                }}
               />
             )}
           </div>

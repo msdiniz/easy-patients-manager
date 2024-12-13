@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MainLayout } from './MainLayout';
 
@@ -19,6 +19,8 @@ describe('MainLayout Integration Test', () => {
     fireEvent.click(screen.getByText('Save'));
 
     // Check if the new patient is added to the PatientList
-    expect(screen.getByText('Johnatan Doester')).toBeInTheDocument();
+    const patientList = screen.getByRole('list');
+    const patientListItem = within(patientList).getByText('Johnatan Doester');
+    expect(patientListItem).toBeInTheDocument();
   });
 });

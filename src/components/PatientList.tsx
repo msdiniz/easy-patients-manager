@@ -34,6 +34,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
       const newPatient: Patient = PatientFactory.createNewForPatientList(searchTerm, useProperCase);
       const detailedPatient: DetailedPatient = transformToDetailedPatient(newPatient);
       onSelectPatient(detailedPatient);
+      setSearchTerm(''); // Reset the search term
     }
   };
 
