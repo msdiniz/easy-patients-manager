@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { PatientInfo } from './PatientInfo';
-import { PatientForm } from './PatientForm';
+import PatientForm from "./Form/PatientForm";
 import { getSelectedPatient, getIsEditing, getIsAdding } from '../store/selectors';
 import { setIsEditing, setSelectedPatient, setPatients, RootState, setIsAdding } from '../store/index';
 import { DetailedPatient } from '../models/PatientModels';

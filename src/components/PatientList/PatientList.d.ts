@@ -1,5 +1,5 @@
 import React from 'react';
-import { DetailedPatient } from '../models/PatientModels';
+import { DetailedPatient } from '../../models/PatientModels';
 import './PatientList.css';
 interface PatientListProps {
     onSelectPatient: (patient: DetailedPatient | null) => void;

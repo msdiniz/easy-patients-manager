@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Patient, DetailedPatient } from '../models/PatientModels';
-import { PatientFactory } from '../models/PatientFactory';
-import { transformToDetailedPatient } from '../utils/transformPatient';
+import { Patient, DetailedPatient } from '../../models/PatientModels';
+import { PatientFactory } from '../../models/PatientFactory';
+import { transformToDetailedPatient } from '../../utils/transformPatient';
 import './PatientList.css'; // Ensure component-specific styles are imported
-import { PatientUtils } from '../models/PatientUtils';
+import { PatientUtils } from '../../models/PatientUtils';
 import { setSelectedPatient, setIsEditing, setIsAdding } from '../store';
 
 interface PatientListProps {

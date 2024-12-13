@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { DetailedPatient } from '../models/PatientModels';
-import { PatientUtils } from '../models/PatientUtils';
+import { DetailedPatient } from '../../models/PatientModels';
+import { PatientUtils } from '../../models/PatientUtils';
 import FormField from './FormField';
 import FormSelect from './FormSelect';
 import FormTextArea from './FormTextArea';
