@@ -1,10 +1,16 @@
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { Provider } from 'react-redux';
 import { MainLayout } from './MainLayout';
+import store from '../store';
 
 describe('MainLayout Integration Test', () => {
   it('should add a new patient to the PatientList when the Save button is clicked', () => {
-    render(<MainLayout />);
+    render(
+      <Provider store={store}>
+        <MainLayout />
+      </Provider>
+    );
 
     // Click the "Add Patient" button
     fireEvent.click(screen.getByText('Add Patient'));

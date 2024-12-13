@@ -12,24 +12,26 @@ import {
   setPatients,
   setIsEditing,
   setIsAdding,
+  RootState
 } from '../store';
+import { Patient } from '../models/Patient';
 
 export const MainLayout: React.FC = () => {
   const dispatch = useDispatch();
-  const { selectedPatient, patients, isEditing, isAdding } = useSelector((state) => state);
+  const { selectedPatient, patients, isEditing, isAdding } = useSelector((state: RootState) => state);
 
   useEffect(() => {
     console.log('MainLayout component mounted');
     const storedPatients = localStorage.getItem('patients');
     console.log('Checking localStorage for patients:', storedPatients);
     if (storedPatients) {
-      const parsedPatients = JSON.parse(storedPatients).map((patient) => transformToDetailedPatient(patient));
+      const parsedPatients = JSON.parse(storedPatients).map((patient: Patient) => transformToDetailedPatient(patient));
       console.log('Loaded patients from localStorage:', parsedPatients);
       dispatch(setPatients(parsedPatients));
     } else {
       axios.get('/data/patients.json')
         .then(response => {
-          const transformedPatients = response.data.map((patient) => transformToDetailedPatient(patient));
+          const transformedPatients = response.data.map((patient: Patient) => transformToDetailedPatient(patient));
           console.log('Loaded patients from JSON file:', transformedPatients);
           dispatch(setPatients(transformedPatients));
         })
@@ -47,7 +49,7 @@ export const MainLayout: React.FC = () => {
     console.log('isEditing:', isEditing, 'isAdding:', isAdding);
   }, [isEditing, isAdding]);
 
-  const handleSelectPatient = (patient) => {
+  const handleSelectPatient = (patient: any) => {
     console.log('Patient selected in MainLayout:', patient);
     dispatch(setSelectedPatient(patient));
     if (isEditing || isAdding) {
@@ -148,7 +150,10 @@ export const MainLayout: React.FC = () => {
                 isFormValid={isFormValid}
               />
             ) : (
-                  setIsEditing(true);
+              <PatientInfo
+                patient={selectedPatient}
+                onEdit={() => {
+                  dispatch(setIsEditing(true));
                   console.log('onEdit called');
                 }}
               />
