@@ -11,3 +11,4 @@ declare const store: import("@reduxjs/toolkit").EnhancedStore<PatientState, impo
 }>, import("redux").StoreEnhancer]>>;
 export default store;
 export type RootState = ReturnType<typeof store.getState>;
+export type { PatientState };

@@ -5,7 +5,7 @@ import { PatientFactory } from '../../models/PatientFactory';
 import { transformToDetailedPatient } from '../../utils/transformPatient';
 import './PatientList.css'; // Ensure component-specific styles are imported
 import { PatientUtils } from '../../models/PatientUtils';
-import { setSelectedPatient, setIsEditing, setIsAdding } from '../store';
+import { setSelectedPatient, setIsEditing, setIsAdding } from '../../store';
 
 interface PatientListProps {
   onSelectPatient: (patient: DetailedPatient | null) => void;

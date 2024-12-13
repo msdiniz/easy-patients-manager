@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { RootState, PatientState } from '../store';
+import { RootState } from '../store';
 import { transformToDetailedPatient } from '../utils/transformPatient';
 import { Patient } from '../models/PatientModels';
 

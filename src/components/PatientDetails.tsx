@@ -22,7 +22,7 @@ const PatientDetails: React.FC = () => {
     console.log('onEdit called');
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     if (selectedPatient) {
       dispatch(setSelectedPatient({
         ...selectedPatient,
