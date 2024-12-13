@@ -1,0 +1,7 @@
+{
+    "genders": ["Male", "Female"],
+    "bloodTypes": ["A", "B", "AB", "O"],
+    "rhFactors": ["+", "-"],
+    "ethnicGroups": ["branco", "pardo", "amarelo", "indigena"],
+    "bookmarks": ["Pacientes", "Pacientes falecidos", "Pacientes - dados antigos", "Perícia Stamato"]
+  }

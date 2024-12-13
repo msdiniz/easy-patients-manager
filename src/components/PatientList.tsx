@@ -16,6 +16,7 @@ interface PatientListProps {
 export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPatientId, patients = [] }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [useProperCase, setUseProperCase] = useState(true);
+  const [showSelectedText, setShowSelectedText] = useState(false); // New state for showing selected text
   const dispatch = useDispatch();
 
   console.log('Patients received by PatientList:', patients);
@@ -72,6 +73,14 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
         />
         <label>Use Proper Case</label>
       </div>
+      <div className="checkbox-container">                
+        <input
+            type="checkbox"
+            checked={showSelectedText}
+            onChange={e => setShowSelectedText(e.target.checked)}
+         />          
+        <label>Show Selected Text</label>
+      </div>
       <div className="button-container">
         {searchTerm && PatientUtils.isValidName(searchTerm) && (
           <button onClick={handleNewPatient}>New Patient</button>
@@ -88,7 +97,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
             className={patient.id === selectedPatientId ? 'selected' : ''}
           >
             {patient.fullName}
-            {patient.id === selectedPatientId && <span> (selected)</span>}
+            {showSelectedText && patient.id === selectedPatientId && <span> (selected)</span>}
           </li>
         ))}
       </ul>
