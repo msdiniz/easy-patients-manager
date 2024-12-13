@@ -3,14 +3,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { PatientInfo } from './PatientInfo';
 import { PatientForm } from './PatientForm';
 import { getSelectedPatient, getIsEditing, getIsAdding } from '../store/selectors';
-import { setIsEditing, setSelectedPatient } from '../store/index';
+import { setIsEditing, setSelectedPatient, setPatients, RootState, setIsAdding } from '../store/index';
 import { DetailedPatient } from '../models/PatientModels';
+import { PatientUtils } from '../models/PatientUtils';
 
 const PatientDetails: React.FC = () => {
   const dispatch = useDispatch();
   const selectedPatient = useSelector(getSelectedPatient);
   const isEditing = useSelector(getIsEditing);
   const isAdding = useSelector(getIsAdding);
+  const patients = useSelector((state: RootState) => state.patients);
 
   console.log('Selected Patient:', selectedPatient);
   console.log('isEditing:', isEditing, 'isAdding:', isAdding);
@@ -30,8 +32,17 @@ const PatientDetails: React.FC = () => {
   };
 
   const handleSave = () => {
-    // Implement save logic here
-    console.log('Save button clicked');
+    if (selectedPatient) {
+      const updatedPatients = isAdding
+        ? [...patients, selectedPatient]
+        : patients.map(p => p.id === selectedPatient.id ? selectedPatient : p);
+
+      dispatch(setPatients(updatedPatients));
+      localStorage.setItem('patients', JSON.stringify(updatedPatients)); // Persist to local storage
+      dispatch(setIsEditing(false));
+      dispatch(setIsAdding(false));
+      console.log('Patient saved:', selectedPatient);
+    }
   };
 
   const handleCancel = () => {
@@ -39,7 +50,11 @@ const PatientDetails: React.FC = () => {
     dispatch(setSelectedPatient(null));
   };
 
-  const isFormValid = selectedPatient !== null && selectedPatient.fullName.trim() !== '';
+  const isFormValid = selectedPatient !== null &&
+    PatientUtils.isValidName(selectedPatient.fullName.trim()) &&
+    new Date(selectedPatient.dob) < new Date() &&
+    selectedPatient.gender !== '' &&
+    new Date(selectedPatient.dateOfFirstContact) < new Date();
 
   if (!selectedPatient) {
     return <div>No patient selected</div>;

@@ -6,11 +6,12 @@ import PatientDetails from './PatientDetails';
 import Header from './Header';
 import { setPatients } from '../store';
 // import { Patient } from '../models/PatientModels';
-import { getPatients } from '../store/selectors';
+import { getPatients, getSelectedPatient } from '../store/selectors';
 
 export const MainLayout: React.FC = () => {
   const dispatch = useDispatch();
   const patients = useSelector(getPatients);
+  const selectedPatient = useSelector(getSelectedPatient);
 
   useEffect(() => {
     console.log('MainLayout component mounted');
@@ -35,7 +36,7 @@ export const MainLayout: React.FC = () => {
       <div className="content">
         <PatientList
           onSelectPatient={() => {}}
-          selectedPatientId={null}
+          selectedPatientId={selectedPatient ? selectedPatient.id : null}
           patients={patients}
         />
         <PatientDetails />

@@ -90,6 +90,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
             className={patient.id === selectedPatientId ? 'selected' : ''}
           >
             {patient.fullName}
+            {patient.id === selectedPatientId && <span> (selected)</span>}
           </li>
         ))}
       </ul>
