@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { DetailedPatient } from '../models/PatientModels';
 import { PatientUtils } from '../models/PatientUtils';
+import FormField from './FormField';
+import FormSelect from './FormSelect';
+import FormTextArea from './FormTextArea';
+import FormButtons from './FormButtons';
 import './PatientForm.css'; // Ensure the CSS file is imported
 
 interface PatientFormProps {
@@ -11,7 +15,7 @@ interface PatientFormProps {
   isFormValid: boolean;
 }
 
-export const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, onCancel, isFormValid }) => {
+const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, onCancel, isFormValid }) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [options, setOptions] = useState<any>({});
 
@@ -51,120 +55,95 @@ export const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onS
 
   return (
     <form className="patient-form">
-      <div className="form-group">
-        <label>Full Name:</label>
-        <input
-          type="text"
-          name="fullName"
-          value={patient.fullName}
-          onChange={handleChange}
-        />
-        {errors.fullName && <span className="error">{errors.fullName}</span>}
-      </div>
-      <div className="form-group">
-        <label>Date of Birth:</label>
-        <input
-          type="date"
-          name="dob"
-          value={patient.dob}
-          onChange={handleChange}
-        />
-        {errors.dob && <span className="error">{errors.dob}</span>}
-      </div>
-      <div className="form-group">
-        <label>Gender:</label>
-        <select name="gender" value={patient.gender} onChange={handleChange}>
-          <option value="">Select</option>
-          {options.genders && options.genders.map((gender: string) => (
-            <option key={gender} value={gender}>{gender}</option>
-          ))}
-        </select>
-        {errors.gender && <span className="error">{errors.gender}</span>}
-      </div>
-      <div className="form-group">
-        <label>CPF:</label>
-        <input
-          type="text"
-          name="cpf"
-          value={patient.cpf}
-          onChange={handleChange}
-          placeholder="ddd.ddd.ddd-dd"
-        />
-        {errors.cpf && <span className="error">{errors.cpf}</span>}
-      </div>
-      <div className="form-group">
-        <label>Blood Type:</label>
-        <select name="bloodType" value={patient.bloodType} onChange={handleChange}>
-          <option value="">Select</option>
-          {options.bloodTypes && options.bloodTypes.map((type: string) => (
-            <option key={type} value={type}>{type}</option>
-          ))}
-        </select>
-      </div>
-      <div className="form-group">
-        <label>Rh Factor:</label>
-        <select name="rhFactor" value={patient.rhFactor} onChange={handleChange}>
-          <option value="">Select</option>
-          {options.rhFactors && options.rhFactors.map((factor: string) => (
-            <option key={factor} value={factor}>{factor}</option>
-          ))}
-        </select>
-      </div>
-      <div className="form-group">
-        <label>Ethnic Group:</label>
-        <select name="ethnicGroup" value={patient.ethnicGroup} onChange={handleChange}>
-          <option value="">Select</option>
-          {options.ethnicGroups && options.ethnicGroups.map((group: string) => (
-            <option key={group} value={group}>{group}</option>
-          ))}
-        </select>
-      </div>
-      <div className="form-group">
-        <label>Observation:</label>
-        <textarea
-          name="observation"
-          value={patient.observation}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label>Notes:</label>
-        <textarea
-          name="notes"
-          value={patient.notes}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label>How Patient Was Referred:</label>
-        <textarea
-          name="howPatientWasReferred"
-          value={patient.howPatientWasReferred}
-          onChange={handleChange}
-          maxLength={300}
-        />
-      </div>
-      <div className="form-group">
-        <label>Date of First Contact:</label>
-        <input
-          type="date"
-          name="dateOfFirstContact"
-          value={patient.dateOfFirstContact}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label>Bookmark/Tag:</label>
-        <select name="bookmark" value={patient.bookmark} onChange={handleChange} multiple>
-          {options.bookmarks && options.bookmarks.map((bookmark: string) => (
-            <option key={bookmark} value={bookmark}>{bookmark}</option>
-          ))}
-        </select>
-      </div>
-      <div className="button-container">
-        <button type="button" onClick={onSave} disabled={!isFormValid} className={!isFormValid ? 'disabled' : ''}>Save</button>
-        <button type="button" onClick={onCancel}>Cancel</button>
-      </div>
+      <FormField
+        label="Full Name"
+        name="fullName"
+        value={patient.fullName}
+        onChange={handleChange}
+        error={errors.fullName}
+      />
+      <FormField
+        label="Date of Birth"
+        name="dob"
+        type="date"
+        value={patient.dob}
+        onChange={handleChange}
+        error={errors.dob}
+      />
+      <FormSelect
+        label="Gender"
+        name="gender"
+        value={patient.gender}
+        options={options.genders || []}
+        onChange={handleChange}
+        error={errors.gender}
+      />
+      <FormField
+        label="CPF"
+        name="cpf"
+        value={patient.cpf}
+        onChange={handleChange}
+        error={errors.cpf}
+        placeholder="ddd.ddd.ddd-dd"
+      />
+      <FormSelect
+        label="Blood Type"
+        name="bloodType"
+        value={patient.bloodType}
+        options={options.bloodTypes || []}
+        onChange={handleChange}
+      />
+      <FormSelect
+        label="Rh Factor"
+        name="rhFactor"
+        value={patient.rhFactor}
+        options={options.rhFactors || []}
+        onChange={handleChange}
+      />
+      <FormSelect
+        label="Ethnic Group"
+        name="ethnicGroup"
+        value={patient.ethnicGroup}
+        options={options.ethnicGroups || []}
+        onChange={handleChange}
+      />
+      <FormTextArea
+        label="Observation"
+        name="observation"
+        value={patient.observation}
+        onChange={handleChange}
+      />
+      <FormTextArea
+        label="Notes"
+        name="notes"
+        value={patient.notes}
+        onChange={handleChange}
+      />
+      <FormTextArea
+        label="How Patient Was Referred"
+        name="howPatientWasReferred"
+        value={patient.howPatientWasReferred}
+        onChange={handleChange}
+        maxLength={300}
+      />
+      <FormField
+        label="Date of First Contact"
+        name="dateOfFirstContact"
+        type="date"
+        value={patient.dateOfFirstContact}
+        onChange={handleChange}
+      />
+      <FormSelect
+        label="Bookmark/Tag"
+        name="bookmark"
+        value={patient.bookmark}
+        options={options.bookmarks || []}
+        onChange={handleChange}
+        multiple
+      />
+      <FormButtons onSave={onSave} onCancel={onCancel} isFormValid={isFormValid} />
     </form>
   );
 };
+
+export default PatientForm;

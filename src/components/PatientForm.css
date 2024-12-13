@@ -6,21 +6,32 @@
 
 .patient-form .form-group {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   margin-bottom: 10px;
 }
 
 .patient-form label {
-  width: 150px; /* Adjust the width as needed */
-  margin-right: 10px;
+  margin-bottom: 5px;
 }
 
 .patient-form input,
-.patient-form textarea {
-  flex: 1;
+.patient-form textarea,
+.patient-form select {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.patient-form input.error,
+.patient-form textarea.error,
+.patient-form select.error {
+  border-color: red;
+}
+
+.patient-form .error-message {
+  color: red;
+  font-size: 0.875em;
+  margin-top: 5px;
 }
 
 .patient-form .button-container {
@@ -31,15 +42,21 @@
 }
 
 .patient-form .button-container button {
-  width: 20%;
+  width: 45%; /* Adjusted width to ensure buttons are not cut off */
   padding: 10px 15px;
   border: none;
   background-color: #007bff;
   color: white;
   cursor: pointer;
   border-radius: 4px;
+  text-align: center;
 }
 
 .patient-form .button-container button:hover {
   background-color: #0056b3;
+}
+
+.patient-form .button-container button.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
