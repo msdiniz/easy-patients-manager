@@ -1,4 +1,3 @@
-// src/components/PatientList.tsx
 import React, { useState } from 'react';
 import { Patient, DetailedPatient } from '../models/PatientModels';
 import { PatientFactory } from '../models/PatientFactory';
@@ -22,7 +21,8 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   };
 
-  const sortedPatients = patients.sort((a, b) => {
+  // Create a new sorted array instead of mutating the original
+  const sortedPatients = [...patients].sort((a, b) => {
     return normalizeString(a.fullName).localeCompare(normalizeString(b.fullName));
   });
 
