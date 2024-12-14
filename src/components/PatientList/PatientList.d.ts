@@ -1,12 +1,10 @@
 import React from 'react';
-import { PatientDetails } from '../../models/PatientModels';
+import { Patient } from '../../models/PatientModels';
 import './PatientList.css';
-
 interface PatientListProps {
-    onSelectPatient: (patient: PatientDetails | null) => void;
+    onSelectPatient: (patientId: string, fullName: string) => void;
     selectedPatientId: string | null;
-    patients: PatientDetails[];
+    patients: Patient[];
 }
-
 export declare const PatientList: React.FC<PatientListProps>;
 export {};

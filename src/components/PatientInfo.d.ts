@@ -5,5 +5,5 @@ interface PatientInfoProps {
     patient: DetailedPatient;
     onEdit: () => void;
 }
-export declare const PatientInfo: React.FC<PatientInfoProps>;
-export {};
+declare const _default: React.NamedExoticComponent<PatientInfoProps>;
+export default _default;

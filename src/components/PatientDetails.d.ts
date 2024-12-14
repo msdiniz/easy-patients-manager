@@ -1,3 +1,7 @@
 import React from 'react';
-declare const PatientDetails: React.FC;
+interface PatientDetailsProps {
+    patientId: string;
+    fullName: string;
+}
+declare const PatientDetails: React.FC<PatientDetailsProps>;
 export default PatientDetails;

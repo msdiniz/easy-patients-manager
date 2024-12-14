@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { PatientList } from './PatientList/PatientList'; // Use named import
 import PatientDetails from './PatientDetails';
 import Header from './Header';
 import { setPatients } from '../store';
-// import { Patient } from '../models/PatientModels';
-import { getPatients, getSelectedPatient } from '../store/selectors';
+import { getPatients } from '../store/selectors';
 
 export const MainLayout: React.FC = () => {
   const dispatch = useDispatch();
   const patients = useSelector(getPatients);
-  const selectedPatient = useSelector(getSelectedPatient);
+  const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
+  const [selectedPatientFullName, setSelectedPatientFullName] = useState<string | null>(null);
 
   useEffect(() => {
     console.log('MainLayout component mounted');
@@ -30,16 +30,26 @@ export const MainLayout: React.FC = () => {
     }
   }, [dispatch]);
 
+  const handleSelectPatient = (patientId: string, fullName: string) => {
+    setSelectedPatientId(patientId);
+    setSelectedPatientFullName(fullName);
+  };
+
   return (
     <div className="main-layout">
       <Header />
       <div className="content">
         <PatientList
-          onSelectPatient={() => {}}
-          selectedPatientId={selectedPatient ? selectedPatient.id : null}
+          onSelectPatient={handleSelectPatient}
+          selectedPatientId={selectedPatientId}
           patients={patients}
         />
-        <PatientDetails />
+        {selectedPatientId && selectedPatientFullName && (
+          <PatientDetails
+            patientId={selectedPatientId}
+            fullName={selectedPatientFullName}
+          />
+        )}
       </div>
     </div>
   );

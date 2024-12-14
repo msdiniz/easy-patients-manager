@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PatientDetails } from '../../models/PatientModels';
+import { DetailedPatient } from '../../models/PatientModels';
 import { PatientUtils } from '../../models/PatientUtils';
 import FormField from './FormField';
 import FormSelect from './FormSelect';
@@ -8,7 +8,7 @@ import FormButtons from './FormButtons';
 import './PatientForm.css'; // Ensure the CSS file is imported
 
 interface PatientFormProps {
-  patient: PatientDetails;
+  patient: DetailedPatient;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   onSave: () => void;
   onCancel: () => void;

@@ -1,21 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PatientInfo from './PatientInfo'; // Ensure the default import is used
-import PatientForm from "./Form/PatientForm";
-import { getSelectedPatient, getIsEditing, getIsAdding } from '../store/selectors';
-import { setIsEditing, setSelectedPatient, setPatients, RootState, setIsAdding } from '../store/index';
-import { PatientDetails as DetailedPatient } from '../models/PatientModels';
+import PatientForm from './Form/PatientForm';
+import { getIsEditing, getIsAdding } from '../store/selectors';
+import { setIsEditing, setSelectedPatient, setIsAdding } from '../store/index';
+import { DetailedPatient } from '../models/PatientModels';
 import { PatientUtils } from '../models/PatientUtils';
 
-const PatientDetails: React.FC = () => {
-  const dispatch = useDispatch();
-  const selectedPatient = useSelector(getSelectedPatient);
-  const isEditing = useSelector(getIsEditing);
-  const isAdding = useSelector(getIsAdding);
-  const patients = useSelector((state: RootState) => state.patients);
+interface PatientDetailsProps {
+  patientId: string;
+  fullName: string;
+}
 
-  console.log('Selected Patient:', selectedPatient);
-  console.log('isEditing:', isEditing, 'isAdding:', isAdding);
+const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) => {
+  const dispatch = useDispatch();
+  const [patient, setPatient] = useState<DetailedPatient | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const isEditing = useSelector(getIsEditing);
+  const isAdding = useSelector(getIsAdding);  
+
+  useEffect(() => {
+    if (patientId && fullName) {
+      const storedDetailedPatients = localStorage.getItem('detailedPatients');
+      if (storedDetailedPatients) {
+        const parsedDetailedPatients: DetailedPatient[] = JSON.parse(storedDetailedPatients);
+        const foundPatient = parsedDetailedPatients.find(p => p.id === patientId);
+        if (foundPatient) {
+          setPatient(foundPatient);
+          dispatch(setSelectedPatient(foundPatient));
+          return;
+        }
+      }
+
+      fetch(`/data/patients/${fullName}_${patientId}.json`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data: DetailedPatient) => {
+          setPatient(data);
+          dispatch(setSelectedPatient(data));
+        })
+        .catch(error => {
+          console.error('Error loading detailed patient:', error);
+          setError('Failed to load patient details. Please try again later.');
+        });
+    }
+  }, [patientId, fullName, dispatch]);
 
   const handleEdit = () => {
     dispatch(setIsEditing(true));
@@ -23,25 +56,27 @@ const PatientDetails: React.FC = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    if (selectedPatient) {
-      dispatch(setSelectedPatient({
-        ...selectedPatient,
-        [e.target.name]: e.target.value,
-      }));
+    if (patient) {
+      const { name, value } = e.target;
+      setPatient({ ...patient, [name]: value });
+      dispatch(setSelectedPatient({ ...patient, [name]: value }));
     }
   };
 
   const handleSave = () => {
-    if (selectedPatient) {
-      const updatedPatients = isAdding
-        ? [...patients, selectedPatient]
-        : patients.map(p => p.id === selectedPatient.id ? selectedPatient : p);
+    if (patient) {
+      const storedDetailedPatients = localStorage.getItem('detailedPatients');
+      const parsedDetailedPatients: DetailedPatient[] = storedDetailedPatients ? JSON.parse(storedDetailedPatients) : [];
 
-      dispatch(setPatients(updatedPatients));
-      localStorage.setItem('patients', JSON.stringify(updatedPatients)); // Persist to local storage
+      const updatedDetailedPatients = parsedDetailedPatients.map(p => p.id === patient.id ? patient : p);
+      if (!parsedDetailedPatients.some(p => p.id === patient.id)) {
+        updatedDetailedPatients.push(patient);
+      }
+
+      localStorage.setItem('detailedPatients', JSON.stringify(updatedDetailedPatients)); // Persist to local storage
       dispatch(setIsEditing(false));
       dispatch(setIsAdding(false));
-      console.log('Patient saved:', selectedPatient);
+      console.log('Patient saved:', patient);
     }
   };
 
@@ -50,21 +85,29 @@ const PatientDetails: React.FC = () => {
     dispatch(setSelectedPatient(null));
   };
 
-  const isFormValid = selectedPatient !== null &&
-    PatientUtils.isValidName(selectedPatient.fullName.trim()) &&
-    new Date(selectedPatient.dob) < new Date() &&
-    selectedPatient.gender !== '' &&
-    new Date(selectedPatient.dateOfFirstContact) < new Date();
+  const isFormValid = patient !== null &&
+    PatientUtils.isValidName(patient.fullName.trim()) &&
+    new Date(patient.dob) < new Date() &&
+    patient.gender !== '' &&
+    new Date(patient.dateOfFirstContact) < new Date();
 
-  if (!selectedPatient) {
+  if (!patientId || !fullName) {
     return <div>No patient selected</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if (!patient) {
+    return <div>Loading...</div>;
   }
 
   return (
     <div className="patient-details">
       {isEditing || isAdding ? (
         <PatientForm
-          patient={selectedPatient as DetailedPatient}
+          patient={patient}
           onChange={handleChange}
           onSave={handleSave}
           onCancel={handleCancel}
@@ -72,7 +115,7 @@ const PatientDetails: React.FC = () => {
         />
       ) : (
         <PatientInfo
-          patient={selectedPatient as DetailedPatient}
+          patient={patient}
           onEdit={handleEdit}
         />
       )}

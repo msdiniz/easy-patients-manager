@@ -1,4 +1,4 @@
-import { transformToDetailedPatient } from './transformPatient';
+import { transformToDetailedPatient, transformToPatient } from './transformPatient';
 import { Patient, DetailedPatient } from '../models/PatientModels';
 
 describe('transformToDetailedPatient', () => {
@@ -11,40 +11,56 @@ describe('transformToDetailedPatient', () => {
       cpf: '123.456.789-00',
       bookmark: '',
       dateOfFirstContact: ''
-      // ...other properties of Patient
     };
 
     const detailedPatient: DetailedPatient = transformToDetailedPatient(patient);
 
     expect(detailedPatient).toEqual({
       ...patient,
+      emails: [],
+      addresses: [],
+      phones: [],
       bloodType: '',
       rhFactor: '',
       ethnicGroup: '',
-      bookmark: '',
       observation: '',
       notes: '',
-      howPatientWasReferred: '',
-      dateOfFirstContact: ''
+      howPatientWasReferred: ''
     });
   });
-
-  it('should retain the fullName property', () => {
-    const patient: Patient = {
-      id: '2',
-      fullName: 'Jane Doe',
-      dob: '1992-02-02',
-      gender: 'female',
-      cpf: '987.654.321-00',
-      bookmark: '',
-      dateOfFirstContact: ''
-      // ...other properties of Patient
-    };
-
-    const detailedPatient: DetailedPatient = transformToDetailedPatient(patient);
-
-    expect(detailedPatient.fullName).toBe('Jane Doe');
-  });
-
+  describe('transformToPatient', () => {
+    it('should transform a DetailedPatient to a Patient', () => {
+      const detailedPatient: DetailedPatient = {
+        id: '1',
+        fullName: 'John Doe',
+        dob: '1990-01-01',
+        gender: 'male',
+        cpf: '123.456.789-00',
+        bookmark: '',
+        dateOfFirstContact: '',
+        emails: [],
+        addresses: [],
+        phones: [],
+        bloodType: '',
+        rhFactor: '',
+        ethnicGroup: '',
+        observation: '',
+        notes: '',
+        howPatientWasReferred: ''
+      };
+  
+      const patient: Patient = transformToPatient(detailedPatient);
+  
+      expect(patient).toEqual({
+        id: '1',
+        fullName: 'John Doe',
+        dob: '1990-01-01',
+        gender: 'male',
+        cpf: '123.456.789-00',
+        bookmark: '',
+        dateOfFirstContact: ''
+      });
+    });
   // Add more tests as needed
+  });
 });

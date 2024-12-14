@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Patient, PatientDetails } from '../../models/PatientModels';
+import { Patient } from '../../models/PatientModels';
 import { PatientFactory } from '../../models/PatientFactory';
 import { transformToDetailedPatient } from '../../utils/transformPatient';
 import './PatientList.css'; // Ensure component-specific styles are imported
@@ -8,7 +8,7 @@ import { PatientUtils } from '../../models/PatientUtils';
 import { setSelectedPatient, setIsEditing, setIsAdding } from '../../store';
 
 interface PatientListProps {
-  onSelectPatient: (patient: PatientDetails | null) => void;
+  onSelectPatient: (patientId: string, fullName: string) => void;
   selectedPatientId: string | null;
   patients: Patient[];
 }
@@ -37,26 +37,20 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   const handleNewPatient = () => {
     if (PatientUtils.isValidName(searchTerm)) {
       const newPatient: Patient = PatientFactory.createNewForPatientList(searchTerm, useProperCase);
-      const detailedPatient: PatientDetails = transformToDetailedPatient(newPatient);
+      const detailedPatient = transformToDetailedPatient(newPatient);
       dispatch(setSelectedPatient(detailedPatient));
       dispatch(setIsEditing(true));
       dispatch(setIsAdding(true));
+      onSelectPatient(detailedPatient.id, detailedPatient.fullName);
       setSearchTerm(''); // Reset the search term
     }
   };
 
-  const handleSelectPatient = (patient: Patient) => {
-    const detailedPatient: PatientDetails = transformToDetailedPatient(patient);
-    console.log('Selected Patient:', detailedPatient);
-    dispatch(setSelectedPatient(detailedPatient));
-    onSelectPatient(detailedPatient);
-  };
-
   const handlePatientClick = (patient: Patient) => {
     console.log('Patient being passed to detail view:', patient);
-    handleSelectPatient(patient);
+    onSelectPatient(patient.id, patient.fullName);
   };
-  
+
   const clearLocalStorage = () => {
     localStorage.clear();
     window.location.reload(); // Reload the page to fetch data from JSON files
@@ -79,12 +73,12 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
         <label>Use Proper Case</label>
       </div>
       <button onClick={clearLocalStorage}>Reset Data</button>
-      <div className="checkbox-container">                
+      <div className="checkbox-container">
         <input
-            type="checkbox"
-            checked={showSelectedText}
-            onChange={e => setShowSelectedText(e.target.checked)}
-         />          
+          type="checkbox"
+          checked={showSelectedText}
+          onChange={e => setShowSelectedText(e.target.checked)}
+        />
         <label>Show Selected Text</label>
       </div>
       <div className="button-container">

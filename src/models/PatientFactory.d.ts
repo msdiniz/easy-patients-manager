@@ -1,5 +1,5 @@
-import { Patient, PatientDetails } from './PatientModels';
+import { Patient, DetailedPatient } from './PatientModels';
 export declare class PatientFactory {
     static createNewForPatientList(fullName?: string, formatName?: boolean): Patient;
-    static createNewForPatientDetail(fullName?: string, formatName?: boolean): PatientDetails;
+    static createNewForPatientDetail(fullName?: string, formatName?: boolean): DetailedPatient;
 }

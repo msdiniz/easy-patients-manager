@@ -1,9 +1,9 @@
 import React from 'react';
-import { PatientDetails } from '../models/PatientModels';
+import { DetailedPatient } from '../models/PatientModels';
 import './PatientInfo.css'; // Import the CSS file
 
 interface PatientInfoProps {
-  patient: PatientDetails;
+  patient: DetailedPatient;
   onEdit: () => void;
 }
 

@@ -3,12 +3,26 @@ import { Patient, DetailedPatient } from '../models/PatientModels';
 export const transformToDetailedPatient = (patient: Patient): DetailedPatient => {
   return {
     ...patient,
-    bloodType: patient.bloodType || '',
-    rhFactor: patient.rhFactor || '',
-    ethnicGroup: patient.ethnicGroup || '',
-    observation: patient.observation || '',
-    notes: patient.notes || '',
-    howPatientWasReferred: patient.howPatientWasReferred || '',
-    dateOfFirstContact: patient.dateOfFirstContact || ''
+    emails: [],
+    addresses: [],
+    phones: [],
+    bloodType: '',
+    rhFactor: '',
+    ethnicGroup: '',
+    observation: '',
+    notes: '',
+    howPatientWasReferred: ''
+  };
+};
+
+export const transformToPatient = (detailedPatient: DetailedPatient): Patient => {
+  return {
+    id: detailedPatient.id,
+    fullName: detailedPatient.fullName,
+    dob: detailedPatient.dob,
+    gender: detailedPatient.gender,
+    cpf: detailedPatient.cpf,
+    bookmark: detailedPatient.bookmark,
+    dateOfFirstContact: detailedPatient.dateOfFirstContact
   };
 };

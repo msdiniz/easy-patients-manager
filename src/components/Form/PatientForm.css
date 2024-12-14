@@ -2,6 +2,9 @@
   display: flex;
   flex-direction: column;
   padding: 20px;
+  width: 100%; /* Adjust this value as needed */
+  max-width: 800px; /* Optional: Set a maximum width */
+  margin: 0 auto; /* Center the form horizontally */
 }
 
 .patient-form .form-group {

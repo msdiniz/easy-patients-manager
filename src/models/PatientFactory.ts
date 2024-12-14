@@ -1,4 +1,4 @@
-import { Patient, PatientDetails } from './PatientModels';
+import { Patient, DetailedPatient } from './PatientModels';
 import { PatientUtils } from './PatientUtils';
 
 export class PatientFactory {
@@ -14,7 +14,7 @@ export class PatientFactory {
     };
   }
 
-  static createNewForPatientDetail(fullName: string = "", formatName: boolean = true): PatientDetails {
+  static createNewForPatientDetail(fullName: string = "", formatName: boolean = true): DetailedPatient {
     return {
       id: "",
       fullName: formatName ? PatientUtils.properCase(fullName) : fullName,

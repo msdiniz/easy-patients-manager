@@ -25,7 +25,7 @@ export interface Patient {
   dateOfFirstContact: string;
 }
 
-export interface PatientDetails extends Patient {
+export interface DetailedPatient extends Patient {
   emails: Email[];
   addresses: Address[];
   phones: Phone[];
