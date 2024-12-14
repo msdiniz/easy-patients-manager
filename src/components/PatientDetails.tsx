@@ -5,6 +5,7 @@ import PatientForm from './Form/PatientForm';
 import { getIsEditing, getIsAdding } from '../store/selectors';
 import { setIsEditing, setSelectedPatient, setIsAdding } from '../store/index';
 import { DetailedPatient } from '../models/PatientModels';
+import { PatientFactory } from '../models/PatientFactory'; // Ensure the named import is used
 import { PatientUtils } from '../models/PatientUtils';
 
 interface PatientDetailsProps {
@@ -17,10 +18,16 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
   const [patient, setPatient] = useState<DetailedPatient | null>(null);
   const [error, setError] = useState<string | null>(null);
   const isEditing = useSelector(getIsEditing);
-  const isAdding = useSelector(getIsAdding);  
+  const isAdding = useSelector(getIsAdding);
 
   useEffect(() => {
-    if (patientId && fullName) {
+    if (isAdding) {
+      // If adding a new patient, create a new DetailedPatient object
+      const newPatient = PatientFactory.createNewForPatientDetail(fullName, true);
+      setPatient(newPatient);
+      dispatch(setSelectedPatient(newPatient));
+    } else if (patientId && fullName) {
+      // Otherwise, fetch the patient data from local storage or JSON file
       const storedDetailedPatients = localStorage.getItem('detailedPatients');
       if (storedDetailedPatients) {
         const parsedDetailedPatients: DetailedPatient[] = JSON.parse(storedDetailedPatients);
@@ -48,7 +55,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
           setError('Failed to load patient details. Please try again later.');
         });
     }
-  }, [patientId, fullName, dispatch]);
+  }, [patientId, fullName, isAdding, dispatch]);
 
   const handleEdit = () => {
     dispatch(setIsEditing(true));
@@ -82,6 +89,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
 
   const handleCancel = () => {
     dispatch(setIsEditing(false));
+    dispatch(setIsAdding(false));
     dispatch(setSelectedPatient(null));
   };
 

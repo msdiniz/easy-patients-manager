@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Patient } from '../../models/PatientModels';
 import { PatientFactory } from '../../models/PatientFactory';
-import { transformToDetailedPatient } from '../../utils/transformPatient';
 import './PatientList.css'; // Ensure component-specific styles are imported
 import { PatientUtils } from '../../models/PatientUtils';
 import { setSelectedPatient, setIsEditing, setIsAdding } from '../../store';
@@ -37,11 +36,10 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   const handleNewPatient = () => {
     if (PatientUtils.isValidName(searchTerm)) {
       const newPatient: Patient = PatientFactory.createNewForPatientList(searchTerm, useProperCase);
-      const detailedPatient = transformToDetailedPatient(newPatient);
-      dispatch(setSelectedPatient(detailedPatient));
+      dispatch(setSelectedPatient(newPatient));
       dispatch(setIsEditing(true));
       dispatch(setIsAdding(true));
-      onSelectPatient(detailedPatient.id, detailedPatient.fullName);
+      onSelectPatient(newPatient.id, newPatient.fullName);
       setSearchTerm(''); // Reset the search term
     }
   };

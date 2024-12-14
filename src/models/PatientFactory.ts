@@ -4,7 +4,7 @@ import { PatientUtils } from './PatientUtils';
 export class PatientFactory {
   static createNewForPatientList(fullName: string = "", formatName: boolean = true): Patient {
     return {
-      id: "",
+      id: this.generateUniqueId(),
       fullName: formatName ? PatientUtils.properCase(fullName) : fullName,
       dob: "",
       gender: "",
@@ -16,7 +16,7 @@ export class PatientFactory {
 
   static createNewForPatientDetail(fullName: string = "", formatName: boolean = true): DetailedPatient {
     return {
-      id: "",
+      id: this.generateUniqueId(),
       fullName: formatName ? PatientUtils.properCase(fullName) : fullName,
       dob: "",
       gender: "",
@@ -33,5 +33,9 @@ export class PatientFactory {
       notes: "",
       howPatientWasReferred: ""
     };
+  }
+
+  private static generateUniqueId(): string {
+    return Math.random().toString(36).substr(2, 9);
   }
 }
