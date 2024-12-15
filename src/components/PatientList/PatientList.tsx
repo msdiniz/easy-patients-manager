@@ -7,6 +7,7 @@ import { PatientUtils } from '../../models/PatientUtils';
 import { setSelectedPatient, setIsEditing, setIsAdding, setPatients } from '../../store';
 import { getPatients } from '../../store/selectors';
 import { getPatientsFromStorage } from '../../utils/patientStorage';
+import useOptions from '../../hooks/useOptions';
 
 interface PatientListProps {
   onSelectPatient: (patientId: string, fullName: string) => void;
@@ -20,7 +21,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   const [useProperCase, setUseProperCase] = useState(true);
   const [showSelectedText, setShowSelectedText] = useState(false); // New state for showing selected text
   const [selectedBookmarks, setSelectedBookmarks] = useState<string[]>([]); // New state for selected bookmarks
-  const [options, setOptions] = useState<{ bookmarks: Bookmark[] }>({ bookmarks: [] }); // Define options state
+  const options = useOptions(); // Use the custom hook
   const selectRef = useRef<HTMLSelectElement>(null); // Add a ref for the select element
 
   useEffect(() => {
@@ -29,19 +30,6 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     if (storedPatients.length > 0) {
       dispatch(setPatients(storedPatients));
     }
-    // Fetch options for bookmarks
-    fetch('/options.json')
-      .then(response => response.json())
-      .then(data => {
-        console.log('Fetched options:', data);
-        // Transform the bookmarks data to ensure each bookmark has an id
-        const transformedBookmarks = data.bookmarks.map((bookmark: string, index: number) => ({
-          id: index.toString(),
-          name: bookmark
-        }));
-        setOptions({ bookmarks: transformedBookmarks });
-      })
-      .catch(error => console.error('Error loading options:', error));
   }, [dispatch]);
 
   const normalizeString = (str: string) => {

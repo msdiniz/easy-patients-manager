@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { DetailedPatient, Bookmark } from '../../models/PatientModels';
 import FormField from './FormField';
 import FormSelect from './FormSelect';
 import FormTextArea from './FormTextArea';
 import FormButtons from './FormButtons';
 import useFormValidation from './useFormValidation';
+import useOptions from '../../hooks/useOptions';
 import './PatientForm.css'; // Ensure the CSS file is imported
 
 interface PatientFormProps {
@@ -15,30 +16,9 @@ interface PatientFormProps {
   isFormValid: boolean;
 }
 
-interface Options {
-  genders: string[];
-  bloodTypes: string[];
-  rhFactors: string[];
-  ethnicGroups: string[];
-  bookmarks: Bookmark[];
-}
-
 const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, onCancel, isFormValid }) => {
-  const [options, setOptions] = useState<Options>({
-    genders: [],
-    bloodTypes: [],
-    rhFactors: [],
-    ethnicGroups: [],
-    bookmarks: []
-  });
+  const options = useOptions(); // Use the custom hook
   const { errors, validateField } = useFormValidation(options);
-
-  useEffect(() => {
-    fetch('/options.json')
-      .then(response => response.json())
-      .then(data => setOptions(data))
-      .catch(error => console.error('Error loading options:', error));
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -47,11 +27,14 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
   };
 
   const handleBookmarkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { options } = e.target;
+    const { options: selectOptions } = e.target;
     const selectedBookmarks: Bookmark[] = [];
-    for (const option of options) {
+    for (const option of selectOptions) {
       if (option.selected) {
-        selectedBookmarks.push({ id: option.value, name: option.text });
+        const bookmark = options.bookmarks.find(b => b.id === option.value);
+        if (bookmark) {
+          selectedBookmarks.push(bookmark);
+        }
       }
     }
     onChange({ target: { name: 'bookmarks', value: selectedBookmarks } } as any);
