@@ -28,6 +28,7 @@ export interface Patient {
   cpf: string;
   dateOfFirstContact: string;
   bookmarks: Bookmark[]; // Change to Bookmarks[]
+  deleted?: boolean; // Add the deleted field
 }
 
 export interface DetailedPatient extends Patient {

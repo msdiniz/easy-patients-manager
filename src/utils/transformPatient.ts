@@ -24,5 +24,6 @@ export const transformToPatient = (detailedPatient: DetailedPatient): Patient =>
     cpf: detailedPatient.cpf,
     dateOfFirstContact: detailedPatient.dateOfFirstContact,
     bookmarks: detailedPatient.bookmarks, // Corrected to bookmarks
+    deleted: detailedPatient.deleted // Ensure the deleted field is included
   };
 };

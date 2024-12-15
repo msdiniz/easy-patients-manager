@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PatientInfo from './PatientInfo'; // Ensure the default import is used
 import PatientForm from './Form/PatientForm';
-import { getIsEditing, getIsAdding } from '../store/selectors';
-import { setIsEditing, setSelectedPatient, setIsAdding, setPatients } from '../store/index';
+import { getIsEditing, getIsAdding, getSelectedPatient } from '../store/selectors';
+import { setIsEditing, setSelectedPatient, setIsAdding, setPatients, selectPatientDeletedState, RootState } from '../store/index';
 import { DetailedPatient } from '../models/PatientModels';
 import { PatientFactory } from '../models/PatientFactory'; // Ensure the named import is used
 import { PatientUtils } from '../models/PatientUtils';
@@ -16,11 +16,13 @@ interface PatientDetailsProps {
 
 const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) => {
   const dispatch = useDispatch();
-  const [patient, setPatient] = useState<DetailedPatient | null>(null);
+  const selectedPatient = useSelector(getSelectedPatient) as DetailedPatient | null;
+  const [patient, setPatient] = useState<DetailedPatient | null>(selectedPatient);
   const [error, setError] = useState<string | null>(null);
   const isEditing = useSelector(getIsEditing);
   const isAdding = useSelector(getIsAdding);
   const [isDirty, setIsDirty] = useState(false);
+  const deleted = useSelector((state: RootState) => selectPatientDeletedState(state, patientId));
 
   useEffect(() => {
     console.log('isAdding:', isAdding);
@@ -31,6 +33,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
       const newPatient = PatientFactory.createNewForPatientDetail(fullName, true);
       newPatient.id = patientId; // Use the passed ID
       newPatient.dateOfFirstContact = new Date().toISOString().split('T')[0]; // Default to today
+      newPatient.deleted = deleted; // Set the deleted state
       console.log('New patient created:', newPatient);
       setPatient(newPatient);
       dispatch(setSelectedPatient(newPatient));
@@ -40,6 +43,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
       const foundPatient = parsedDetailedPatients.find(p => p.id === patientId);
       console.log('Found patient:', foundPatient);
       if (foundPatient) {
+        foundPatient.deleted = deleted; // Set the deleted state
         setPatient(foundPatient);
         dispatch(setSelectedPatient(foundPatient));
         return;
@@ -53,6 +57,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
           return response.json();
         })
         .then((data: DetailedPatient) => {
+          data.deleted = deleted; // Set the deleted state
           console.log('Fetched patient data:', data);
           setPatient(data);
           dispatch(setSelectedPatient(data));
@@ -62,7 +67,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
           setError('Failed to load patient details. Please try again later.');
         });
     }
-  }, [patientId, fullName, isAdding, isEditing, dispatch]);
+  }, [patientId, fullName, deleted, isAdding, isEditing, dispatch]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -111,6 +116,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
         cpf: patient.cpf,
         dateOfFirstContact: patient.dateOfFirstContact,
         bookmarks: patient.bookmarks, // Corrected to bookmarks
+        deleted: patient.deleted // Ensure the deleted field is saved
       });
       savePatientsToStorage(updatedPatients); // Persist to local storage
   
@@ -135,6 +141,27 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
     dispatch(setIsAdding(false));
     dispatch(setSelectedPatient(null));
     setIsDirty(false);
+  };
+
+  const handleDeleteToggle = () => {
+    if (patient) {
+      const confirmDelete = window.confirm(`Are you sure you want to ${patient.deleted ? 'undelete' : 'delete'} this patient?`);
+      if (confirmDelete) {
+        const updatedPatients = getPatientsFromStorage().map(p =>
+          p.id === patient.id ? { ...p, deleted: !p.deleted } : p
+        );
+        savePatientsToStorage(updatedPatients);
+        dispatch(setPatients(updatedPatients));
+        dispatch(setSelectedPatient(null)); // Clear the selected patient
+
+        // Update detailed patients in local storage
+        const parsedDetailedPatients = getDetailedPatientsFromStorage();
+        const updatedDetailedPatients = parsedDetailedPatients.map(p =>
+          p.id === patient.id ? { ...p, deleted: !p.deleted } : p
+        );
+        saveDetailedPatientsToStorage(updatedDetailedPatients);
+      }
+    }
   };
 
   const isFormValid = patient !== null &&
@@ -169,6 +196,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
         <PatientInfo
           patient={patient}
           onEdit={handleEdit}
+          onDeleteToggle={handleDeleteToggle}
         />
       )}
     </div>

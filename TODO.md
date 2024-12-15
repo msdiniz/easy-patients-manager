@@ -50,9 +50,9 @@
 - [ ] **Integration with Google Contacts**:
   - Fetch patient details from Google Contacts.
 - [ ] **Bookmarks Field**:
-  - Change the `bookmark` field to `Bookmarks[]` in the model.
-  - Ensure the `bookmark` field is editable.
-  - Add a select field in `PatientList` that allows selecting 0 to N bookmarks, and filter the `PatientList` based on the selected values. Any patient can have N bookmarks.
+  - ~~Change the `bookmark` field to `Bookmarks[]` in the model.~~
+  - ~~Ensure the `bookmark` field is editable.~~
+  - ~~Add a select field in `PatientList` that allows selecting 0 to N bookmarks, and filter the `PatientList` based on the selected values. Any patient can have N bookmarks.~~
 - [ ] **Delete Operation**:
   - Implement the delete operation for patients.
   - Add a boolean field `deleted` in the `Patient` model to handle deletions.

@@ -58,6 +58,17 @@
 .checkbox-container {
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  margin-right: 5px;
 }
 
 .checkbox-container label {

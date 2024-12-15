@@ -16,10 +16,11 @@ interface PatientListProps {
 
 export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPatientId }) => {
   const dispatch = useDispatch();
-  const patients = useSelector(getPatients);
+  const patients = useSelector(getPatients) as Patient[]; // Ensure the correct type is used
   const [searchTerm, setSearchTerm] = useState('');
   const [useProperCase, setUseProperCase] = useState(true);
   const [showSelectedText, setShowSelectedText] = useState(false); // New state for showing selected text
+  const [showDeleted, setShowDeleted] = useState(false); // New state for showing deleted patients
   const [selectedBookmarks, setSelectedBookmarks] = useState<string[]>([]); // New state for selected bookmarks
   const options = useOptions(); // Use the custom hook
   const selectRef = useRef<HTMLSelectElement>(null); // Add a ref for the select element
@@ -42,6 +43,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   });
 
   const filteredPatients = sortedPatients.filter(patient =>
+    (showDeleted ? patient.deleted : !patient.deleted) && // Filter based on showDeleted state
     normalizeString(patient.fullName).toLowerCase().includes(normalizeString(searchTerm).toLowerCase()) &&
     (selectedBookmarks.length === 0 || (patient.bookmarks && patient.bookmarks.some(b => selectedBookmarks.includes(b.name))))
   );
@@ -91,6 +93,12 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     }
   };
 
+  const handleShowDeletedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setShowDeleted(e.target.checked);
+    dispatch(setSelectedPatient(null)); // Clear the selected patient
+    onSelectPatient('', ''); // Clear the selected patient
+  };
+
   const clearLocalStorage = () => {
     localStorage.clear();
     window.location.reload(); // Reload the page to fetch data from JSON files
@@ -105,21 +113,35 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
         onChange={e => setSearchTerm(e.target.value)}
       />
       <div className="checkbox-container">
-        <input
-          type="checkbox"
-          checked={useProperCase}
-          onChange={e => setUseProperCase(e.target.checked)}
-        />
-        <label>Use Proper Case</label>
+        <label className="checkbox-label">
+          <input
+            type="checkbox"
+            checked={useProperCase}
+            onChange={e => setUseProperCase(e.target.checked)}
+          />
+          Use Proper Case
+        </label>
       </div>
       <button onClick={clearLocalStorage}>Reset Data</button>
       <div className="checkbox-container">
-        <input
-          type="checkbox"
-          checked={showSelectedText}
-          onChange={e => setShowSelectedText(e.target.checked)}
-        />
-        <label>Show Selected Text</label>
+        <label className="checkbox-label">
+          <input
+            type="checkbox"
+            checked={showSelectedText}
+            onChange={e => setShowSelectedText(e.target.checked)}
+          />
+          Show Selected Text
+        </label>
+      </div>
+      <div className="checkbox-container">
+        <label className="checkbox-label">
+          <input
+            type="checkbox"
+            checked={showDeleted}
+            onChange={handleShowDeletedChange}
+          />
+          Show Only Deleted Patients
+        </label>
       </div>
       <div className="button-container">
         {searchTerm && PatientUtils.isValidName(searchTerm) && (
