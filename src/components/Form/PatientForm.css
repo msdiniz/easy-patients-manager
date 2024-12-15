@@ -63,3 +63,31 @@
   background-color: #ccc;
   cursor: not-allowed;
 }
+.form-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-field label {
+  margin-bottom: 0.5rem;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.form-field input.error,
+.form-field select.error,
+.form-field textarea.error {
+  border: 1px solid red;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.875em;
+  margin-top: 0.25rem;
+}

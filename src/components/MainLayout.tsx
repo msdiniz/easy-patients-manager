@@ -6,6 +6,7 @@ import PatientDetails from './PatientDetails';
 import Header from './Header';
 import { setPatients } from '../store';
 import { getPatients } from '../store/selectors';
+import { getPatientsFromStorage, savePatientsToStorage } from '../utils/patientStorage';
 
 export const MainLayout: React.FC = () => {
   const dispatch = useDispatch();
@@ -15,14 +16,15 @@ export const MainLayout: React.FC = () => {
 
   useEffect(() => {
     console.log('MainLayout component mounted');
-    const storedPatients = localStorage.getItem('patients');
-    if (storedPatients) {
-      const parsedPatients = JSON.parse(storedPatients);
+    const parsedPatients = getPatientsFromStorage();
+    if (parsedPatients.length > 0) {
       dispatch(setPatients(parsedPatients));
     } else {
       axios.get('/data/patients.json')
         .then(response => {
-          dispatch(setPatients(response.data));
+          const patients = response.data;
+          dispatch(setPatients(patients));
+          savePatientsToStorage(patients); // Save to local storage
         })
         .catch(error => {
           console.error('Error loading patients from JSON file:', error);

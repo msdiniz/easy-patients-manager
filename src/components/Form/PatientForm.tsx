@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { DetailedPatient } from '../../models/PatientModels';
-import { PatientUtils } from '../../models/PatientUtils';
 import FormField from './FormField';
 import FormSelect from './FormSelect';
 import FormTextArea from './FormTextArea';
 import FormButtons from './FormButtons';
+import useFormValidation from './useFormValidation';
 import './PatientForm.css'; // Ensure the CSS file is imported
 
 interface PatientFormProps {
@@ -16,8 +16,8 @@ interface PatientFormProps {
 }
 
 const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, onCancel, isFormValid }) => {
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [options, setOptions] = useState<any>({});
+  const { errors, validateField } = useFormValidation(options);
 
   useEffect(() => {
     fetch('/options.json')
@@ -25,27 +25,6 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
       .then(data => setOptions(data))
       .catch(error => console.error('Error loading options:', error));
   }, []);
-
-  const validateField = (name: string, value: string) => {
-    let error = '';
-    if (name === 'fullName' && !PatientUtils.isValidName(value)) {
-      error = 'Invalid name';
-    } else if (name === 'dob') {
-      const dob = new Date(value);
-      const today = new Date();
-      const age = today.getFullYear() - dob.getFullYear();
-      if (dob >= today) {
-        error = 'DOB must be in the past';
-      } else if (age > 115) {
-        error = 'Age cannot be more than 115 years';
-      }
-    } else if (name === 'gender' && !options.genders.includes(value)) {
-      error = 'Invalid gender';
-    } else if (name === 'cpf' && !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(value)) {
-      error = 'Invalid CPF format';
-    }
-    setErrors({ ...errors, [name]: error });
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -74,7 +53,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         label="Gender"
         name="gender"
         value={patient.gender}
-        options={options.genders || []}
+        options={['', ...options.genders || []]} // Add an empty option for new patients
         onChange={handleChange}
         error={errors.gender}
       />
@@ -90,21 +69,21 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         label="Blood Type"
         name="bloodType"
         value={patient.bloodType}
-        options={options.bloodTypes || []}
+        options={['', ...options.bloodTypes || []]} // Add an empty option for new patients
         onChange={handleChange}
       />
       <FormSelect
         label="Rh Factor"
         name="rhFactor"
         value={patient.rhFactor}
-        options={options.rhFactors || []}
+        options={['', ...options.rhFactors || []]} // Add an empty option for new patients
         onChange={handleChange}
       />
       <FormSelect
         label="Ethnic Group"
         name="ethnicGroup"
         value={patient.ethnicGroup}
-        options={options.ethnicGroups || []}
+        options={['', ...options.ethnicGroups || []]} // Add an empty option for new patients
         onChange={handleChange}
       />
       <FormTextArea
@@ -130,8 +109,9 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         label="Date of First Contact"
         name="dateOfFirstContact"
         type="date"
-        value={patient.dateOfFirstContact}
+        value={patient.dateOfFirstContact || new Date().toISOString().split('T')[0]} // Default to today
         onChange={handleChange}
+        error={errors.dateOfFirstContact}
       />
       <FormSelect
         label="Bookmark/Tag"

@@ -1,24 +1,32 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Patient } from '../../models/PatientModels';
 import { PatientFactory } from '../../models/PatientFactory';
 import './PatientList.css'; // Ensure component-specific styles are imported
 import { PatientUtils } from '../../models/PatientUtils';
-import { setSelectedPatient, setIsEditing, setIsAdding } from '../../store';
+import { setSelectedPatient, setIsEditing, setIsAdding, setPatients } from '../../store';
+import { getPatients } from '../../store/selectors';
+import { getPatientsFromStorage } from '../../utils/patientStorage';
 
 interface PatientListProps {
   onSelectPatient: (patientId: string, fullName: string) => void;
   selectedPatientId: string | null;
-  patients: Patient[];
 }
 
-export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPatientId, patients = [] }) => {
+export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPatientId }) => {
+  const dispatch = useDispatch();
+  const patients = useSelector(getPatients);
   const [searchTerm, setSearchTerm] = useState('');
   const [useProperCase, setUseProperCase] = useState(true);
   const [showSelectedText, setShowSelectedText] = useState(false); // New state for showing selected text
-  const dispatch = useDispatch();
 
-  console.log('Patients received by PatientList:', patients);
+  useEffect(() => {
+    console.log('PatientList component mounted');
+    const storedPatients = getPatientsFromStorage();
+    if (storedPatients.length > 0) {
+      dispatch(setPatients(storedPatients));
+    }
+  }, [dispatch]);
 
   const normalizeString = (str: string) => {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -33,9 +41,17 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     normalizeString(patient.fullName).toLowerCase().includes(normalizeString(searchTerm).toLowerCase())
   );
 
+  useEffect(() => {
+    if (searchTerm) {
+      dispatch(setSelectedPatient(null));
+      onSelectPatient('', ''); // Clear the selected patient
+    }
+  }, [searchTerm, dispatch, onSelectPatient]);
+
   const handleNewPatient = () => {
     if (PatientUtils.isValidName(searchTerm)) {
       const newPatient: Patient = PatientFactory.createNewForPatientList(searchTerm, useProperCase);
+      console.log('New patient created in PatientList:', newPatient);
       dispatch(setSelectedPatient(newPatient));
       dispatch(setIsEditing(true));
       dispatch(setIsAdding(true));
@@ -45,7 +61,10 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   };
 
   const handlePatientClick = (patient: Patient) => {
-    console.log('Patient being passed to detail view:', patient);
+    console.log('Patient selected in PatientList:', patient);
+    dispatch(setSelectedPatient(patient));
+    dispatch(setIsEditing(false));
+    dispatch(setIsAdding(false));
     onSelectPatient(patient.id, patient.fullName);
   };
 

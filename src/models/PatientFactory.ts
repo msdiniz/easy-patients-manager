@@ -3,8 +3,10 @@ import { PatientUtils } from './PatientUtils';
 
 export class PatientFactory {
   static createNewForPatientList(fullName: string = "", formatName: boolean = true): Patient {
+    const id = this.generateUniqueId();
+    console.log('Generated new patient ID for list:', id);
     return {
-      id: this.generateUniqueId(),
+      id,
       fullName: formatName ? PatientUtils.properCase(fullName) : fullName,
       dob: "",
       gender: "",
@@ -15,8 +17,10 @@ export class PatientFactory {
   }
 
   static createNewForPatientDetail(fullName: string = "", formatName: boolean = true): DetailedPatient {
+    const id = this.generateUniqueId();
+    console.log('Generated new patient ID for detail:', id);
     return {
-      id: this.generateUniqueId(),
+      id,
       fullName: formatName ? PatientUtils.properCase(fullName) : fullName,
       dob: "",
       gender: "",

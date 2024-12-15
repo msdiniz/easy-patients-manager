@@ -3,10 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import PatientInfo from './PatientInfo'; // Ensure the default import is used
 import PatientForm from './Form/PatientForm';
 import { getIsEditing, getIsAdding } from '../store/selectors';
-import { setIsEditing, setSelectedPatient, setIsAdding } from '../store/index';
+import { setIsEditing, setSelectedPatient, setIsAdding, setPatients } from '../store/index';
 import { DetailedPatient } from '../models/PatientModels';
 import { PatientFactory } from '../models/PatientFactory'; // Ensure the named import is used
 import { PatientUtils } from '../models/PatientUtils';
+import { getPatientsFromStorage, savePatientsToStorage, getDetailedPatientsFromStorage, saveDetailedPatientsToStorage } from '../utils/patientStorage';
 
 interface PatientDetailsProps {
   patientId: string;
@@ -19,24 +20,31 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
   const [error, setError] = useState<string | null>(null);
   const isEditing = useSelector(getIsEditing);
   const isAdding = useSelector(getIsAdding);
+  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
+    console.log('isAdding:', isAdding);
+    console.log('isEditing:', isEditing);
+    setError(null); // Reset the error state
     if (isAdding) {
-      // If adding a new patient, create a new DetailedPatient object
+      // If adding a new patient, create a new DetailedPatient object with the same ID
       const newPatient = PatientFactory.createNewForPatientDetail(fullName, true);
+      newPatient.id = patientId; // Use the passed ID
+      newPatient.dateOfFirstContact = new Date().toISOString().split('T')[0]; // Default to today
+      console.log('New patient created:', newPatient);
       setPatient(newPatient);
       dispatch(setSelectedPatient(newPatient));
     } else if (patientId && fullName) {
       // Otherwise, fetch the patient data from local storage or JSON file
-      const storedDetailedPatients = localStorage.getItem('detailedPatients');
-      if (storedDetailedPatients) {
-        const parsedDetailedPatients: DetailedPatient[] = JSON.parse(storedDetailedPatients);
-        const foundPatient = parsedDetailedPatients.find(p => p.id === patientId);
-        if (foundPatient) {
-          setPatient(foundPatient);
-          dispatch(setSelectedPatient(foundPatient));
-          return;
-        }
+      const parsedDetailedPatients = getDetailedPatientsFromStorage();
+      const foundPatient = parsedDetailedPatients.find(p => p.id === patientId);
+      if (foundPatient) {
+        console.log('Found patient in local storage:', foundPatient);
+        setPatient(foundPatient);
+        dispatch(setSelectedPatient(foundPatient));
+        return;
+      } else {    
+        console.log(`Patient ${patientId} not found in local storage. Fetching from JSON file...`);
       }
 
       fetch(`/data/patients/${fullName}_${patientId}.json`)
@@ -44,9 +52,11 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
+          console.log('Fetched patient data:', response.json);
           return response.json();
         })
         .then((data: DetailedPatient) => {
+          console.log('Fetched patient data:', data);
           setPatient(data);
           dispatch(setSelectedPatient(data));
         })
@@ -55,7 +65,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
           setError('Failed to load patient details. Please try again later.');
         });
     }
-  }, [patientId, fullName, isAdding, dispatch]);
+  }, [patientId, fullName, isAdding, isEditing, dispatch]);
 
   const handleEdit = () => {
     dispatch(setIsEditing(true));
@@ -67,23 +77,39 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
       const { name, value } = e.target;
       setPatient({ ...patient, [name]: value });
       dispatch(setSelectedPatient({ ...patient, [name]: value }));
+      setIsDirty(true);
     }
   };
 
   const handleSave = () => {
     if (patient) {
-      const storedDetailedPatients = localStorage.getItem('detailedPatients');
-      const parsedDetailedPatients: DetailedPatient[] = storedDetailedPatients ? JSON.parse(storedDetailedPatients) : [];
-
-      const updatedDetailedPatients = parsedDetailedPatients.map(p => p.id === patient.id ? patient : p);
-      if (!parsedDetailedPatients.some(p => p.id === patient.id)) {
-        updatedDetailedPatients.push(patient);
-      }
-
-      localStorage.setItem('detailedPatients', JSON.stringify(updatedDetailedPatients)); // Persist to local storage
+      // Get existing detailed patients from localStorage
+      const parsedDetailedPatients = getDetailedPatientsFromStorage();
+      const updatedDetailedPatients = parsedDetailedPatients.filter(p => p.id !== patient.id);
+      updatedDetailedPatients.push(patient);
+      saveDetailedPatientsToStorage(updatedDetailedPatients); // Persist to local storage
+  
+      // Get existing patients from localStorage
+      const parsedPatients = getPatientsFromStorage();
+      const updatedPatients = parsedPatients.filter(p => p.id !== patient.id);
+      updatedPatients.push({
+        id: patient.id,
+        fullName: patient.fullName,
+        dob: patient.dob,
+        gender: patient.gender,
+        cpf: patient.cpf,
+        dateOfFirstContact: patient.dateOfFirstContact,
+        bookmark: patient.bookmark,
+      });
+      savePatientsToStorage(updatedPatients); // Persist to local storage
+  
       dispatch(setIsEditing(false));
       dispatch(setIsAdding(false));
+      setIsDirty(false);
       console.log('Patient saved:', patient);
+  
+      // Ensure PatientList updates
+      dispatch(setPatients(updatedPatients));
     }
   };
 
@@ -91,6 +117,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
     dispatch(setIsEditing(false));
     dispatch(setIsAdding(false));
     dispatch(setSelectedPatient(null));
+    setIsDirty(false);
   };
 
   const isFormValid = patient !== null &&
