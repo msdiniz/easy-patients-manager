@@ -38,13 +38,11 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
       // Otherwise, fetch the patient data from local storage or JSON file
       const parsedDetailedPatients = getDetailedPatientsFromStorage();
       const foundPatient = parsedDetailedPatients.find(p => p.id === patientId);
+      console.log('Found patient:', foundPatient);
       if (foundPatient) {
-        console.log('Found patient in local storage:', foundPatient);
         setPatient(foundPatient);
         dispatch(setSelectedPatient(foundPatient));
         return;
-      } else {    
-        console.log(`Patient ${patientId} not found in local storage. Fetching from JSON file...`);
       }
 
       fetch(`/data/patients/${fullName}_${patientId}.json`)
@@ -52,7 +50,6 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-          console.log('Fetched patient data:', response.json);
           return response.json();
         })
         .then((data: DetailedPatient) => {
@@ -66,6 +63,20 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
         });
     }
   }, [patientId, fullName, isAdding, isEditing, dispatch]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isDirty]);
 
   const handleEdit = () => {
     dispatch(setIsEditing(true));
@@ -99,7 +110,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
         gender: patient.gender,
         cpf: patient.cpf,
         dateOfFirstContact: patient.dateOfFirstContact,
-        bookmark: patient.bookmark,
+        bookmarks: patient.bookmarks, // Corrected to bookmarks
       });
       savePatientsToStorage(updatedPatients); // Persist to local storage
   
@@ -114,6 +125,12 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
   };
 
   const handleCancel = () => {
+    if (isDirty) {
+      const confirmDiscard = window.confirm('You have unsaved changes. Do you really want to discard them?');
+      if (!confirmDiscard) {
+        return;
+      }
+    }
     dispatch(setIsEditing(false));
     dispatch(setIsAdding(false));
     dispatch(setSelectedPatient(null));

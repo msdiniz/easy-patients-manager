@@ -24,7 +24,7 @@ const PatientInfo: React.FC<PatientInfoProps> = ({ patient, onEdit }) => {
       <p>Notes: {patient.notes}</p>
       <p>How Patient Was Referred: {patient.howPatientWasReferred}</p>
       <p>Date of First Contact: {patient.dateOfFirstContact}</p>
-      <button onClick={onEdit}>Edit</button>
+      <p><strong>Bookmarks:</strong> {patient.bookmarks ? patient.bookmarks.map(b => b.name).join(', ') : 'None'}</p>      <button onClick={onEdit}>Edit</button>
     </div>
   );
 };

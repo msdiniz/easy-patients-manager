@@ -22,7 +22,7 @@ export const transformToPatient = (detailedPatient: DetailedPatient): Patient =>
     dob: detailedPatient.dob,
     gender: detailedPatient.gender,
     cpf: detailedPatient.cpf,
-    bookmark: detailedPatient.bookmark,
-    dateOfFirstContact: detailedPatient.dateOfFirstContact
+    dateOfFirstContact: detailedPatient.dateOfFirstContact,
+    bookmarks: detailedPatient.bookmarks, // Corrected to bookmarks
   };
 };

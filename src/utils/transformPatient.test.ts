@@ -9,7 +9,7 @@ describe('transformToDetailedPatient', () => {
       dob: '1990-01-01',
       gender: 'male',
       cpf: '123.456.789-00',
-      bookmark: '',
+      bookmarks: [],
       dateOfFirstContact: ''
     };
 
@@ -35,9 +35,9 @@ describe('transformToDetailedPatient', () => {
         fullName: 'John Doe',
         dob: '1990-01-01',
         gender: 'male',
-        cpf: '123.456.789-00',
-        bookmark: '',
+        cpf: '123.456.789-00',        
         dateOfFirstContact: '',
+        bookmarks: [],
         emails: [],
         addresses: [],
         phones: [],

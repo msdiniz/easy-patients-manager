@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Patient } from '../../models/PatientModels';
+import { Patient, Bookmark } from '../../models/PatientModels';
 import { PatientFactory } from '../../models/PatientFactory';
 import './PatientList.css'; // Ensure component-specific styles are imported
 import { PatientUtils } from '../../models/PatientUtils';
@@ -19,6 +19,8 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   const [searchTerm, setSearchTerm] = useState('');
   const [useProperCase, setUseProperCase] = useState(true);
   const [showSelectedText, setShowSelectedText] = useState(false); // New state for showing selected text
+  const [selectedBookmarks, setSelectedBookmarks] = useState<string[]>([]); // New state for selected bookmarks
+  const [options, setOptions] = useState<{ bookmarks: Bookmark[] }>({ bookmarks: [] }); // Define options state
 
   useEffect(() => {
     console.log('PatientList component mounted');
@@ -26,6 +28,19 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     if (storedPatients.length > 0) {
       dispatch(setPatients(storedPatients));
     }
+    // Fetch options for bookmarks
+    fetch('/options.json')
+      .then(response => response.json())
+      .then(data => {
+        console.log('Fetched options:', data);
+        // Transform the bookmarks data to ensure each bookmark has an id
+        const transformedBookmarks = data.bookmarks.map((bookmark: string, index: number) => ({
+          id: index.toString(),
+          name: bookmark
+        }));
+        setOptions({ bookmarks: transformedBookmarks });
+      })
+      .catch(error => console.error('Error loading options:', error));
   }, [dispatch]);
 
   const normalizeString = (str: string) => {
@@ -38,7 +53,8 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   });
 
   const filteredPatients = sortedPatients.filter(patient =>
-    normalizeString(patient.fullName).toLowerCase().includes(normalizeString(searchTerm).toLowerCase())
+    normalizeString(patient.fullName).toLowerCase().includes(normalizeString(searchTerm).toLowerCase()) &&
+    (selectedBookmarks.length === 0 || (patient.bookmarks && patient.bookmarks.some(b => selectedBookmarks.includes(b.name))))
   );
 
   useEffect(() => {
@@ -66,6 +82,17 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     dispatch(setIsEditing(false));
     dispatch(setIsAdding(false));
     onSelectPatient(patient.id, patient.fullName);
+  };
+
+  const handleBookmarkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { options } = e.target;
+    const selected: string[] = [];
+    for (const option of options) {
+      if (option.selected) {
+        selected.push(option.value);
+      }
+    }
+    setSelectedBookmarks(selected);
   };
 
   const clearLocalStorage = () => {
@@ -105,6 +132,20 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
         {searchTerm && (
           <button onClick={() => setSearchTerm('')}>Clear</button>
         )}
+      </div>
+      <div className="bookmark-filter">
+        <label>Filter by Bookmarks:</label>
+        <select multiple onChange={handleBookmarkChange}>
+          {options.bookmarks && options.bookmarks.map((bookmark: Bookmark) => {
+            console.log('Rendering bookmark option:', bookmark);
+            console.log('Rendering bookmark option.id:', bookmark.id);
+            return (
+              <option key={bookmark.id} value={bookmark.name}>
+                {bookmark.name}
+              </option>
+            );
+          })}
+        </select>
       </div>
       <ul>
         {filteredPatients.map(patient => (

@@ -11,7 +11,7 @@ export class PatientFactory {
       dob: "",
       gender: "",
       cpf: "",
-      bookmark: "",
+      bookmarks: [], // Corrected to bookmarks
       dateOfFirstContact: ""
     };
   }
@@ -25,7 +25,7 @@ export class PatientFactory {
       dob: "",
       gender: "",
       cpf: "",
-      bookmark: "",
+      bookmarks: [], // Corrected to bookmarks
       dateOfFirstContact: "",
       emails: [],
       addresses: [],

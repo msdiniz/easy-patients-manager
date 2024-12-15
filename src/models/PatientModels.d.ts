@@ -10,14 +10,18 @@ export interface Phone {
     phone: string;
     type: string;
 }
+export interface Bookmark {
+    id: string;
+    name: string;
+}
 export interface Patient {
     id: string;
     fullName: string;
     dob: string;
     gender: string;
     cpf: string;
-    bookmark: string;
     dateOfFirstContact: string;
+    bookmarks: Bookmark[];
 }
 export interface DetailedPatient extends Patient {
     emails: Email[];

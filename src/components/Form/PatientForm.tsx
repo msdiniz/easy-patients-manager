@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DetailedPatient } from '../../models/PatientModels';
+import { DetailedPatient, Bookmark } from '../../models/PatientModels';
 import FormField from './FormField';
 import FormSelect from './FormSelect';
 import FormTextArea from './FormTextArea';
@@ -15,8 +15,22 @@ interface PatientFormProps {
   isFormValid: boolean;
 }
 
+interface Options {
+  genders: string[];
+  bloodTypes: string[];
+  rhFactors: string[];
+  ethnicGroups: string[];
+  bookmarks: Bookmark[];
+}
+
 const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, onCancel, isFormValid }) => {
-  const [options, setOptions] = useState<any>({});
+  const [options, setOptions] = useState<Options>({
+    genders: [],
+    bloodTypes: [],
+    rhFactors: [],
+    ethnicGroups: [],
+    bookmarks: []
+  });
   const { errors, validateField } = useFormValidation(options);
 
   useEffect(() => {
@@ -30,6 +44,17 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
     const { name, value } = e.target;
     validateField(name, value);
     onChange(e);
+  };
+
+  const handleBookmarkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { options } = e.target;
+    const selectedBookmarks: Bookmark[] = [];
+    for (const option of options) {
+      if (option.selected) {
+        selectedBookmarks.push({ id: option.value, name: option.text });
+      }
+    }
+    onChange({ target: { name: 'bookmarks', value: selectedBookmarks } } as any);
   };
 
   return (
@@ -53,7 +78,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         label="Gender"
         name="gender"
         value={patient.gender}
-        options={['', ...options.genders || []]} // Add an empty option for new patients
+        options={['', ...options.genders]} // Add an empty option for new patients
         onChange={handleChange}
         error={errors.gender}
       />
@@ -69,21 +94,21 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         label="Blood Type"
         name="bloodType"
         value={patient.bloodType}
-        options={['', ...options.bloodTypes || []]} // Add an empty option for new patients
+        options={['', ...options.bloodTypes]} // Add an empty option for new patients
         onChange={handleChange}
       />
       <FormSelect
         label="Rh Factor"
         name="rhFactor"
         value={patient.rhFactor}
-        options={['', ...options.rhFactors || []]} // Add an empty option for new patients
+        options={['', ...options.rhFactors]} // Add an empty option for new patients
         onChange={handleChange}
       />
       <FormSelect
         label="Ethnic Group"
         name="ethnicGroup"
         value={patient.ethnicGroup}
-        options={['', ...options.ethnicGroups || []]} // Add an empty option for new patients
+        options={['', ...options.ethnicGroups]} // Add an empty option for new patients
         onChange={handleChange}
       />
       <FormTextArea
@@ -114,11 +139,11 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         error={errors.dateOfFirstContact}
       />
       <FormSelect
-        label="Bookmark/Tag"
-        name="bookmark"
-        value={patient.bookmark}
-        options={options.bookmarks || []}
-        onChange={handleChange}
+        label="Bookmarks"
+        name="bookmarks"
+        value={patient.bookmarks ? patient.bookmarks.map(b => b.id) : []}
+        options={options.bookmarks}
+        onChange={handleBookmarkChange}
         multiple
       />
       <FormButtons onSave={onSave} onCancel={onCancel} isFormValid={isFormValid} />

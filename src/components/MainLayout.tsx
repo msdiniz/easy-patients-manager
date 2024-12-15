@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { PatientList } from './PatientList/PatientList'; // Use named import
 import PatientDetails from './PatientDetails';
 import Header from './Header';
 import { setPatients } from '../store';
-import { getPatients } from '../store/selectors';
 import { getPatientsFromStorage, savePatientsToStorage } from '../utils/patientStorage';
 
 export const MainLayout: React.FC = () => {
   const dispatch = useDispatch();
-  const patients = useSelector(getPatients);
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [selectedPatientFullName, setSelectedPatientFullName] = useState<string | null>(null);
 
@@ -44,7 +42,6 @@ export const MainLayout: React.FC = () => {
         <PatientList
           onSelectPatient={handleSelectPatient}
           selectedPatientId={selectedPatientId}
-          patients={patients}
         />
         {selectedPatientId && selectedPatientFullName && (
           <PatientDetails

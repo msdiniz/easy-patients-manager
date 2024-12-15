@@ -1,10 +1,11 @@
 import React from 'react';
+import { Bookmark } from '../../models/PatientModels';
 interface FormSelectProps {
     label: string;
     name: string;
-    value: string;
+    value: string | string[];
+    options: string[] | Bookmark[];
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    options: string[];
     error?: string;
     multiple?: boolean;
 }
