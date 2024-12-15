@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Patient, Bookmark } from '../../models/PatientModels';
 import { PatientFactory } from '../../models/PatientFactory';
@@ -21,6 +21,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   const [showSelectedText, setShowSelectedText] = useState(false); // New state for showing selected text
   const [selectedBookmarks, setSelectedBookmarks] = useState<string[]>([]); // New state for selected bookmarks
   const [options, setOptions] = useState<{ bookmarks: Bookmark[] }>({ bookmarks: [] }); // Define options state
+  const selectRef = useRef<HTMLSelectElement>(null); // Add a ref for the select element
 
   useEffect(() => {
     console.log('PatientList component mounted');
@@ -95,6 +96,13 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     setSelectedBookmarks(selected);
   };
 
+  const handleClearBookmarks = () => {
+    setSelectedBookmarks([]);
+    if (selectRef.current) {
+      selectRef.current.value = ''; // Clear the selected value in the select element
+    }
+  };
+
   const clearLocalStorage = () => {
     localStorage.clear();
     window.location.reload(); // Reload the page to fetch data from JSON files
@@ -135,7 +143,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
       </div>
       <div className="bookmark-filter">
         <label>Filter by Bookmarks:</label>
-        <select multiple onChange={handleBookmarkChange}>
+        <select ref={selectRef} multiple onChange={handleBookmarkChange}>
           {options.bookmarks && options.bookmarks.map((bookmark: Bookmark) => {
             console.log('Rendering bookmark option:', bookmark);
             console.log('Rendering bookmark option.id:', bookmark.id);
@@ -146,6 +154,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
             );
           })}
         </select>
+        <button onClick={handleClearBookmarks}>Clear Bookmarks</button>
       </div>
       <ul>
         {filteredPatients.map(patient => (
