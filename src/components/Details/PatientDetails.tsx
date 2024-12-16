@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PatientInfo from '../PatientInfo/PatientInfo'; // Ensure the default import is used
 import PatientForm from '../Form/PatientForm';
+import TabPanel from '../Tabs/TabPanel'; // Import TabPanel
 import { getIsEditing, getIsAdding, getSelectedPatient, getIsTogglingDelete, getShowDeleted } from '../../store/selectors'; // Import the new selector
 import { setIsEditing, setSelectedPatient, setIsAdding, setPatients, selectPatientDeletedState, setIsTogglingDelete, RootState } from '../../store/index';
 import { DetailedPatient, Email, Address, Phone, Bookmark } from '../../models/PatientModels'; // Import the missing types
 import { PatientFactory } from '../../models/PatientFactory'; // Ensure the named import is used
 import { PatientUtils } from '../../models/PatientUtils';
 import { getPatientsFromStorage, savePatientsToStorage, getDetailedPatientsFromStorage, saveDetailedPatientsToStorage } from '../../utils/patientStorage';
+import styles from './PatientDetails.module.css'; // Import the CSS module
 
 interface PatientDetailsProps {
   patientId: string;
@@ -32,6 +34,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
   const showDeleted = useSelector(getShowDeleted); // Use the new selector
   const [isDirty, setIsDirty] = useState(false);
   const deleted = useSelector((state: RootState) => selectPatientDeletedState(state, patientId));
+  // const [activeTab, setActiveTab] = useState(0); // State for active tab
 
   useEffect(() => {
     console.log('isAdding:', isAdding);
@@ -203,24 +206,51 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
   const showPatientInfo = (patient.deleted && showDeleted) || (!patient.deleted && !showDeleted);
 
   return (
-    <div className="patient-details">
-      {isEditing || isAdding ? (
-        <PatientForm
-          patient={patient}
-          onChange={handleChange}
-          onSave={handleSave}
-          onCancel={handleCancel}
-          isFormValid={isFormValid}
-        />
-      ) : (
-        showPatientInfo && (
-          <PatientInfo
-            patient={patient}
-            onEdit={handleEdit}
-            onDeleteToggle={handleDeleteToggle}
-          />
-        )
-      )}
+    <div className={styles.patientDetails}>
+      <TabPanel
+        tabs={[
+          {
+            label: 'Local',
+            content: isEditing || isAdding ? (
+              <PatientForm
+                patient={patient}
+                onChange={handleChange}
+                onSave={handleSave}
+                onCancel={handleCancel}
+                isFormValid={isFormValid}
+              />
+            ) : (
+              showPatientInfo && (
+                <PatientInfo
+                  patient={patient}
+                  onEdit={handleEdit}
+                  onDeleteToggle={handleDeleteToggle}
+                />
+              )
+            ),
+          },
+          {
+            label: 'Google',
+            content: isEditing || isAdding ? (
+              <PatientForm
+                patient={patient}
+                onChange={handleChange}
+                onSave={handleSave}
+                onCancel={handleCancel}
+                isFormValid={isFormValid}
+              />
+            ) : (
+              showPatientInfo && (
+                <PatientInfo
+                  patient={patient}
+                  onEdit={handleEdit}
+                  onDeleteToggle={handleDeleteToggle}
+                />
+              )
+            ),
+          },
+        ]}
+      />
     </div>
   );
 };

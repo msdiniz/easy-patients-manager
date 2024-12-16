@@ -1,0 +1,23 @@
+.tabPanel {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabHeader {
+  display: flex;
+}
+
+.tabButton {
+  flex: 1;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.tabButtonActive {
+  background-color: #007bff;
+  color: white;
+}
+
+.tabContent {
+  padding: 10px;
+}

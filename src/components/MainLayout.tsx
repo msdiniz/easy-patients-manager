@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { PatientList } from './PatientList/PatientList'; // Use named import
-import PatientDetails from './PatientDetails';
+import PatientDetails from '././Details/PatientDetails';
 import Header from './Header';
 import { setPatients } from '../store';
 import { getPatientsFromStorage, savePatientsToStorage } from '../utils/patientStorage';

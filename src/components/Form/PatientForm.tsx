@@ -6,7 +6,7 @@ import FormTextArea from './Fields/FormTextArea';
 import FormButtons from './Fields/FormButtons';
 import useFormValidation from './useFormValidation';
 import useOptions from '../../hooks/useOptions';
-import './PatientForm.css'; // Ensure the CSS file is imported
+import styles from './PatientForm.module.css'; // Import the CSS module
 import EmailFields from './Fields/EmailFields';
 import AddressFields from './Fields/AddressFields';
 import PhoneFields from './Fields/PhoneFields';
@@ -75,7 +75,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
   };
 
   return (
-    <form className="patient-form">
+    <form className={styles.patientForm}>
       <FormField
         label="Full Name"
         name="fullName"

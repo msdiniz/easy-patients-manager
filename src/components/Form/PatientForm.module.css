@@ -1,4 +1,4 @@
-.patient-form {
+.patientForm {
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -7,44 +7,44 @@
   margin: 0 auto; /* Center the form horizontally */
 }
 
-.patient-form .form-group {
+.formGroup {
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
 }
 
-.patient-form label {
+.label {
   margin-bottom: 5px;
 }
 
-.patient-form input,
-.patient-form textarea,
-.patient-form select {
+.input,
+.textarea,
+.select {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-.patient-form input.error,
-.patient-form textarea.error,
-.patient-form select.error {
+.inputError,
+.textareaError,
+.selectError {
   border-color: red;
 }
 
-.patient-form .error-message {
+.errorMessage {
   color: red;
   font-size: 0.875em;
   margin-top: 5px;
 }
 
-.patient-form .button-container {
+.buttonContainer {
   display: flex;
   justify-content: space-between;
   width: 100%;
   padding: 10px 0;
 }
 
-.patient-form .button-container button {
+.buttonContainer button {
   width: 45%; /* Adjusted width to ensure buttons are not cut off */
   padding: 10px 15px;
   border: none;
@@ -55,38 +55,39 @@
   text-align: center;
 }
 
-.patient-form .button-container button:hover {
+.buttonContainer button:hover {
   background-color: #0056b3;
 }
 
-.patient-form .button-container button.disabled {
+.buttonContainer button.disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
-.form-field {
+
+.formField {
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
 }
 
-.form-field label {
+.formField label {
   margin-bottom: 0.5rem;
 }
 
-.form-field input,
-.form-field select,
-.form-field textarea {
+.formField input,
+.formField select,
+.formField textarea {
   padding: 0.5rem;
   font-size: 1rem;
 }
 
-.form-field input.error,
-.form-field select.error,
-.form-field textarea.error {
+.formField input.error,
+.formField select.error,
+.formField textarea.error {
   border: 1px solid red;
 }
 
-.error-message {
+.errorMessage {
   color: red;
   font-size: 0.875em;
   margin-top: 0.25rem;
