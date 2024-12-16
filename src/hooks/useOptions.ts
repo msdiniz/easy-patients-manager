@@ -7,6 +7,9 @@ interface Options {
   rhFactors: string[];
   ethnicGroups: string[];
   bookmarks: Bookmark[];
+  emailTypes: string[];
+  addressTypes: string[];
+  phoneTypes: string[];
 }
 
 const useOptions = () => {
@@ -15,7 +18,10 @@ const useOptions = () => {
     bloodTypes: [],
     rhFactors: [],
     ethnicGroups: [],
-    bookmarks: []
+    bookmarks: [],
+    emailTypes: [],
+    addressTypes: [],
+    phoneTypes: []
   });
 
   useEffect(() => {
@@ -31,7 +37,10 @@ const useOptions = () => {
           bloodTypes: data.bloodTypes || [],
           rhFactors: data.rhFactors || [],
           ethnicGroups: data.ethnicGroups || [],
-          bookmarks: transformedBookmarks
+          bookmarks: transformedBookmarks,
+          emailTypes: data.emailTypes || [],
+          addressTypes: data.addressTypes || [],
+          phoneTypes: data.phoneTypes || []
         });
       })
       .catch(error => console.error('Error loading options:', error));

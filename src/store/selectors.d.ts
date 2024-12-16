@@ -84,3 +84,45 @@ export declare const getIsAdding: ((state: import("../store").PatientState) => b
     memoize: typeof import("reselect").weakMapMemoize;
     argsMemoize: typeof import("reselect").weakMapMemoize;
 };
+export declare const getIsTogglingDelete: ((state: import("../store").PatientState) => boolean) & {
+    clearCache: () => void;
+    resultsCount: () => number;
+    resetResultsCount: () => void;
+} & {
+    resultFunc: (resultFuncArgs_0: boolean) => boolean;
+    memoizedResultFunc: ((resultFuncArgs_0: boolean) => boolean) & {
+        clearCache: () => void;
+        resultsCount: () => number;
+        resetResultsCount: () => void;
+    };
+    lastResult: () => boolean;
+    dependencies: [(state: RootState) => boolean];
+    recomputations: () => number;
+    resetRecomputations: () => void;
+    dependencyRecomputations: () => number;
+    resetDependencyRecomputations: () => void;
+} & {
+    memoize: typeof import("reselect").weakMapMemoize;
+    argsMemoize: typeof import("reselect").weakMapMemoize;
+};
+export declare const getShowDeleted: ((state: import("../store").PatientState) => boolean) & {
+    clearCache: () => void;
+    resultsCount: () => number;
+    resetResultsCount: () => void;
+} & {
+    resultFunc: (resultFuncArgs_0: boolean) => boolean;
+    memoizedResultFunc: ((resultFuncArgs_0: boolean) => boolean) & {
+        clearCache: () => void;
+        resultsCount: () => number;
+        resetResultsCount: () => void;
+    };
+    lastResult: () => boolean;
+    dependencies: [(state: RootState) => boolean];
+    recomputations: () => number;
+    resetRecomputations: () => void;
+    dependencyRecomputations: () => number;
+    resetDependencyRecomputations: () => void;
+} & {
+    memoize: typeof import("reselect").weakMapMemoize;
+    argsMemoize: typeof import("reselect").weakMapMemoize;
+};

@@ -3,5 +3,8 @@
     "bloodTypes": ["A", "B", "AB", "O"],
     "rhFactors": ["+", "-"],
     "ethnicGroups": ["branco", "pardo", "amarelo", "indigena"],
-    "bookmarks": ["Pacientes", "Pacientes falecidos", "Pacientes - dados antigos", "Perícia Stamato"]
-  }
+    "bookmarks": ["Pacientes", "Pacientes falecidos", "Pacientes - dados antigos", "Perícia Stamato"],
+    "emailTypes": ["home", "work", "other"],
+    "addressTypes": ["home", "work", "other"],
+    "phoneTypes": ["home", "work", "other", "cell 1", "cell 2", "accompanying 1", "accompanying 2"]
+    }

@@ -36,11 +36,29 @@
 - [x] **Basic CRUD Operations for Patients**
   - ~~Implement basic Create, Read, Update, Delete operations for patients.~~
 - [x] **Patient Fields**:
-  - ~~Full Name, DOB, Gender, Emails, Addresses, Phones, CPF, Blood Type, Rh Factor, Ethnic Group, Bookmark, Observation, Notes, How Patient Was Referred, Date of First Contact.~~
-- [x] **Basic CRUD Operations for Clinic Staff**
-  - ~~Implement basic Create, Read, Update, Delete operations for clinic staff.~~
-- [x] **Clinic Staff Fields**:
-  - ~~Full Name, Role (Physician, Admin, Supervisor), DOB, Gender, Emails, Addresses, Phones, Specialties (for Physicians).~~
+  - Full Name, DOB, Gender, Emails, Addresses, Phones, CPF, Blood Type, Rh Factor, Ethnic Group, Bookmark, Observation, Notes, How Patient Was Referred, Date of First Contact.
+    1. **Emails**:
+       - Fields: email, type, note
+       - Type options: home, work, other
+       - Note field is optional but required for type "other"
+
+    2. **Addresses**:
+       - Fields: address, type, note
+       - Type options: home, work, other
+       - Note field is optional but required for type "other"
+
+    3. **Phones**:
+       - Fields: phone, type, note
+       - Type options: home, work, other, cell 1, cell 2, accompanying 1, accompanying 2
+       - Note field is optional but required for type "accompanying \d" and "other"
+
+    4. **Dynamic Fields**:
+       - Ability to add or remove multiple emails, addresses, and phones dynamically in the form.
+
+- [ ] **Basic CRUD Operations for Clinic Staff**
+  - Implement basic Create, Read, Update, Delete operations for clinic staff.
+- [ ] **Clinic Staff Fields**:
+  - Full Name, Role (Physician, Admin, Supervisor), DOB, Gender, Emails, Addresses, Phones, Specialties (for Physicians).
 
 ## Future Enhancements
 
@@ -49,14 +67,15 @@
   - Implement interaction details (e.g., category, location, time, price).
 - [ ] **Integration with Google Contacts**:
   - Fetch patient details from Google Contacts.
-- [ ] **Bookmarks Field**:
+- [x] **Bookmarks Field**:
   - ~~Change the `bookmark` field to `Bookmarks[]` in the model.~~
   - ~~Ensure the `bookmark` field is editable.~~
   - ~~Add a select field in `PatientList` that allows selecting 0 to N bookmarks, and filter the `PatientList` based on the selected values. Any patient can have N bookmarks.~~
-- [ ] **Delete Operation**:
-  - Implement the delete operation for patients.
-  - Add a boolean field `deleted` in the `Patient` model to handle deletions.
-  - Ensure the `PatientList` filters out patients marked as deleted.
+
+- [x] **Delete Operation**:
+  - ~~Implement the delete operation for patients.~~
+  - ~~Add a boolean field `deleted` in the `Patient` model to handle deletions.~~
+  - ~~Ensure the `PatientList` filters out patients marked as deleted.~~
 
 ## Notes
 

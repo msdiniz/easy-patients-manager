@@ -25,6 +25,30 @@ const PatientInfo: React.FC<PatientInfoProps> = ({ patient, onEdit, onDeleteTogg
       <p><strong>Notes:</strong> {patient.notes}</p>
       <p><strong>How Patient Was Referred:</strong> {patient.howPatientWasReferred}</p>
       <p><strong>Date of First Contact:</strong> {patient.dateOfFirstContact}</p>
+      <h3>Emails</h3>
+      {patient.emails.map((email, index) => (
+        <div key={index}>
+          <p>Email: {email.email}</p>
+          <p>Type: {email.type}</p>
+          {email.note && <p>Note: {email.note}</p>}
+        </div>
+      ))}
+      <h3>Addresses</h3>
+      {patient.addresses.map((address, index) => (
+        <div key={index}>
+          <p>Address: {address.address}</p>
+          <p>Type: {address.type}</p>
+          {address.note && <p>Note: {address.note}</p>}
+        </div>
+      ))}
+      <h3>Phones</h3>
+      {patient.phones.map((phone, index) => (
+        <div key={index}>
+          <p>Phone: {phone.phone}</p>
+          <p>Type: {phone.type}</p>
+          {phone.note && <p>Note: {phone.note}</p>}
+        </div>
+      ))}      
       <p><strong>Bookmarks:</strong> {patient.bookmarks ? patient.bookmarks.map(b => b.name).join(', ') : 'None'}</p>
       {!patient.deleted && <button onClick={onEdit}>Edit</button>}
       <button onClick={onDeleteToggle} style={{ marginLeft: '10px' }}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DetailedPatient, Bookmark } from '../../models/PatientModels';
+import { DetailedPatient, Bookmark, Email, Address, Phone } from '../../models/PatientModels';
 import FormField from './FormField';
 import FormSelect from './FormSelect';
 import FormTextArea from './FormTextArea';
@@ -7,23 +7,41 @@ import FormButtons from './FormButtons';
 import useFormValidation from './useFormValidation';
 import useOptions from '../../hooks/useOptions';
 import './PatientForm.css'; // Ensure the CSS file is imported
+import EmailFields from './EmailFields';
+import AddressFields from './AddressFields';
+import PhoneFields from './PhoneFields';
 
 interface PatientFormProps {
   patient: DetailedPatient;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | CustomChangeEvent) => void;
   onSave: () => void;
   onCancel: () => void;
   isFormValid: boolean;
 }
 
+interface CustomChangeEvent {
+  target: {
+    name: string;
+    value: Email[] | Address[] | Phone[] | Bookmark[];
+  };
+}
+
+const isCustomChangeEvent = (e: any): e is CustomChangeEvent => {
+  return e && e.target && Array.isArray(e.target.value);
+};
+
 const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, onCancel, isFormValid }) => {
   const options = useOptions(); // Use the custom hook
   const { errors, validateField } = useFormValidation(options);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    validateField(name, value);
-    onChange(e);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | CustomChangeEvent) => {
+    if (isCustomChangeEvent(e)) {
+      onChange(e);
+    } else {
+      const { name, value } = e.target;
+      validateField(name, value);
+      onChange(e);
+    }
   };
 
   const handleBookmarkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -37,7 +55,23 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         }
       }
     }
-    onChange({ target: { name: 'bookmarks', value: selectedBookmarks } } as any);
+    const event: CustomChangeEvent = { target: { name: 'bookmarks', value: selectedBookmarks } };
+    handleChange(event);
+  };
+
+  const handleEmailsChange = (emails: Email[]) => {
+    const event: CustomChangeEvent = { target: { name: 'emails', value: emails } };
+    handleChange(event);
+  };
+
+  const handleAddressesChange = (addresses: Address[]) => {
+    const event: CustomChangeEvent = { target: { name: 'addresses', value: addresses } };
+    handleChange(event);
+  };
+
+  const handlePhonesChange = (phones: Phone[]) => {
+    const event: CustomChangeEvent = { target: { name: 'phones', value: phones } };
+    handleChange(event);
   };
 
   return (
@@ -121,6 +155,9 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         onChange={handleChange}
         error={errors.dateOfFirstContact}
       />
+      <EmailFields emails={patient.emails || []} onChange={handleEmailsChange} />
+      <AddressFields addresses={patient.addresses || []} onChange={handleAddressesChange} />
+      <PhoneFields phones={patient.phones || []} onChange={handlePhonesChange} />
       <FormSelect
         label="Bookmarks"
         name="bookmarks"

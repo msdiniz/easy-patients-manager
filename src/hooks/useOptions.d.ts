@@ -5,6 +5,9 @@ interface Options {
     rhFactors: string[];
     ethnicGroups: string[];
     bookmarks: Bookmark[];
+    emailTypes: string[];
+    addressTypes: string[];
+    phoneTypes: string[];
 }
 declare const useOptions: () => Options;
 export default useOptions;

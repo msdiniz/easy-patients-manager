@@ -4,7 +4,7 @@ import PatientInfo from './PatientInfo'; // Ensure the default import is used
 import PatientForm from './Form/PatientForm';
 import { getIsEditing, getIsAdding, getSelectedPatient, getIsTogglingDelete, getShowDeleted } from '../store/selectors'; // Import the new selector
 import { setIsEditing, setSelectedPatient, setIsAdding, setPatients, selectPatientDeletedState, setIsTogglingDelete, RootState } from '../store/index';
-import { DetailedPatient } from '../models/PatientModels';
+import { DetailedPatient, Email, Address, Phone, Bookmark } from '../models/PatientModels'; // Import the missing types
 import { PatientFactory } from '../models/PatientFactory'; // Ensure the named import is used
 import { PatientUtils } from '../models/PatientUtils';
 import { getPatientsFromStorage, savePatientsToStorage, getDetailedPatientsFromStorage, saveDetailedPatientsToStorage } from '../utils/patientStorage';
@@ -12,6 +12,13 @@ import { getPatientsFromStorage, savePatientsToStorage, getDetailedPatientsFromS
 interface PatientDetailsProps {
   patientId: string;
   fullName: string;
+}
+
+interface CustomChangeEvent {
+  target: {
+    name: string;
+    value: Email[] | Address[] | Phone[] | Bookmark[];
+  };
 }
 
 const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) => {
@@ -97,13 +104,13 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
     console.log('onEdit called');
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    if (patient) {
-      const { name, value } = e.target;
-      setPatient({ ...patient, [name]: value });
-      dispatch(setSelectedPatient({ ...patient, [name]: value }));
-      setIsDirty(true);
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | CustomChangeEvent) => {
+    const { name, value } = e.target;
+    setPatient(prevPatient => prevPatient ? { ...prevPatient, [name]: value } : prevPatient);
+    const updatedPatient = patient ? { ...patient, [name]: value } : null;
+    setPatient(updatedPatient);
+    dispatch(setSelectedPatient(updatedPatient));
+    setIsDirty(true);
   };
 
   const handleSave = () => {
