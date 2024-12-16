@@ -1,5 +1,5 @@
 import React from 'react';
-import { DetailedPatient } from '../models/PatientModels';
+import { DetailedPatient, ContactItem, Email, Address, Phone } from '../models/PatientModels';
 import './PatientInfo.css'; // Import the CSS file
 
 interface PatientInfoProps {
@@ -9,6 +9,45 @@ interface PatientInfoProps {
 }
 
 const PatientInfo: React.FC<PatientInfoProps> = ({ patient, onEdit, onDeleteToggle }) => {
+  const isEmail = (item: ContactItem): item is Email => {
+    return (item as Email).email !== undefined;
+  };
+  
+  const isAddress = (item: ContactItem): item is Address => {
+    return (item as Address).address !== undefined;
+  };
+  
+  const isPhone = (item: ContactItem): item is Phone => {
+    return (item as Phone).phone !== undefined;
+  };
+  
+  const renderList = (items: ContactItem[], titleSingular: string, titlePlural: string) => {
+    if (!items || items.length === 0) {
+      return (
+        <div>
+          <p><strong>{titlePlural}:</strong> none</p>
+        </div>
+      );
+    }
+    const titleText = items.length > 1 ? titlePlural : titleSingular;
+    return (
+      <div>
+        <p><strong>{titleText}</strong></p>
+        <ul>
+          {items.map((item, index) => (
+            <li key={index}>
+              {isEmail(item) && item.email}
+              {isAddress(item) && item.address}
+              {isPhone(item) && item.phone}
+              {item.type && ` (${item.type})`}
+              {item.note && ` - Note: ${item.note}`}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+  
   if (!patient) {
     return <div>No patient selected</div>;
   }
@@ -25,30 +64,20 @@ const PatientInfo: React.FC<PatientInfoProps> = ({ patient, onEdit, onDeleteTogg
       <p><strong>Notes:</strong> {patient.notes}</p>
       <p><strong>How Patient Was Referred:</strong> {patient.howPatientWasReferred}</p>
       <p><strong>Date of First Contact:</strong> {patient.dateOfFirstContact}</p>
+      {renderList(patient.emails, 'Email', 'Emails')}
+      {renderList(patient.addresses, 'Address', 'Addresses')}
+      {renderList(patient.phones, 'Phone', 'Phones')}
       <h3>Emails</h3>
-      {patient.emails.map((email, index) => (
-        <div key={index}>
-          <p>Email: {email.email}</p>
-          <p>Type: {email.type}</p>
-          {email.note && <p>Note: {email.note}</p>}
-        </div>
-      ))}
-      <h3>Addresses</h3>
-      {patient.addresses.map((address, index) => (
-        <div key={index}>
-          <p>Address: {address.address}</p>
-          <p>Type: {address.type}</p>
-          {address.note && <p>Note: {address.note}</p>}
-        </div>
-      ))}
-      <h3>Phones</h3>
-      {patient.phones.map((phone, index) => (
-        <div key={index}>
-          <p>Phone: {phone.phone}</p>
-          <p>Type: {phone.type}</p>
-          {phone.note && <p>Note: {phone.note}</p>}
-        </div>
-      ))}      
+      {/* {(!patient.emails || patient.emails.length === 0) ? (
+        <p>None</p>
+      ) : (
+        patient.emails.map((email, index) => (
+          <div key={index}>
+            <p>{email.email} {email.type && `(${email.type})`}</p>
+            {email.note && <p>Note: {email.note}</p>}
+          </div>
+        ))
+      )} */}
       <p><strong>Bookmarks:</strong> {patient.bookmarks ? patient.bookmarks.map(b => b.name).join(', ') : 'None'}</p>
       {!patient.deleted && <button onClick={onEdit}>Edit</button>}
       <button onClick={onDeleteToggle} style={{ marginLeft: '10px' }}>

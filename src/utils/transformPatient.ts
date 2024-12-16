@@ -3,6 +3,8 @@ import { Patient, DetailedPatient } from '../models/PatientModels';
 export const transformToDetailedPatient = (patient: Patient): DetailedPatient => {
   return {
     ...patient,
+    bookmarks: patient.bookmarks === null ? [] : patient.bookmarks,
+    deleted: patient.deleted !== undefined ? patient.deleted : undefined,    
     emails: [],
     addresses: [],
     phones: [],
@@ -23,7 +25,7 @@ export const transformToPatient = (detailedPatient: DetailedPatient): Patient =>
     gender: detailedPatient.gender,
     cpf: detailedPatient.cpf,
     dateOfFirstContact: detailedPatient.dateOfFirstContact,
-    bookmarks: detailedPatient.bookmarks, // Corrected to bookmarks
-    deleted: detailedPatient.deleted // Ensure the deleted field is included
+    bookmarks: detailedPatient.bookmarks  === null ? [] : detailedPatient.bookmarks,
+    deleted: detailedPatient.deleted !== undefined ? detailedPatient.deleted : undefined
   };
 };

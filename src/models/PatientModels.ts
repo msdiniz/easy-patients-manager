@@ -18,6 +18,8 @@ export interface Phone {
   type: string;
 }
 
+export type ContactItem = Email | Address | Phone;
+
 export interface Bookmark {
   id: string;
   name: string;

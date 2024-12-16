@@ -25,7 +25,9 @@ describe('transformToDetailedPatient', () => {
       ethnicGroup: '',
       observation: '',
       notes: '',
-      howPatientWasReferred: ''
+      howPatientWasReferred: '',
+      deleted: undefined,
+      bookmarks: [],
     });
   });
   describe('transformToPatient', () => {
@@ -57,8 +59,9 @@ describe('transformToDetailedPatient', () => {
         dob: '1990-01-01',
         gender: 'male',
         cpf: '123.456.789-00',
-        bookmark: '',
-        dateOfFirstContact: ''
+        dateOfFirstContact: '',
+        deleted: undefined,
+        bookmarks: [],
       });
     });
   // Add more tests as needed
