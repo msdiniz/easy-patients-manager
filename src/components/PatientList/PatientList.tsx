@@ -118,6 +118,22 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
         </label>
       </div>
       <button onClick={clearLocalStorage}>Reset Data</button>
+      <div className="button-container">
+        {searchTerm && PatientUtils.isValidName(searchTerm) && (
+          <button onClick={handleNewPatient}>New Patient</button>
+        )}
+        {searchTerm && (
+          <button onClick={() => setSearchTerm('')}>Clear</button>
+        )}
+      </div>
+      <div className="patient-list-divider"></div>
+      <FilterByBookmarks
+        options={options.bookmarks}
+        selectedBookmarks={selectedBookmarks}
+        onBookmarkChange={handleBookmarkChange}
+        onClearBookmarks={handleClearBookmarks}
+      />
+      <div className="patient-list-divider"></div>
       <div className="checkbox-container">
         <label className="checkbox-label">
           <input
@@ -138,21 +154,8 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
           Show Only Deleted Patients
         </label>
       </div>
-      <div className="button-container">
-        {searchTerm && PatientUtils.isValidName(searchTerm) && (
-          <button onClick={handleNewPatient}>New Patient</button>
-        )}
-        {searchTerm && (
-          <button onClick={() => setSearchTerm('')}>Clear</button>
-        )}
-      </div>
-      <FilterByBookmarks
-        options={options.bookmarks}
-        selectedBookmarks={selectedBookmarks}
-        onBookmarkChange={handleBookmarkChange}
-        onClearBookmarks={handleClearBookmarks}
-      />
-      <ul>
+      <div className="patient-list-divider"></div>
+      <ul className="patient-list-ul">
         {filteredPatients.map(patient => (
           <li
             key={patient.id}
@@ -164,6 +167,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
           </li>
         ))}
       </ul>
+      <div className="patient-list-vertical-line"></div>
     </div>
   );
 };

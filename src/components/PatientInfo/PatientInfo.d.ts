@@ -1,5 +1,5 @@
 import React from 'react';
-import { DetailedPatient } from '../models/PatientModels';
+import { DetailedPatient } from '../../models/PatientModels';
 import './PatientInfo.css';
 interface PatientInfoProps {
     patient: DetailedPatient | null;

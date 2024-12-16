@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bookmark } from '../../models/PatientModels';
+import { Bookmark } from '../../../models/PatientModels';
 interface FormSelectProps {
     label: string;
     name: string;

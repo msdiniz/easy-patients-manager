@@ -1,15 +1,15 @@
 import React from 'react';
 import { DetailedPatient, Bookmark, Email, Address, Phone } from '../../models/PatientModels';
-import FormField from './FormField';
-import FormSelect from './FormSelect';
-import FormTextArea from './FormTextArea';
-import FormButtons from './FormButtons';
+import FormField from './Fields/FormField';
+import FormSelect from './Fields/FormSelect';
+import FormTextArea from './Fields/FormTextArea';
+import FormButtons from './Fields/FormButtons';
 import useFormValidation from './useFormValidation';
 import useOptions from '../../hooks/useOptions';
 import './PatientForm.css'; // Ensure the CSS file is imported
-import EmailFields from './EmailFields';
-import AddressFields from './AddressFields';
-import PhoneFields from './PhoneFields';
+import EmailFields from './Fields/EmailFields';
+import AddressFields from './Fields/AddressFields';
+import PhoneFields from './Fields/PhoneFields';
 
 interface PatientFormProps {
   patient: DetailedPatient;

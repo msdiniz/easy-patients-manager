@@ -1,5 +1,5 @@
 import React from 'react';
-import { Address } from '../../models/PatientModels';
+import { Address } from '../../../models/PatientModels';
 interface AddressFieldsProps {
     addresses: Address[];
     onChange: (addresses: Address[]) => void;

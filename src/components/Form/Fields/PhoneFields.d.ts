@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone } from '../../models/PatientModels';
+import { Phone } from '../../../models/PatientModels';
 interface PhoneFieldsProps {
     phones: Phone[];
     onChange: (phones: Phone[]) => void;

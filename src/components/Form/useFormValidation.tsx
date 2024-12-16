@@ -29,7 +29,32 @@ const useFormValidation = (options: any) => {
     setErrors(prevErrors => ({ ...prevErrors, [name]: error }));
   };
 
-  return { errors, validateField };
+  const validateEmail = (email: string) => {
+    if (!email) {
+      return 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      return 'Invalid email address';
+    }
+    return '';
+  };
+
+  const validatePhone = (phone: string) => {
+    if (!phone) {
+      return 'Phone number is required';
+    } else if (!/^\d{10,15}$/.test(phone)) {
+      return 'Invalid phone number';
+    }
+    return '';
+  };
+
+  const validateAddress = (address: string) => {
+    if (!address) {
+      return 'Address is required';
+    }
+    return '';
+  };
+
+  return { errors, validateField, validateEmail, validatePhone, validateAddress };
 };
 
 export default useFormValidation;

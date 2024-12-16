@@ -8,7 +8,12 @@ interface FilterByBookmarksProps {
   onClearBookmarks: () => void;
 }
 
-const FilterByBookmarks: React.FC<FilterByBookmarksProps> = ({ options, onBookmarkChange, onClearBookmarks }) => {
+const FilterByBookmarks: React.FC<FilterByBookmarksProps> = ({
+  options,
+  selectedBookmarks,
+  onBookmarkChange,
+  onClearBookmarks,
+}) => {
   const handleBookmarkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { options } = e.target;
     const selected: string[] = [];
@@ -22,15 +27,23 @@ const FilterByBookmarks: React.FC<FilterByBookmarksProps> = ({ options, onBookma
 
   return (
     <div className="bookmark-filter">
-      <label>Filter by Bookmarks:</label>
-      <select multiple onChange={handleBookmarkChange}>
+      <label htmlFor="bookmarks">Filter by Bookmarks:</label>
+      <select
+        id="bookmarks"
+        multiple
+        value={selectedBookmarks}
+        onChange={handleBookmarkChange}
+        style={{ width: '100%' }}
+      >
         {options.map((bookmark: Bookmark) => (
           <option key={bookmark.id} value={bookmark.name}>
             {bookmark.name}
           </option>
         ))}
       </select>
-      <button onClick={onClearBookmarks}>Clear Bookmarks</button>
+      <button type="button" onClick={onClearBookmarks}>
+        Clear Bookmarks
+      </button>
     </div>
   );
 };

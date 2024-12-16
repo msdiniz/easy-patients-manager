@@ -2,6 +2,8 @@
   text-align: left;
   width: 30%;
   min-width: 250px; /* Set a minimum width to prevent deformation */
+  padding-right: 20px; /* Add padding to avoid overlap with the vertical line */
+  position: relative; /* Ensure the vertical line is positioned correctly */
 }
 
 .patient-list input {
@@ -29,6 +31,7 @@
   width: 100%;
   padding: 10px 0;
   gap: 10px; /* Add space between buttons */
+  margin-bottom: 10px;
 }
 
 .button-container button {
@@ -55,6 +58,27 @@
   font-weight: bold; /* Bold text for selected patient */
 }
 
+.patient-list-divider {
+  border-top: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.patient-list-ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #ccc; /* Subtle line above the list */
+}
+
+.patient-list-vertical-line {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background-color: #ccc;
+}
+
 .checkbox-container {
   display: flex;
   align-items: center;
@@ -73,4 +97,23 @@
 
 .checkbox-container label {
   margin-left: 8px; /* Add some space between the checkbox and the label */
+}
+
+.bookmark-filter {
+  margin-bottom: 10px;
+}
+
+.bookmark-filter label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.bookmark-filter select {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.bookmark-filter button {
+  display: block;
+  width: 100%;
 }

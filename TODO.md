@@ -65,8 +65,44 @@
 - [ ] **Patient and Staff Interaction**:
   - Implement interaction categories (e.g., first consultation, follow-up, urgent consultation, contact, hospitalization, admin).
   - Implement interaction details (e.g., category, location, time, price).
+  - **Interaction Categories**:
+    - consulta primeira vez
+    - consulta retorno
+    - consulta urgente
+    - contato
+    - internação hospitalar
+    - admin
+  - **Interaction Details**:
+    - **Contato**:
+      - pessoal
+      - phone
+      - email
+      - Whatsapp
+      - outro
+    - **Local**:
+      - consultório
+      - casa do paciente
+      - sala de emergência
+      - visita hospitalar
+    - **Time**:
+      - start time
+      - end time
+    - **Preço**
+    - **Interaction Rules**:
+      - interaction 1-1 category
+      - interaction 1-1 local
+      - interaction 1-1 preço
+      - if (category === internação hospitalar) {
+        - interaction 1-n time
+        - interaction 1-n preço
+      } else {
+        - interaction 1-1 time
+        - interaction 1-1 preço
+      }
+
 - [ ] **Integration with Google Contacts**:
   - Fetch patient details from Google Contacts.
+
 - [x] **Bookmarks Field**:
   - ~~Change the `bookmark` field to `Bookmarks[]` in the model.~~
   - ~~Ensure the `bookmark` field is editable.~~
@@ -81,3 +117,29 @@
 
 - Ensure all components are implemented in TypeScript.
 - Use React for the frontend and plan for future integration with Electron for desktop application.
+
+## Application Structure
+
+- The App should be named EasyPatientsManager and it should have a main screen with:
+  - **Header**:
+    - mini logo icon
+    - name of App
+    - buttons: Login/Logout button and close
+  - **Left Panel (listOfPatientsPanel)**:
+    - list of all patients
+    - top of it needs a search textbox and find button
+    - new patient (registrar/cadastrar)
+  - **Right Panel**:
+    - a tab panel with at least two tabs:
+      - **First Tab (tabLocal)**:
+        - blank OR when we click in a patient, it should display a form with all patient fields, including the empty ones.
+        - it should have a button edit that turns into save and back in edit after respective actions
+        - it should have a button OpenLocalFolder, if it does not exist, it should display CreateLocalFolder instead
+      - **Second Tab (tabGoogle)**:
+        - identical to First Tab
+  - It will be an Electron Desktop App, and its primary source of patients, list displayed at listOfPatientsPanel, will be a JSON located in the `\data` folder:
+    - it will be an array of patients
+    - each patient should have: Id, fullName, DOB, CPF
+  - The source of fields for each patient at tabLocal should be a JSON that will be located in `\data\patients\fullName_Id`.
+  - The source of fields for each patient at tabGoogle should be GoogleContactService(fullName).
+  - If there is room on the screen, both tabs should be displayed side by side; if not, regular tabs (so, probably a Tab control is not ideal here...)

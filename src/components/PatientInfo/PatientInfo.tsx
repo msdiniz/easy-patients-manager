@@ -1,5 +1,5 @@
 import React from 'react';
-import { DetailedPatient, ContactItem, Email, Address, Phone } from '../models/PatientModels';
+import { DetailedPatient, ContactItem, Email, Address, Phone } from '../../models/PatientModels';
 import './PatientInfo.css'; // Import the CSS file
 
 interface PatientInfoProps {
