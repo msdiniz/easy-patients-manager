@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PatientInfo from './PatientInfo'; // Ensure the default import is used
 import PatientForm from './Form/PatientForm';
-import { getIsEditing, getIsAdding, getSelectedPatient } from '../store/selectors';
-import { setIsEditing, setSelectedPatient, setIsAdding, setPatients, selectPatientDeletedState, RootState } from '../store/index';
+import { getIsEditing, getIsAdding, getSelectedPatient, getIsTogglingDelete, getShowDeleted } from '../store/selectors'; // Import the new selector
+import { setIsEditing, setSelectedPatient, setIsAdding, setPatients, selectPatientDeletedState, setIsTogglingDelete, RootState } from '../store/index';
 import { DetailedPatient } from '../models/PatientModels';
 import { PatientFactory } from '../models/PatientFactory'; // Ensure the named import is used
 import { PatientUtils } from '../models/PatientUtils';
@@ -21,13 +21,22 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
   const [error, setError] = useState<string | null>(null);
   const isEditing = useSelector(getIsEditing);
   const isAdding = useSelector(getIsAdding);
+  const isTogglingDelete = useSelector(getIsTogglingDelete); // Use the new selector
+  const showDeleted = useSelector(getShowDeleted); // Use the new selector
   const [isDirty, setIsDirty] = useState(false);
   const deleted = useSelector((state: RootState) => selectPatientDeletedState(state, patientId));
 
   useEffect(() => {
     console.log('isAdding:', isAdding);
     console.log('isEditing:', isEditing);
+    console.log('isTogglingDelete:', isTogglingDelete);
     setError(null); // Reset the error state
+
+    if (isTogglingDelete) {
+      dispatch(setSelectedPatient(null));
+      return;
+    }
+
     if (isAdding) {
       // If adding a new patient, create a new DetailedPatient object with the same ID
       const newPatient = PatientFactory.createNewForPatientDetail(fullName, true);
@@ -67,7 +76,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
           setError('Failed to load patient details. Please try again later.');
         });
     }
-  }, [patientId, fullName, deleted, isAdding, isEditing, dispatch]);
+  }, [patientId, fullName, deleted, isAdding, isEditing, isTogglingDelete, dispatch]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -147,12 +156,14 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
     if (patient) {
       const confirmDelete = window.confirm(`Are you sure you want to ${patient.deleted ? 'undelete' : 'delete'} this patient?`);
       if (confirmDelete) {
+        dispatch(setIsTogglingDelete(true)); // Set isTogglingDelete to true
         const updatedPatients = getPatientsFromStorage().map(p =>
           p.id === patient.id ? { ...p, deleted: !p.deleted } : p
         );
         savePatientsToStorage(updatedPatients);
         dispatch(setPatients(updatedPatients));
         dispatch(setSelectedPatient(null)); // Clear the selected patient
+        dispatch(setIsTogglingDelete(false)); // Set isTogglingDelete to false
 
         // Update detailed patients in local storage
         const parsedDetailedPatients = getDetailedPatientsFromStorage();
@@ -182,6 +193,8 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
     return <div>Loading...</div>;
   }
 
+  const showPatientInfo = (patient.deleted && showDeleted) || (!patient.deleted && !showDeleted);
+
   return (
     <div className="patient-details">
       {isEditing || isAdding ? (
@@ -193,11 +206,13 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
           isFormValid={isFormValid}
         />
       ) : (
-        <PatientInfo
-          patient={patient}
-          onEdit={handleEdit}
-          onDeleteToggle={handleDeleteToggle}
-        />
+        showPatientInfo && (
+          <PatientInfo
+            patient={patient}
+            onEdit={handleEdit}
+            onDeleteToggle={handleDeleteToggle}
+          />
+        )
       )}
     </div>
   );

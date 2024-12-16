@@ -1,4 +1,3 @@
-// \src\store\index.ts
 import { createSlice, configureStore, PayloadAction } from '@reduxjs/toolkit';
 import { Patient } from '../models/PatientModels';
 
@@ -7,6 +6,8 @@ interface PatientState {
   patients: Patient[];
   isEditing: boolean;
   isAdding: boolean;
+  isTogglingDelete: boolean;
+  showDeleted: boolean; // New state to track whether to show deleted patients
 }
 
 const initialState: PatientState = {
@@ -14,6 +15,8 @@ const initialState: PatientState = {
   patients: [],
   isEditing: false,
   isAdding: false,
+  isTogglingDelete: false,
+  showDeleted: false, // Initialize the new state
 };
 
 const patientSlice = createSlice({
@@ -32,10 +35,16 @@ const patientSlice = createSlice({
     setIsAdding(state, action: PayloadAction<boolean>) {
       state.isAdding = action.payload;
     },
+    setIsTogglingDelete(state, action: PayloadAction<boolean>) {
+      state.isTogglingDelete = action.payload;
+    },
+    setShowDeleted(state, action: PayloadAction<boolean>) {
+      state.showDeleted = action.payload;
+    },
   },
 });
 
-export const { setSelectedPatient, setPatients, setIsEditing, setIsAdding } = patientSlice.actions;
+export const { setSelectedPatient, setPatients, setIsEditing, setIsAdding, setIsTogglingDelete, setShowDeleted } = patientSlice.actions;
 
 export const selectPatientDeletedState = (state: PatientState, patientId: string): boolean => {
   const patient = state.patients.find(p => p.id === patientId);

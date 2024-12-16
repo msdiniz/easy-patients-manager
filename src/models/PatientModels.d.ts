@@ -22,6 +22,7 @@ export interface Patient {
     cpf: string;
     dateOfFirstContact: string;
     bookmarks: Bookmark[];
+    deleted?: boolean;
 }
 export interface DetailedPatient extends Patient {
     emails: Email[];

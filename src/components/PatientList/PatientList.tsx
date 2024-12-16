@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Patient, Bookmark } from '../../models/PatientModels';
+import { Patient } from '../../models/PatientModels';
 import { PatientFactory } from '../../models/PatientFactory';
 import './PatientList.css'; // Ensure component-specific styles are imported
 import { PatientUtils } from '../../models/PatientUtils';
-import { setSelectedPatient, setIsEditing, setIsAdding, setPatients } from '../../store';
+import { setSelectedPatient, setIsEditing, setIsAdding, setPatients, setShowDeleted } from '../../store';
 import { getPatients } from '../../store/selectors';
 import { getPatientsFromStorage } from '../../utils/patientStorage';
 import useOptions from '../../hooks/useOptions';
+import FilterByBookmarks from './FilterByBookmarks'; // Import the new component
 
 interface PatientListProps {
   onSelectPatient: (patientId: string, fullName: string) => void;
@@ -20,7 +21,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   const [searchTerm, setSearchTerm] = useState('');
   const [useProperCase, setUseProperCase] = useState(true);
   const [showSelectedText, setShowSelectedText] = useState(false); // New state for showing selected text
-  const [showDeleted, setShowDeleted] = useState(false); // New state for showing deleted patients
+  const [showDeleted, setShowDeletedState] = useState(false); // New state for showing deleted patients
   const [selectedBookmarks, setSelectedBookmarks] = useState<string[]>([]); // New state for selected bookmarks
   const options = useOptions(); // Use the custom hook
   const selectRef = useRef<HTMLSelectElement>(null); // Add a ref for the select element
@@ -75,14 +76,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     onSelectPatient(patient.id, patient.fullName);
   };
 
-  const handleBookmarkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { options } = e.target;
-    const selected: string[] = [];
-    for (const option of options) {
-      if (option.selected) {
-        selected.push(option.value);
-      }
-    }
+  const handleBookmarkChange = (selected: string[]) => {
     setSelectedBookmarks(selected);
   };
 
@@ -94,7 +88,8 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   };
 
   const handleShowDeletedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setShowDeleted(e.target.checked);
+    setShowDeletedState(e.target.checked);
+    dispatch(setShowDeleted(e.target.checked)); // Dispatch the showDeleted state
     dispatch(setSelectedPatient(null)); // Clear the selected patient
     onSelectPatient('', ''); // Clear the selected patient
   };
@@ -151,21 +146,12 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
           <button onClick={() => setSearchTerm('')}>Clear</button>
         )}
       </div>
-      <div className="bookmark-filter">
-        <label>Filter by Bookmarks:</label>
-        <select ref={selectRef} multiple onChange={handleBookmarkChange}>
-          {options.bookmarks && options.bookmarks.map((bookmark: Bookmark) => {
-            console.log('Rendering bookmark option:', bookmark);
-            console.log('Rendering bookmark option.id:', bookmark.id);
-            return (
-              <option key={bookmark.id} value={bookmark.name}>
-                {bookmark.name}
-              </option>
-            );
-          })}
-        </select>
-        <button onClick={handleClearBookmarks}>Clear Bookmarks</button>
-      </div>
+      <FilterByBookmarks
+        options={options.bookmarks}
+        selectedBookmarks={selectedBookmarks}
+        onBookmarkChange={handleBookmarkChange}
+        onClearBookmarks={handleClearBookmarks}
+      />
       <ul>
         {filteredPatients.map(patient => (
           <li
