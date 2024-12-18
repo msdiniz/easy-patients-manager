@@ -12,7 +12,6 @@ dist
 dist-ssr
 *.local
 
-
 # Editor directories and files
 .idea
 .DS_Store
@@ -26,3 +25,7 @@ dist-ssr
 !.vscode/launch.json
 !.vscode/tasks.json
 !.vscode/extensions.json
+
+# Ignore environment variable files
+.env
+.env.*

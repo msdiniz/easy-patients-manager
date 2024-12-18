@@ -3,8 +3,9 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 // Specify the path to the .env file
-dotenv.config({ path: path.resolve(__dirname, '.env'), debug: process.env.DEBUG === 'true' });
-console.log('dotenv at OAuth:');
+const envPath = path.resolve(__dirname, '../auth/.env');
+dotenv.config({ path: envPath, debug: process.env.DEBUG === 'true' });
+console.log('dotenv at OAuth:', envPath);
 
 // Debugging log to check environment variables
 console.log('OAuth Client Environment Variables:', process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET);
