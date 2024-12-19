@@ -1,23 +1,20 @@
-import { allContacts } from '../shared/contactsState';
-
-interface Contact {
-  names?: Array<{ displayName: string }>;
-  memberships?: Array<{ contactGroupMembership: { contactGroupResourceName: string } }>;
-}
+import { people_v1 } from 'googleapis';
+import { contactGroupIds } from '../data/contacts/constants';
 
 /**
  * Filters contacts based on the provided filter text and selected groups.
- * @param filterText - The filter text. // document.getElementById('filter-text').value.trim().toLowerCase()
- * @param selectedGroups - The selected contact group IDs. // Array.from(document.querySelectorAll('#bookmark-panel input[type="checkbox"]:checked')).map(checkbox => checkbox.value)
+ * @param contacts - The contacts to filter.
+ * @param filterText - The filter text.
+ * @param selectedGroups - The selected contact group IDs.
  * @returns The filtered contacts.
  */
-function filterContacts(filterText: string, selectedGroups: string[]): Contact[] {
+function filterContacts(contacts: people_v1.Schema$Person[], filterText: string, selectedGroups: string[]): people_v1.Schema$Person[] {
   // Filter contacts by selected groups
-  let filteredContacts = allContacts.filter(person => {
+  let filteredContacts = contacts.filter(person => {
     const memberships = person.memberships || [];
     return memberships.some(membership =>
       membership.contactGroupMembership &&
-      selectedGroups.includes(membership.contactGroupMembership.contactGroupResourceName)
+      selectedGroups.includes(membership.contactGroupMembership.contactGroupResourceName!)
     );
   });
 
@@ -34,22 +31,37 @@ function filterContacts(filterText: string, selectedGroups: string[]): Contact[]
 
 /**
  * Filters contacts based on the selected groups.
- * @param selectedGroups - The selected contact group IDs. // Array.from(document.querySelectorAll('#bookmark-panel input[type="checkbox"]:checked')).map(checkbox => checkbox.value)
+ * @param contacts - The contacts to filter.
+ * @param selectedGroups - The selected contact group IDs.
  * @returns The filtered contacts.
  */
-function filterContactsByGroup(selectedGroups: string[]): Contact[] {
-  const filteredContacts = allContacts.filter(person => {
+function filterContactsByGroup(contacts: people_v1.Schema$Person[], selectedGroups: string[]): people_v1.Schema$Person[] {
+  return contacts.filter(person => {
     const memberships = person.memberships || [];
     return memberships.some(membership =>
       membership.contactGroupMembership &&
-      selectedGroups.includes(membership.contactGroupMembership.contactGroupResourceName)
+      selectedGroups.includes(membership.contactGroupMembership.contactGroupResourceName!)
     );
   });
+}
 
-  return filteredContacts;
+/**
+ * Returns contacts that do not belong to patient groups.
+ * @param contacts - The contacts to filter.
+ * @returns The contacts that do not belong to patient groups.
+ */
+function returnContactsThatDoNotBelongToPatientGroups(contacts: people_v1.Schema$Person[]): people_v1.Schema$Person[] {
+  return contacts.filter(person => {
+    const memberships = person.memberships || [];
+    return !memberships.some(membership =>
+      membership.contactGroupMembership &&
+      contactGroupIds.includes(membership.contactGroupMembership.contactGroupResourceName!)
+    );
+  });
 }
 
 export {
   filterContacts,
   filterContactsByGroup,
+  returnContactsThatDoNotBelongToPatientGroups,
 };

@@ -4,6 +4,8 @@ import path from 'path';
 import { google } from 'googleapis';
 import axios from 'axios';
 //import readline from 'readline';
+import { contactGroupIds } from '../../data/contacts/constants';
+import { filterContactsByGroup, returnContactsThatDoNotBelongToPatientGroups } from '../../apiContacts/filterContacts';
 
 jest.resetModules(); // Reset the module registry to avoid mock interference
 // Unmock the googleapis module
@@ -60,31 +62,56 @@ describe('ApiDataSource Integration Tests - Fetch Contacts', () => {
 
     // Pass the authenticated client to the ApiDataSource instance
     apiDataSource = new ApiDataSource(oauth2Client);
-  }, 3000); // Increase the timeout to 5 minutes (300000 ms)
+  }, 300000); // Increase the timeout to 5 minutes (300000 ms)
 
-  it('should fetch all contacts', async () => {
+  it('should fetch all contacts in specified groups', async () => {
     try {
       const contacts = await apiDataSource.fetchContacts();
-      console.log('Fetched contacts:', contacts);
-      expect(contacts).toBeDefined();
-      expect(contacts.length).toBeGreaterThan(0);
+      const filteredContacts = filterContactsByGroup(contacts, contactGroupIds);
+      console.log('Fetched contacts:', filteredContacts);
+      expect(filteredContacts).toBeDefined();
+      expect(filteredContacts.length).toBeGreaterThan(0);
     } catch (error) {
       if (isAxiosError(error) && error.response && error.response.status === 401) {
         console.error('Error: Access token has expired. Refreshing token...');
         await refreshAccessToken(oauth2Client);
         const contacts = await apiDataSource.fetchContacts(); // Retry fetching contacts
-        console.log('Fetched contacts after refresh:', contacts);
-        expect(contacts).toBeDefined();
-        expect(contacts.length).toBeGreaterThan(0);
+        const filteredContacts = filterContactsByGroup(contacts, contactGroupIds);
+        console.log('Fetched contacts after refresh:', filteredContacts);
+        expect(filteredContacts).toBeDefined();
+        expect(filteredContacts.length).toBeGreaterThan(0);
       } else {
         console.error('Error fetching contacts:', error);
         throw error;
       }
     }
-  }, 30000);
+  }, 300000); // Increase the timeout to 5 minutes (300000 ms)
+
+  it('should fetch contacts that do not belong to patient groups', async () => {
+    try {
+      const contacts = await apiDataSource.fetchContacts();
+      const filteredContacts = returnContactsThatDoNotBelongToPatientGroups(contacts);
+      console.log('Fetched contacts:', filteredContacts);
+      expect(filteredContacts).toBeDefined();
+      expect(filteredContacts.length).toBeGreaterThan(0);
+    } catch (error) {
+      if (isAxiosError(error) && error.response && error.response.status === 401) {
+        console.error('Error: Access token has expired. Refreshing token...');
+        await refreshAccessToken(oauth2Client);
+        const contacts = await apiDataSource.fetchContacts(); // Retry fetching contacts
+        const filteredContacts = returnContactsThatDoNotBelongToPatientGroups(contacts);
+        console.log('Fetched contacts after refresh:', filteredContacts);
+        expect(filteredContacts).toBeDefined();
+        expect(filteredContacts.length).toBeGreaterThan(0);
+      } else {
+        console.error('Error fetching contacts:', error);
+        throw error;
+      }
+    }
+  }, 300000); // Increase the timeout to 5 minutes (300000 ms)
 
   it('should fetch a single contact', async () => {
-    const contactId = 'people/c7358803509038311667'; // Replace with a valid contact ID
+    const contactId = 'people/c5059214960171316005'; // Marcelo Scofano Diniz
     try {
       const contact = await apiDataSource.fetchContact(contactId);
       console.log('Fetched contact:', contact);
@@ -107,7 +134,7 @@ describe('ApiDataSource Integration Tests - Fetch Contacts', () => {
         throw error;
       }
     }
-  }, 30000);
+  }, 300000); // Increase the timeout to 5 minutes (300000 ms)
 });
 
 // Not used now

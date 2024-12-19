@@ -13,6 +13,8 @@ class ApiDataSource extends DataSource {
   async fetchContacts(): Promise<people_v1.Schema$Person[]> {
     let nextPageToken: string | null = null;
     const contacts: people_v1.Schema$Person[] = [];
+    const fetchedContacts = new Set<string>();
+
     do {
       try {
         const res: GaxiosResponse<people_v1.Schema$ListConnectionsResponse> = await this.people.people.connections.list({
@@ -26,13 +28,19 @@ class ApiDataSource extends DataSource {
         nextPageToken = res.data.nextPageToken || null;
 
         if (connections) {
-          contacts.push(...connections);
+          for (const contact of connections) {
+            if (!fetchedContacts.has(contact.resourceName!)) {
+              contacts.push(contact);
+              fetchedContacts.add(contact.resourceName!);
+            }
+          }
         }
       } catch (error) {
         console.error('Error fetching contacts:', error);
         break;
       }
     } while (nextPageToken);
+
     return contacts;
   }
 
