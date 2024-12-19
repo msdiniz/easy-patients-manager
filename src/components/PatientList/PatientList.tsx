@@ -9,6 +9,9 @@ import { getPatients } from '../../store/selectors';
 import { getPatientsFromStorage } from '../../utils/patientStorage';
 import useOptions from '../../hooks/useOptions';
 import FilterByBookmarks from './FilterByBookmarks'; // Import the new component
+import ApiDataSource from '../../apiContacts/apiDataSource';
+import { RootState } from '../../store';
+import { people_v1 } from 'googleapis';
 
 interface PatientListProps {
   onSelectPatient: (patientId: string, fullName: string) => void;
@@ -23,8 +26,10 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   const [showSelectedText, setShowSelectedText] = useState(false); // New state for showing selected text
   const [showDeleted, setShowDeletedState] = useState(false); // New state for showing deleted patients
   const [selectedBookmarks, setSelectedBookmarks] = useState<string[]>([]); // New state for selected bookmarks
+  const [googleContacts, setGoogleContacts] = useState<people_v1.Schema$Person[]>([]);
   const options = useOptions(); // Use the custom hook
   const selectRef = useRef<HTMLSelectElement>(null); // Add a ref for the select element
+  const authClient = useSelector((state: RootState) => state.auth.authClient);
 
   useEffect(() => {
     console.log('PatientList component mounted');
@@ -32,7 +37,21 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     if (storedPatients.length > 0) {
       dispatch(setPatients(storedPatients));
     }
-  }, [dispatch]);
+
+    const fetchGoogleContacts = async () => {
+      if (authClient) {
+        const apiDataSource = new ApiDataSource(authClient);
+        try {
+          const contacts = await apiDataSource.fetchContacts();
+          setGoogleContacts(contacts);
+        } catch (error) {
+          console.error('Error fetching Google contacts:', error);
+        }
+      }
+    };
+
+    fetchGoogleContacts();
+  }, [dispatch, authClient]);
 
   const normalizeString = (str: string) => {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -74,6 +93,13 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     dispatch(setIsEditing(false));
     dispatch(setIsAdding(false));
     onSelectPatient(patient.id, patient.fullName);
+
+    const correspondingGoogleContact = googleContacts.find(contact => contact.names?.[0]?.displayName === patient.fullName);
+    if (correspondingGoogleContact) {
+      // Populate the second tab with the corresponding Google contact info
+      // Implement the logic to populate the second tab
+      console.log('Corresponding Google contact found:', correspondingGoogleContact);
+    }
   };
 
   const handleBookmarkChange = (selected: string[]) => {

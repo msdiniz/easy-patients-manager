@@ -1,16 +1,21 @@
-import { createSlice, configureStore, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Patient } from '../models/PatientModels';
-import patientReducer from './patientSlice';
-import authReducer from './authSlice';
 
-interface PatientState {
+export type PatientState = {
+
   selectedPatient: Patient | null;
+
   patients: Patient[];
+
   isEditing: boolean;
+
   isAdding: boolean;
+
   isTogglingDelete: boolean;
-  showDeleted: boolean; // New state to track whether to show deleted patients
-}
+
+  showDeleted: boolean;
+
+};
 
 const initialState: PatientState = {
   selectedPatient: null,
@@ -18,7 +23,7 @@ const initialState: PatientState = {
   isEditing: false,
   isAdding: false,
   isTogglingDelete: false,
-  showDeleted: false, // Initialize the new state
+  showDeleted: false,
 };
 
 const patientSlice = createSlice({
@@ -47,20 +52,4 @@ const patientSlice = createSlice({
 });
 
 export const { setSelectedPatient, setPatients, setIsEditing, setIsAdding, setIsTogglingDelete, setShowDeleted } = patientSlice.actions;
-
-export const selectPatientDeletedState = (state: PatientState, patientId: string): boolean => {
-  const patient = state.patients.find(p => p.id === patientId);
-  return patient ? patient.deleted || false : false;
-};
-
-const store = configureStore({
-  reducer: {
-    patient: patientReducer,
-    auth: authReducer,
-  },
-});
-
-export default store;
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
-export type { PatientState }; // Ensure PatientState is exported
+export default patientSlice.reducer;
