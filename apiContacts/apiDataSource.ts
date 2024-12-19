@@ -1,22 +1,26 @@
 import { google, people_v1 } from 'googleapis';
 import { GaxiosResponse } from 'gaxios';
-import oauth2Client from '../auth/oauthClient';
+import { OAuth2Client } from 'google-auth-library';
 import DataSource from './dataSource';
 
-console.log('Initializing google.people with:', { version: 'v1', auth: oauth2Client });
-
-const people: people_v1.People = google.people({
-  version: 'v1',
-  auth: oauth2Client,
-});
-
 class ApiDataSource extends DataSource {
+  private people: people_v1.People;
+
+  constructor(oauth2Client: OAuth2Client) {
+    super();
+    console.log('Initializing google.people with:', { version: 'v1', auth: oauth2Client });
+    this.people = google.people({
+      version: 'v1',
+      auth: oauth2Client,
+    });
+  }
+
   async fetchContacts(): Promise<people_v1.Schema$Person[]> {
     let nextPageToken: string | null = null;
     const contacts: people_v1.Schema$Person[] = [];
     do {
       try {
-        const res: GaxiosResponse<people_v1.Schema$ListConnectionsResponse> = await people.people.connections.list({
+        const res: GaxiosResponse<people_v1.Schema$ListConnectionsResponse> = await this.people.people.connections.list({
           resourceName: 'people/me',
           pageSize: 100, // Fetch in larger chunks
           personFields: 'names,emailAddresses,phoneNumbers,addresses,memberships,genders,birthdays,biographies',
@@ -39,7 +43,7 @@ class ApiDataSource extends DataSource {
 
   async fetchContact(contactId: string): Promise<people_v1.Schema$Person | null> {
     try {
-      const res: GaxiosResponse<people_v1.Schema$Person> = await people.people.get({
+      const res: GaxiosResponse<people_v1.Schema$Person> = await this.people.people.get({
         resourceName: `people/${contactId}`,
         personFields: 'names,emailAddresses,phoneNumbers,addresses,memberships,genders,birthdays,biographies',
       });
@@ -52,7 +56,7 @@ class ApiDataSource extends DataSource {
 
   async createContact(contact: people_v1.Schema$Person): Promise<people_v1.Schema$Person | null> {
     try {
-      const res: GaxiosResponse<people_v1.Schema$Person> = await people.people.createContact({
+      const res: GaxiosResponse<people_v1.Schema$Person> = await this.people.people.createContact({
         requestBody: contact,
       });
       return res.data;
@@ -64,7 +68,7 @@ class ApiDataSource extends DataSource {
 
   async updateContact(contactId: string, contact: people_v1.Schema$Person): Promise<people_v1.Schema$Person | null> {
     try {
-      const res: GaxiosResponse<people_v1.Schema$Person> = await people.people.updateContact({
+      const res: GaxiosResponse<people_v1.Schema$Person> = await this.people.people.updateContact({
         resourceName: `people/${contactId}`,
         updatePersonFields: 'names,emailAddresses,phoneNumbers,addresses,memberships,genders,birthdays,biographies',
         requestBody: contact,
@@ -78,7 +82,7 @@ class ApiDataSource extends DataSource {
 
   async deleteContact(contactId: string): Promise<void> {
     try {
-      await people.people.deleteContact({
+      await this.people.people.deleteContact({
         resourceName: `people/${contactId}`,
       });
     } catch (error) {

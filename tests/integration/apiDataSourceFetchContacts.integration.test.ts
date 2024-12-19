@@ -17,6 +17,11 @@ describe('ApiDataSource Integration Tests - Fetch Contacts', () => {
     // Ensure we are using the actual googleapis module
     const { OAuth2 } = google.auth;
 
+    // Check for required environment variables
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+      throw new Error('Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET in environment variables');
+    }
+
     oauth2Client = new OAuth2(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
@@ -38,7 +43,8 @@ describe('ApiDataSource Integration Tests - Fetch Contacts', () => {
     // Verify that the tokens are set correctly
     console.log('OAuth2 client credentials:', oauth2Client.credentials);
 
-    apiDataSource = new ApiDataSource();
+    // Initialize ApiDataSource with oauth2Client
+    apiDataSource = new ApiDataSource(oauth2Client);
   }, 300000); // Increase the timeout to 5 minutes (300000 ms)
 
   it('should fetch all contacts', async () => {
