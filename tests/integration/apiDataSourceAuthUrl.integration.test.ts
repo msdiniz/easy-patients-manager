@@ -6,7 +6,7 @@ jest.resetModules(); // Reset the module registry to avoid mock interference
 // Unmock the googleapis module
 jest.unmock('googleapis');
 // Load environment variables from .env file
-dotenv.config({ path: path.resolve(__dirname, '../../auth/.env'), debug: process.env.DEBUG === 'true' });
+dotenv.config({ path: path.resolve(__dirname, '../../src/auth/.env'), debug: process.env.DEBUG === 'true' });
 
 describe('ApiDataSource Integration Tests - Generate Auth URL', () => {
   let oauth2Client: any;

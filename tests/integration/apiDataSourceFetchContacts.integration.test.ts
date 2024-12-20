@@ -12,7 +12,7 @@ jest.resetModules(); // Reset the module registry to avoid mock interference
 jest.unmock('googleapis');
 
 // Load environment variables from .env file
-dotenv.config({ path: path.resolve(__dirname, '.env'), debug: process.env.DEBUG === 'true' });
+dotenv.config({ path: path.resolve(__dirname, '../../src/auth/.env'), debug: process.env.DEBUG === 'true' });
 // Load additional environment variables from .envAuthCode file
 dotenv.config({ path: path.resolve(__dirname, '.envAuthCode'), debug: process.env.DEBUG === 'true' });
 

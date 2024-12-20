@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 // Specify the path to the .env file
-const envPath = path.resolve(__dirname, '../auth/.env');
+const envPath = path.resolve(__dirname, '.env');
 dotenv.config({ path: envPath, debug: process.env.DEBUG === 'true' });
 console.log('dotenv at OAuth:', envPath);
 

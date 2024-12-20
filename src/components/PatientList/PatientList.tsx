@@ -69,6 +69,7 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
   );
 
   useEffect(() => {
+    console.log('PatientList component mounted');
     if (searchTerm) {
       dispatch(setSelectedPatient(null));
       onSelectPatient('', ''); // Clear the selected patient
