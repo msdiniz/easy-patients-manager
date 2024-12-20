@@ -22,7 +22,7 @@ const AddressFields: React.FC<AddressFieldsProps> = ({ addresses, onChange }) =>
     <FieldGroup
       items={addresses}
       onChange={onChange}
-      label="Addresses"
+      label="Address"
       options={options.addressTypes}
       placeholder="Address"
       typeField="type"

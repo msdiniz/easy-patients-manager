@@ -55,7 +55,7 @@ const FieldGroup = <T extends { [key: string]: any }>({
     <div className={styles.formGroupFullWidth} style={{ border: hasErrors ? '1px solid red' : '1px solid lightgray', padding: '10px', borderRadius: '5px' }}>
       <label>{label}</label>
       {items.map((item, index) => (
-        <div key={index} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '10px', marginBottom: '10px' }}>
+        <div key={index} style={{ display: 'grid', gridTemplateColumns: '3fr 1fr auto', gap: '10px', marginBottom: '10px' }}>
           <div>
             <input
               type="text"
@@ -87,7 +87,11 @@ const FieldGroup = <T extends { [key: string]: any }>({
           <button type="button" onClick={() => handleRemoveItem(index)}>Remove</button>
         </div>
       ))}
-      <button type="button" onClick={handleAddItem}>Add {label}</button>
+      <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr auto', gap: '10px' }}>
+        <div style={{ gridColumn: '3 / 4' }}>
+          <button type="button" onClick={handleAddItem} style={{ width: '100%' }}>Add {label}</button>
+        </div>
+      </div>
     </div>
   );
 };

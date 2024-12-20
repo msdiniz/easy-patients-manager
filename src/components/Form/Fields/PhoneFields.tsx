@@ -24,7 +24,7 @@ const PhoneFields: React.FC<PhoneFieldsProps> = ({ phones, onChange }) => {
     <FieldGroup
       items={phones}
       onChange={onChange}
-      label="Phones"
+      label="Phone"
       options={options.phoneTypes}
       placeholder="Phone"
       typeField="type"

@@ -24,7 +24,7 @@ const EmailFields: React.FC<EmailFieldsProps> = ({ emails, onChange }) => {
     <FieldGroup
       items={emails}
       onChange={onChange}
-      label="Emails"
+      label="Email"
       options={options.emailTypes}
       placeholder="Email"
       typeField="type"
