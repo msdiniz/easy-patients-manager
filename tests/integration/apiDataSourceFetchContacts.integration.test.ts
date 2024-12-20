@@ -1,18 +1,18 @@
-import ApiDataSource from '../../apiContacts/apiDataSource';
+import ApiDataSource from '../../src/apiContacts/apiDataSource';
 import dotenv from 'dotenv';
 import path from 'path';
 import { google } from 'googleapis';
 import axios from 'axios';
 //import readline from 'readline';
 import { contactGroupIds } from '../../data/contacts/constants';
-import { filterContactsByGroup, returnContactsThatDoNotBelongToPatientGroups } from '../../apiContacts/filterContacts';
+import { filterContactsByGroup, returnContactsThatDoNotBelongToPatientGroups } from '../../src/apiContacts/filterContacts';
 
 jest.resetModules(); // Reset the module registry to avoid mock interference
 // Unmock the googleapis module
 jest.unmock('googleapis');
 
 // Load environment variables from .env file
-dotenv.config({ path: path.resolve(__dirname, '.env'), debug: process.env.DEBUG === 'true' });
+dotenv.config({ path: path.resolve(__dirname, '../../src/auth/.env'), debug: process.env.DEBUG === 'true' });
 // Load additional environment variables from .envAuthCode file
 dotenv.config({ path: path.resolve(__dirname, '.envAuthCode'), debug: process.env.DEBUG === 'true' });
 
