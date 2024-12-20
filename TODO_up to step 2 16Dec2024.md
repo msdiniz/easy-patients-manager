@@ -77,6 +77,14 @@
   - ~~Add a boolean field `deleted` in the `Patient` model to handle deletions.~~
   - ~~Ensure the `PatientList` filters out patients marked as deleted.~~
 
+## css styling
+  - Understanding Class Name Handling in React with CSS Modules
+CSS Modules and Class Names: CSS modules generate unique class names to avoid conflicts. These class names are often obfuscated (e.g., _formGroup_12pbc_25). When you combine class names, the order and presence of undefined can affect how styles are applied.
+
+Combining Class Names: When combining class names, if any part of the combination is undefined, it can lead to unexpected results. React doesn't inherently handle undefined class names gracefully, so it's important to ensure that all class names are defined.
+- npm install classnames
+
+
 ## Notes
 
 - Ensure all components are implemented in TypeScript.
