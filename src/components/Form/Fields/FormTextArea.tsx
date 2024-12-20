@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from '../PatientForm.module.css'; // Import the CSS module
 
 interface FormTextAreaProps {
   label: string;
@@ -7,19 +8,20 @@ interface FormTextAreaProps {
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   error?: string;
   maxLength?: number;
+  className?: string; // Add className prop
 }
 
-const FormTextArea: React.FC<FormTextAreaProps> = ({ label, name, value, onChange, error, maxLength }) => (
-  <div className="form-group">
-    <label>{label}:</label>
+const FormTextArea: React.FC<FormTextAreaProps> = ({ label, name, value, onChange, error, maxLength, className = '' }) => (
+  <div className={`${className}`}>
+    <label className={styles.label}>{label}:</label>
     <textarea
       name={name}
       value={value}
       onChange={onChange}
-      className={error ? 'error' : ''}
+      className={`${styles.textarea} ${error ? styles.textareaError : ''}`}
       maxLength={maxLength}
     />
-    {error && <span className="error-message">{error}</span>}
+    {error && <span className={styles.errorMessage}>{error}</span>}
   </div>
 );
 

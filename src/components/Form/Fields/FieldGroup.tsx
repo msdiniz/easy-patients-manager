@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import styles from '../PatientForm.module.css'; 
 
 interface FieldGroupProps<T> {
   items: T[];
@@ -51,7 +52,7 @@ const FieldGroup = <T extends { [key: string]: any }>({
   const hasErrors = Object.values(errors).some((error) => error);
 
   return (
-    <div style={{ border: hasErrors ? '1px solid red' : '1px solid lightgray', padding: '10px', borderRadius: '5px' }}>
+    <div className={styles.formGroupFullWidth} style={{ border: hasErrors ? '1px solid red' : '1px solid lightgray', padding: '10px', borderRadius: '5px' }}>
       <label>{label}</label>
       {items.map((item, index) => (
         <div key={index} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '10px', marginBottom: '10px' }}>

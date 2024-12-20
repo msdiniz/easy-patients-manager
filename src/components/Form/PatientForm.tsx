@@ -82,6 +82,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         value={patient.fullName}
         onChange={handleChange}
         error={errors.fullName}
+        className={styles.formGroupFullWidth}
       />
       <FormField
         label="Date of Birth"
@@ -90,6 +91,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         value={patient.dob}
         onChange={handleChange}
         error={errors.dob}
+        className={styles.formGroupShortWidth}
       />
       <FormSelect
         label="Gender"
@@ -98,6 +100,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         options={['', ...options.genders]} // Add an empty option for new patients
         onChange={handleChange}
         error={errors.gender}
+        className={styles.formGroupShortWidth}
       />
       <FormField
         label="CPF"
@@ -106,20 +109,7 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         onChange={handleChange}
         error={errors.cpf}
         placeholder="ddd.ddd.ddd-dd"
-      />
-      <FormSelect
-        label="Blood Type"
-        name="bloodType"
-        value={patient.bloodType}
-        options={['', ...options.bloodTypes]} // Add an empty option for new patients
-        onChange={handleChange}
-      />
-      <FormSelect
-        label="Rh Factor"
-        name="rhFactor"
-        value={patient.rhFactor}
-        options={['', ...options.rhFactors]} // Add an empty option for new patients
-        onChange={handleChange}
+        className={styles.formGroupShortWidth}
       />
       <FormSelect
         label="Ethnic Group"
@@ -127,25 +117,32 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         value={patient.ethnicGroup}
         options={['', ...options.ethnicGroups]} // Add an empty option for new patients
         onChange={handleChange}
+        className={styles.formGroupShortWidth}
       />
-      <FormTextArea
-        label="Observation"
-        name="observation"
-        value={patient.observation}
+      <FormSelect
+        label="Blood Type"
+        name="bloodType"
+        value={patient.bloodType}
+        options={['', ...options.bloodTypes]} // Add an empty option for new patients
         onChange={handleChange}
+        className={styles.formGroupShortWidth}
       />
-      <FormTextArea
-        label="Notes"
-        name="notes"
-        value={patient.notes}
+      <FormSelect
+        label="Rh Factor"
+        name="rhFactor"
+        value={patient.rhFactor}
+        options={['', ...options.rhFactors]} // Add an empty option for new patients
         onChange={handleChange}
+        className={styles.formGroupShortWidth}
       />
-      <FormTextArea
-        label="How Patient Was Referred"
-        name="howPatientWasReferred"
-        value={patient.howPatientWasReferred}
-        onChange={handleChange}
-        maxLength={300}
+      <FormSelect
+        label="Bookmarks"
+        name="bookmarks"
+        value={patient.bookmarks ? patient.bookmarks.map(b => b.id) : []}
+        options={options.bookmarks}
+        onChange={handleBookmarkChange}
+        multiple
+        className={styles.formGroupShortWidth}
       />
       <FormField
         label="Date of First Contact"
@@ -154,18 +151,33 @@ const PatientForm: React.FC<PatientFormProps> = ({ patient, onChange, onSave, on
         value={patient.dateOfFirstContact || new Date().toISOString().split('T')[0]} // Default to today
         onChange={handleChange}
         error={errors.dateOfFirstContact}
+        className={styles.formGroupShortWidth}
+      />
+      <FormTextArea
+        label="Observation"
+        name="observation"
+        value={patient.observation}
+        onChange={handleChange}
+        className={styles.formGroupFullWidth}
+      />
+      <FormTextArea
+        label="Notes"
+        name="notes"
+        value={patient.notes}
+        onChange={handleChange}
+        className={styles.formGroupFullWidth}
+      />
+      <FormTextArea
+        label="How Patient Was Referred"
+        name="howPatientWasReferred"
+        value={patient.howPatientWasReferred}
+        onChange={handleChange}
+        maxLength={300}
+        className={styles.formGroupFullWidth}
       />
       <EmailFields emails={patient.emails || []} onChange={handleEmailsChange} />
       <AddressFields addresses={patient.addresses || []} onChange={handleAddressesChange} />
       <PhoneFields phones={patient.phones || []} onChange={handlePhonesChange} />
-      <FormSelect
-        label="Bookmarks"
-        name="bookmarks"
-        value={patient.bookmarks ? patient.bookmarks.map(b => b.id) : []}
-        options={options.bookmarks}
-        onChange={handleBookmarkChange}
-        multiple
-      />
       <FormButtons onSave={onSave} onCancel={onCancel} isFormValid={isFormValid} />
     </form>
   );

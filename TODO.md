@@ -118,6 +118,11 @@
 - Ensure all components are implemented in TypeScript.
 - Use React for the frontend and plan for future integration with Electron for desktop application.
 
+## Security ##
+- .env files should not be stored in public git or Stackblitz.
+- how to use them?
+- see https://stackblitz.com/edit/node-secrets-example-localstorage-v2?file=index.js
+
 ## Application Structure
 
 - The App should be named EasyPatientsManager and it should have a main screen with:
