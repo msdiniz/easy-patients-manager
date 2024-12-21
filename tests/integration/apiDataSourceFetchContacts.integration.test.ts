@@ -1,10 +1,11 @@
 import ApiDataSource from '../../src/apiContacts/apiDataSource';
 import dotenv from 'dotenv';
 import path from 'path';
-import { google } from 'googleapis';
+// import { google } from 'googleapis';
+import { oauth2Client } from '../../src/auth/oauthClient';
 import axios from 'axios';
 //import readline from 'readline';
-import { contactGroupIds } from '../../data/contacts/constants';
+import { contactGroupIds } from '../../src/apiContacts/constants';
 import { filterContactsByGroup, returnContactsThatDoNotBelongToPatientGroups } from '../../src/apiContacts/filterContacts';
 
 jest.resetModules(); // Reset the module registry to avoid mock interference
@@ -19,33 +20,13 @@ dotenv.config({ path: path.resolve(__dirname, '.envAuthCode'), debug: process.en
 //before running the test, you need to get the auth code from the user
 //visit below link to authorize the app and get the auth code:
 //and paste it in .envAuthCode file:
-// https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcontacts%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&response_type=code&client_id=924094636500-n6l4bvrnt998vv4ple3ote0nk4rj5ejc.apps.googleusercontent.com&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob'     
+// 'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcontacts%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&response_type=code&client_id=924094636500-n6l4bvrnt998vv4ple3ote0nk4rj5ejc.apps.googleusercontent.com&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob'     
 
 describe('ApiDataSource Integration Tests - Fetch Contacts', () => {
   let apiDataSource: ApiDataSource;
-  let oauth2Client: import('google-auth-library').OAuth2Client;
+  //let oauth2Client: import('google-auth-library').OAuth2Client;
 
   beforeAll(async () => {
-    // Ensure we are using the actual googleapis module
-    const { OAuth2 } = google.auth;
-
-    oauth2Client = new OAuth2(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET,
-      'urn:ietf:wg:oauth:2.0:oob'
-    );
-
-    // Generate the authorization URL
-    const authUrl = oauth2Client.generateAuthUrl({
-      access_type: 'offline',
-      scope: [
-        'https://www.googleapis.com/auth/contacts',
-        'https://www.googleapis.com/auth/userinfo.profile',
-      ],
-    });
-
-    console.log('Authorize this app by visiting this url:', authUrl);
-
     // Read the auth code from the .envAuthCode file
     const authCode = process.env.AUTH_CODE;
     if (!authCode) {
@@ -53,10 +34,23 @@ describe('ApiDataSource Integration Tests - Fetch Contacts', () => {
     }
     console.log('Auth code:', authCode);
     // Exchange the auth code for tokens
-    const { tokens } = await oauth2Client.getToken(authCode);
-    console.log('Received tokens:', tokens);
-    oauth2Client.setCredentials(tokens);
-
+    try {
+      const { tokens } = await oauth2Client.getToken(authCode);
+      oauth2Client.setCredentials(tokens);
+    } catch (error) {
+      if ( error.response && error.response.status === 400) {
+        console.error('Error: Invalid grant. The auth code may have been used already.');
+        console.error('Try to generate another auth-code and paste it in .envAuthCode file');
+        console.error('Visit this link to generate auth-code: https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcontacts%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&response_type=code&client_id=924094636500-n6l4bvrnt998vv4ple3ote0nk4rj5ejc.apps.googleusercontent.com&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob'); 
+        if (error.response) {
+          console.error('Error.response.status:', error.response.status);
+          console.error('Error.response:', error.response);
+        }        
+      } else {
+        console.error('Error during initial authentication:', error);
+      }
+      throw error;
+    }
     // Verify that the tokens are set correctly
     console.log('OAuth2 client credentials:', oauth2Client.credentials);
 
@@ -81,7 +75,12 @@ describe('ApiDataSource Integration Tests - Fetch Contacts', () => {
         expect(filteredContacts).toBeDefined();
         expect(filteredContacts.length).toBeGreaterThan(0);
       } else {
-        console.error('Error fetching contacts:', error);
+        console.error('Error fetching contacts:', error);      
+        if (isAxiosError(error) && error.response) {
+          console.error('Error.response.status:', error.response.status);
+          console.error('Error.response:', error.response);
+          console.error('Error.response.data:', error.response.data);
+        }  
         throw error;
       }
     }

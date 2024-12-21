@@ -1,5 +1,5 @@
 import { people_v1 } from 'googleapis';
-import { contactGroupIds } from '../../data/contacts/constants';
+import { contactGroupIds } from './constants';
 
 /**
  * Filters contacts based on the provided filter text and selected groups.
