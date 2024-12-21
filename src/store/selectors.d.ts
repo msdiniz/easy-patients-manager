@@ -1,18 +1,21 @@
 import { RootState } from '../store';
 import { Patient } from '../models/PatientModels';
-export declare const getPatients: ((state: import("../store").PatientState) => import("../models/PatientModels").DetailedPatient[]) & {
+export declare const getPatients: ((state: {
+    patient: import("./patientSlice").PatientState;
+    auth: import("./authSlice").AuthState;
+}) => import("../models/PatientModels").DetailedPatient[]) & {
     clearCache: () => void;
     resultsCount: () => number;
     resetResultsCount: () => void;
 } & {
-    resultFunc: (resultFuncArgs_0: Patient[]) => import("../models/PatientModels").DetailedPatient[];
-    memoizedResultFunc: ((resultFuncArgs_0: Patient[]) => import("../models/PatientModels").DetailedPatient[]) & {
+    resultFunc: (...resultFuncArgs: any) => import("../models/PatientModels").DetailedPatient[];
+    memoizedResultFunc: ((...resultFuncArgs: any) => import("../models/PatientModels").DetailedPatient[]) & {
         clearCache: () => void;
         resultsCount: () => number;
         resetResultsCount: () => void;
     };
     lastResult: () => import("../models/PatientModels").DetailedPatient[];
-    dependencies: [(state: RootState) => Patient[]];
+    dependencies: [(state: RootState) => any];
     recomputations: () => number;
     resetRecomputations: () => void;
     dependencyRecomputations: () => number;
@@ -21,19 +24,22 @@ export declare const getPatients: ((state: import("../store").PatientState) => i
     memoize: typeof import("reselect").weakMapMemoize;
     argsMemoize: typeof import("reselect").weakMapMemoize;
 };
-export declare const getSelectedPatient: ((state: import("../store").PatientState) => Patient | null) & {
+export declare const getSelectedPatient: ((state: {
+    patient: import("./patientSlice").PatientState;
+    auth: import("./authSlice").AuthState;
+}) => Patient | null) & {
     clearCache: () => void;
     resultsCount: () => number;
     resetResultsCount: () => void;
 } & {
-    resultFunc: (resultFuncArgs_0: Patient | null) => Patient | null;
-    memoizedResultFunc: ((resultFuncArgs_0: Patient | null) => Patient | null) & {
+    resultFunc: (...resultFuncArgs: any) => Patient | null;
+    memoizedResultFunc: ((...resultFuncArgs: any) => Patient | null) & {
         clearCache: () => void;
         resultsCount: () => number;
         resetResultsCount: () => void;
     };
     lastResult: () => Patient | null;
-    dependencies: [(state: RootState) => Patient | null];
+    dependencies: [(state: RootState) => any];
     recomputations: () => number;
     resetRecomputations: () => void;
     dependencyRecomputations: () => number;
@@ -42,19 +48,22 @@ export declare const getSelectedPatient: ((state: import("../store").PatientStat
     memoize: typeof import("reselect").weakMapMemoize;
     argsMemoize: typeof import("reselect").weakMapMemoize;
 };
-export declare const getIsEditing: ((state: import("../store").PatientState) => boolean) & {
+export declare const getIsEditing: ((state: {
+    patient: import("./patientSlice").PatientState;
+    auth: import("./authSlice").AuthState;
+}) => boolean) & {
     clearCache: () => void;
     resultsCount: () => number;
     resetResultsCount: () => void;
 } & {
-    resultFunc: (resultFuncArgs_0: boolean) => boolean;
-    memoizedResultFunc: ((resultFuncArgs_0: boolean) => boolean) & {
+    resultFunc: (...resultFuncArgs: any) => boolean;
+    memoizedResultFunc: ((...resultFuncArgs: any) => boolean) & {
         clearCache: () => void;
         resultsCount: () => number;
         resetResultsCount: () => void;
     };
     lastResult: () => boolean;
-    dependencies: [(state: RootState) => boolean];
+    dependencies: [(state: RootState) => any];
     recomputations: () => number;
     resetRecomputations: () => void;
     dependencyRecomputations: () => number;
@@ -63,19 +72,22 @@ export declare const getIsEditing: ((state: import("../store").PatientState) => 
     memoize: typeof import("reselect").weakMapMemoize;
     argsMemoize: typeof import("reselect").weakMapMemoize;
 };
-export declare const getIsAdding: ((state: import("../store").PatientState) => boolean) & {
+export declare const getIsAdding: ((state: {
+    patient: import("./patientSlice").PatientState;
+    auth: import("./authSlice").AuthState;
+}) => boolean) & {
     clearCache: () => void;
     resultsCount: () => number;
     resetResultsCount: () => void;
 } & {
-    resultFunc: (resultFuncArgs_0: boolean) => boolean;
-    memoizedResultFunc: ((resultFuncArgs_0: boolean) => boolean) & {
+    resultFunc: (...resultFuncArgs: any) => boolean;
+    memoizedResultFunc: ((...resultFuncArgs: any) => boolean) & {
         clearCache: () => void;
         resultsCount: () => number;
         resetResultsCount: () => void;
     };
     lastResult: () => boolean;
-    dependencies: [(state: RootState) => boolean];
+    dependencies: [(state: RootState) => any];
     recomputations: () => number;
     resetRecomputations: () => void;
     dependencyRecomputations: () => number;
@@ -84,19 +96,22 @@ export declare const getIsAdding: ((state: import("../store").PatientState) => b
     memoize: typeof import("reselect").weakMapMemoize;
     argsMemoize: typeof import("reselect").weakMapMemoize;
 };
-export declare const getIsTogglingDelete: ((state: import("../store").PatientState) => boolean) & {
+export declare const getIsTogglingDelete: ((state: {
+    patient: import("./patientSlice").PatientState;
+    auth: import("./authSlice").AuthState;
+}) => boolean) & {
     clearCache: () => void;
     resultsCount: () => number;
     resetResultsCount: () => void;
 } & {
-    resultFunc: (resultFuncArgs_0: boolean) => boolean;
-    memoizedResultFunc: ((resultFuncArgs_0: boolean) => boolean) & {
+    resultFunc: (...resultFuncArgs: any) => boolean;
+    memoizedResultFunc: ((...resultFuncArgs: any) => boolean) & {
         clearCache: () => void;
         resultsCount: () => number;
         resetResultsCount: () => void;
     };
     lastResult: () => boolean;
-    dependencies: [(state: RootState) => boolean];
+    dependencies: [(state: RootState) => any];
     recomputations: () => number;
     resetRecomputations: () => void;
     dependencyRecomputations: () => number;
@@ -105,19 +120,22 @@ export declare const getIsTogglingDelete: ((state: import("../store").PatientSta
     memoize: typeof import("reselect").weakMapMemoize;
     argsMemoize: typeof import("reselect").weakMapMemoize;
 };
-export declare const getShowDeleted: ((state: import("../store").PatientState) => boolean) & {
+export declare const getShowDeleted: ((state: {
+    patient: import("./patientSlice").PatientState;
+    auth: import("./authSlice").AuthState;
+}) => boolean) & {
     clearCache: () => void;
     resultsCount: () => number;
     resetResultsCount: () => void;
 } & {
-    resultFunc: (resultFuncArgs_0: boolean) => boolean;
-    memoizedResultFunc: ((resultFuncArgs_0: boolean) => boolean) & {
+    resultFunc: (...resultFuncArgs: any) => boolean;
+    memoizedResultFunc: ((...resultFuncArgs: any) => boolean) & {
         clearCache: () => void;
         resultsCount: () => number;
         resetResultsCount: () => void;
     };
     lastResult: () => boolean;
-    dependencies: [(state: RootState) => boolean];
+    dependencies: [(state: RootState) => any];
     recomputations: () => number;
     resetRecomputations: () => void;
     dependencyRecomputations: () => number;

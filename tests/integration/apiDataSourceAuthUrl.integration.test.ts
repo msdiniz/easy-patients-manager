@@ -34,5 +34,6 @@ describe('ApiDataSource Integration Tests - Generate Auth URL', () => {
 
     console.log('Authorize this app by visiting this url:', authUrl);
     expect(authUrl).toContain('https://accounts.google.com/o/oauth2/v2/auth');  
+    expect(authUrl).toBe('https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcontacts%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&response_type=code&client_id=924094636500-n6l4bvrnt998vv4ple3ote0nk4rj5ejc.apps.googleusercontent.com&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob');
   });
 });

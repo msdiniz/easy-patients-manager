@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 // Specify the path to the .env file
-const envPath = path.resolve(__dirname, '../auth/.env');
+const envPath = path.resolve(__dirname, '.env');
 dotenv.config({ path: envPath, debug: process.env.DEBUG === 'true' });
 console.log('dotenv at OAuth:', envPath);
 
@@ -16,4 +16,14 @@ const oauth2Client: Auth.OAuth2Client = new google.auth.OAuth2(
   'urn:ietf:wg:oauth:2.0:oob'
 );
 
-export default oauth2Client;
+const generateAuthUrl = () => {
+  return oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: [
+      'https://www.googleapis.com/auth/contacts',
+      'https://www.googleapis.com/auth/userinfo.profile',
+    ],
+  });
+};
+
+export { oauth2Client, generateAuthUrl };

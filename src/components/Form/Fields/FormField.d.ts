@@ -7,6 +7,7 @@ interface FormFieldProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
     error?: string;
     placeholder?: string;
+    className?: string;
 }
 declare const FormField: React.FC<FormFieldProps>;
 export default FormField;

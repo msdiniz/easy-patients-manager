@@ -8,6 +8,7 @@ interface FormSelectProps {
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     error?: string;
     multiple?: boolean;
+    className?: string;
 }
 declare const FormSelect: React.FC<FormSelectProps>;
 export default FormSelect;
