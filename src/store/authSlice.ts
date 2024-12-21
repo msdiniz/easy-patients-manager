@@ -1,27 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import { gapi } from 'gapi-script';
 
 interface AuthState {
   isLoggedIn: boolean;
-  authClient: gapi.auth2.GoogleUser | null;
+  tokens: {
+    access_token: string;
+    refresh_token: string;
+    scope: string;
+    token_type: string;
+    expiry_date: number;
+  } | null;
 }
 
 const initialState: AuthState = {
   isLoggedIn: false,
-  authClient: null,
+  tokens: null,
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setAuthClient(state, action: PayloadAction<gapi.auth2.GoogleUser>) {
+    setAuthClient(state, action: PayloadAction<AuthState['tokens']>) {
       state.isLoggedIn = true;
-      state.authClient = action.payload;
+      state.tokens = action.payload;
     },
     clearAuthClient(state) {
       state.isLoggedIn = false;
-      state.authClient = null;
+      state.tokens = null;
     },
   },
 });

@@ -1,31 +1,36 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { WritableDraft } from 'immer';
-import { OAuth2Client } from 'google-auth-library';
 
-export type AuthState = {
-  authClient: OAuth2Client | null;
+interface AuthState {
   isLoggedIn: boolean;
+  tokens: {
+    access_token: string;
+    refresh_token: string;
+    scope: string;
+    token_type: string;
+    expiry_date: number;
+  } | null;
 }
 
 const initialState: AuthState = {
-  authClient: null,
   isLoggedIn: false,
+  tokens: null,
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setAuthClient(state, action: PayloadAction<OAuth2Client>) {
-      state.authClient = action.payload as WritableDraft<OAuth2Client>;
+    setAuthClient(state, action: PayloadAction<AuthState['tokens']>) {
       state.isLoggedIn = true;
+      state.tokens = action.payload;
     },
     clearAuthClient(state) {
-      state.authClient = null;
       state.isLoggedIn = false;
+      state.tokens = null;
     },
   },
 });
 
 export const { setAuthClient, clearAuthClient } = authSlice.actions;
 export default authSlice.reducer;
+export type { AuthState }; // Export AuthState

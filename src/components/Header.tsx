@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { gapi } from 'gapi-script';
 import { setAuthClient, clearAuthClient } from '../store/authSlice';
 import { setApiDataSource, clearApiDataSource } from '../store/apiDataSourceSlice';
 import { RootState } from '../store';
 import styles from './Header.module.css';
-import ApiDataSource from '../apiContacts/apiDataSource'; // Correct import
+import ApiDataSource from '../apiContacts/apiDataSource';
 
 const Header: React.FC = () => {
   const [showAuthInput, setShowAuthInput] = useState(false);
@@ -13,30 +12,27 @@ const Header: React.FC = () => {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
   useEffect(() => {
-    const initClient = () => {
-      gapi.client.init({
-        clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-        scope: 'https://www.googleapis.com/auth/contacts https://www.googleapis.com/auth/userinfo.profile',
-      });
-    };
-    gapi.load('client:auth2', initClient);
-  }, []);
-
-  const handleLoginClick = () => {
-    gapi.auth2.getAuthInstance().signIn().then((user: gapi.auth2.GoogleUser) => { // Add type annotation
-      dispatch(setAuthClient(user));
-      const apiDataSource = new ApiDataSource(user);
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokens = urlParams.get('tokens');
+    if (tokens) {
+      const parsedTokens = JSON.parse(tokens);
+      dispatch(setAuthClient(parsedTokens));
+      const apiDataSource = new ApiDataSource(parsedTokens);
       dispatch(setApiDataSource(apiDataSource));
       setShowAuthInput(false);
-    });
+    }
+  }, [dispatch]);
+
+  const handleLoginClick = async () => {
+    const response = await fetch('http://localhost:5000/auth-url');
+    const data = await response.json();
+    window.location.href = data.url;
   };
 
   const handleLogoutClick = () => {
-    gapi.auth2.getAuthInstance().signOut().then(() => {
-      dispatch(clearAuthClient());
-      dispatch(clearApiDataSource());
-      setShowAuthInput(false);
-    });
+    dispatch(clearAuthClient());
+    dispatch(clearApiDataSource());
+    setShowAuthInput(true);
   };
 
   return (

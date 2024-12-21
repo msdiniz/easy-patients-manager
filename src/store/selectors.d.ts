@@ -294,3 +294,4 @@ export declare const getShowDeleted: ((state: {
     memoize: typeof import("reselect").weakMapMemoize;
     argsMemoize: typeof import("reselect").weakMapMemoize;
 };
+export declare const selectPatientDeletedState: (state: RootState, patientId: string) => boolean;

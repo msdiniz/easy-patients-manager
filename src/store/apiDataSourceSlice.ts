@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import ApiDataSource from '../apiContacts/apiDataSource';
 
-export interface ApiDataSourceState { // Export the interface
+interface ApiDataSourceState {
   apiDataSource: ApiDataSource | null;
 }
 
@@ -24,3 +24,4 @@ const apiDataSourceSlice = createSlice({
 
 export const { setApiDataSource, clearApiDataSource } = apiDataSourceSlice.actions;
 export default apiDataSourceSlice.reducer;
+export type { ApiDataSourceState }; // Export ApiDataSourceState

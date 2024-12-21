@@ -46,9 +46,4 @@ const patientSlice = createSlice({
 
 export const { setSelectedPatient, setPatients, setIsEditing, setIsAdding, setIsTogglingDelete, setShowDeleted } = patientSlice.actions;
 
-export const selectPatientDeletedState = (state: PatientState, patientId: string): boolean => {
-  const patient = state.patients.find(p => p.id === patientId);
-  return patient ? patient.deleted || false : false;
-};
-
 export default patientSlice.reducer;

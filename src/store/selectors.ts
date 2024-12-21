@@ -43,4 +43,9 @@ export const getSelectedPatient = createSelector([selectSelectedPatient], (selec
 export const getIsEditing = createSelector([selectIsEditing], (isEditing: boolean) => isEditing);
 export const getIsAdding = createSelector([selectIsAdding], (isAdding: boolean) => isAdding);
 export const getIsTogglingDelete = createSelector([selectIsTogglingDelete], (isTogglingDelete: boolean) => isTogglingDelete);
-export const getShowDeleted = createSelector([selectShowDeleted], (showDeleted: boolean) => showDeleted); // Add selector for showDeleted
+export const getShowDeleted = createSelector([selectShowDeleted], (showDeleted: boolean) => showDeleted);
+
+export const selectPatientDeletedState = (state: RootState, patientId: string): boolean => {
+  const patient = state.patient.patients.find(p => p.id === patientId);
+  return patient ? patient.deleted || false : false;
+};

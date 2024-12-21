@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import PatientInfo from '../PatientInfo/PatientInfo'; // Ensure the default import is used
+import PatientInfo from '../PatientInfo/PatientInfo';
 import PatientForm from '../Form/PatientForm';
-import TabPanel from '../Tabs/TabPanel'; // Import TabPanel
-import { getIsEditing, getIsAdding, getSelectedPatient, getIsTogglingDelete, getShowDeleted } from '../../store/selectors'; // Import the new selector
-import { setIsEditing, setSelectedPatient, setIsAdding, setPatients, setIsTogglingDelete, selectPatientDeletedState } from '../../store/patientSlice'; // Correct import path
-import { RootState } from '../../store'; // Import RootState
-import { DetailedPatient, Email, Address, Phone, Bookmark } from '../../models/PatientModels'; // Import the missing types
-import { PatientFactory } from '../../models/PatientFactory'; // Ensure the named import is used
+import TabPanel from '../Tabs/TabPanel';
+import { getIsEditing, getIsAdding, getSelectedPatient, getIsTogglingDelete, getShowDeleted, selectPatientDeletedState } from '../../store/selectors';
+import { setIsEditing, setSelectedPatient, setIsAdding, setPatients, setIsTogglingDelete } from '../../store/patientSlice';
+import { RootState } from '../../store';
+import { DetailedPatient, Email, Address, Phone, Bookmark } from '../../models/PatientModels';
+import { PatientFactory } from '../../models/PatientFactory';
 import { PatientUtils } from '../../models/PatientUtils';
 import { getPatientsFromStorage, savePatientsToStorage, getDetailedPatientsFromStorage, saveDetailedPatientsToStorage } from '../../utils/patientStorage';
-import styles from './PatientDetails.module.css'; // Import the CSS module
+import styles from './PatientDetails.module.css';
 
 interface PatientDetailsProps {
   patientId: string;
@@ -31,11 +31,10 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
   const [error, setError] = useState<string | null>(null);
   const isEditing = useSelector(getIsEditing);
   const isAdding = useSelector(getIsAdding);
-  const isTogglingDelete = useSelector(getIsTogglingDelete); // Use the new selector
-  const showDeleted = useSelector(getShowDeleted); // Use the new selector
+  const isTogglingDelete = useSelector(getIsTogglingDelete);
+  const showDeleted = useSelector(getShowDeleted);
   const [isDirty, setIsDirty] = useState(false);
-  const deleted = useSelector((state: RootState) => selectPatientDeletedState(state.patient, patientId));
-  // const [activeTab, setActiveTab] = useState(0); // State for active tab
+  const deleted = useSelector((state: RootState) => selectPatientDeletedState(state, patientId));
 
   useEffect(() => {
     console.log('isAdding:', isAdding);
@@ -135,7 +134,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
         gender: patient.gender,
         cpf: patient.cpf,
         dateOfFirstContact: patient.dateOfFirstContact,
-        bookmarks: patient.bookmarks, // Corrected to bookmarks
+        bookmarks: patient.bookmarks,
         deleted: patient.deleted // Ensure the deleted field is saved
       });
       savePatientsToStorage(updatedPatients); // Persist to local storage

@@ -1,8 +1,20 @@
 interface AuthState {
     isLoggedIn: boolean;
-    authClient: gapi.auth2.GoogleUser | null;
+    tokens: {
+        access_token: string;
+        refresh_token: string;
+        scope: string;
+        token_type: string;
+        expiry_date: number;
+    } | null;
 }
-export declare const setAuthClient: import("@reduxjs/toolkit").ActionCreatorWithPayload<gapi.auth2.GoogleUser, "auth/setAuthClient">, clearAuthClient: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"auth/clearAuthClient">;
+export declare const setAuthClient: import("@reduxjs/toolkit").ActionCreatorWithPayload<{
+    access_token: string;
+    refresh_token: string;
+    scope: string;
+    token_type: string;
+    expiry_date: number;
+} | null, "auth/setAuthClient">, clearAuthClient: import("@reduxjs/toolkit").ActionCreatorWithoutPayload<"auth/clearAuthClient">;
 declare const _default: import("redux").Reducer<AuthState>;
 export default _default;
 export type { AuthState };
