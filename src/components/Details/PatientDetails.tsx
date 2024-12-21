@@ -4,7 +4,8 @@ import PatientInfo from '../PatientInfo/PatientInfo'; // Ensure the default impo
 import PatientForm from '../Form/PatientForm';
 import TabPanel from '../Tabs/TabPanel'; // Import TabPanel
 import { getIsEditing, getIsAdding, getSelectedPatient, getIsTogglingDelete, getShowDeleted } from '../../store/selectors'; // Import the new selector
-import { setIsEditing, setSelectedPatient, setIsAdding, setPatients, selectPatientDeletedState, setIsTogglingDelete, RootState } from '../../store/index';
+import { setIsEditing, setSelectedPatient, setIsAdding, setPatients, setIsTogglingDelete, selectPatientDeletedState } from '../../store/patientSlice'; // Correct import path
+import { RootState } from '../../store'; // Import RootState
 import { DetailedPatient, Email, Address, Phone, Bookmark } from '../../models/PatientModels'; // Import the missing types
 import { PatientFactory } from '../../models/PatientFactory'; // Ensure the named import is used
 import { PatientUtils } from '../../models/PatientUtils';
@@ -33,7 +34,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
   const isTogglingDelete = useSelector(getIsTogglingDelete); // Use the new selector
   const showDeleted = useSelector(getShowDeleted); // Use the new selector
   const [isDirty, setIsDirty] = useState(false);
-  const deleted = useSelector((state: RootState) => selectPatientDeletedState(state, patientId));
+  const deleted = useSelector((state: RootState) => selectPatientDeletedState(state.patient, patientId));
   // const [activeTab, setActiveTab] = useState(0); // State for active tab
 
   useEffect(() => {

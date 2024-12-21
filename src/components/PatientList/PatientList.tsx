@@ -4,7 +4,7 @@ import { Patient } from '../../models/PatientModels';
 import { PatientFactory } from '../../models/PatientFactory';
 import './PatientList.css'; // Ensure component-specific styles are imported
 import { PatientUtils } from '../../models/PatientUtils';
-import { setSelectedPatient, setIsEditing, setIsAdding, setPatients, setShowDeleted } from '../../store';
+import { setSelectedPatient, setIsEditing, setIsAdding, setPatients, setShowDeleted } from '../../store/patientSlice'; // Correct import path
 import { getPatients } from '../../store/selectors';
 import { getPatientsFromStorage } from '../../utils/patientStorage';
 import useOptions from '../../hooks/useOptions';
@@ -15,7 +15,7 @@ interface PatientListProps {
   selectedPatientId: string | null;
 }
 
-export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPatientId }) => {
+const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPatientId }) => {
   const dispatch = useDispatch();
   const patients = useSelector(getPatients) as Patient[]; // Ensure the correct type is used
   const [searchTerm, setSearchTerm] = useState('');
@@ -171,3 +171,5 @@ export const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selec
     </div>
   );
 };
+
+export default PatientList;

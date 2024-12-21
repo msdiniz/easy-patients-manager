@@ -1,31 +1,31 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { WritableDraft } from 'immer';
-import { OAuth2Client } from 'google-auth-library';
+// import { gapi } from 'gapi-script';
 
-export type AuthState = {
-  authClient: OAuth2Client | null;
+interface AuthState {
   isLoggedIn: boolean;
+  authClient: gapi.auth2.GoogleUser | null;
 }
 
 const initialState: AuthState = {
-  authClient: null,
   isLoggedIn: false,
+  authClient: null,
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setAuthClient(state, action: PayloadAction<OAuth2Client>) {
-      state.authClient = action.payload as WritableDraft<OAuth2Client>;
+    setAuthClient(state, action: PayloadAction<gapi.auth2.GoogleUser>) {
       state.isLoggedIn = true;
+      state.authClient = action.payload;
     },
     clearAuthClient(state) {
-      state.authClient = null;
       state.isLoggedIn = false;
+      state.authClient = null;
     },
   },
 });
 
 export const { setAuthClient, clearAuthClient } = authSlice.actions;
 export default authSlice.reducer;
+export type { AuthState }; // Export AuthState

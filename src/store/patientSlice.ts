@@ -2,19 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Patient } from '../models/PatientModels';
 
 export type PatientState = {
-
   selectedPatient: Patient | null;
-
   patients: Patient[];
-
   isEditing: boolean;
-
   isAdding: boolean;
-
   isTogglingDelete: boolean;
-
   showDeleted: boolean;
-
 };
 
 const initialState: PatientState = {
@@ -52,4 +45,10 @@ const patientSlice = createSlice({
 });
 
 export const { setSelectedPatient, setPatients, setIsEditing, setIsAdding, setIsTogglingDelete, setShowDeleted } = patientSlice.actions;
+
+export const selectPatientDeletedState = (state: PatientState, patientId: string): boolean => {
+  const patient = state.patients.find(p => p.id === patientId);
+  return patient ? patient.deleted || false : false;
+};
+
 export default patientSlice.reducer;

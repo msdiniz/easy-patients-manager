@@ -1,39 +1,35 @@
-import { google, people_v1 } from 'googleapis';
-import { GaxiosResponse } from 'gaxios';
+import { gapi } from 'gapi-script';
 import DataSource from './dataSource';
 
 class ApiDataSource extends DataSource {
-  private people: people_v1.People;
+  private authClient: gapi.auth2.GoogleUser;
 
-  constructor(authClient: people_v1.Params$Resource$People$Connections$List['auth']) {
+  constructor(authClient: gapi.auth2.GoogleUser) {
     super();
-    this.people = google.people({ version: 'v1', auth: authClient });
+    this.authClient = authClient;
   }
 
-  async fetchContacts(): Promise<people_v1.Schema$Person[]> {
+  async fetchContacts(): Promise<gapi.client.people.Person[]> {
+    const accessToken = this.authClient.getAuthResponse().access_token;
+    gapi.client.setToken({ access_token: accessToken });
+
+    const contacts: gapi.client.people.Person[] = [];
     let nextPageToken: string | null = null;
-    const contacts: people_v1.Schema$Person[] = [];
-    const fetchedContacts = new Set<string>();
 
     do {
       try {
-        const res: GaxiosResponse<people_v1.Schema$ListConnectionsResponse> = await this.people.people.connections.list({
+        const response = await gapi.client.people.people.connections.list({
           resourceName: 'people/me',
-          pageSize: 100, // Fetch in larger chunks
+          pageSize: 100,
           personFields: 'names,emailAddresses,phoneNumbers,addresses,memberships,genders,birthdays,biographies',
           pageToken: nextPageToken || undefined,
         });
 
-        const connections = res.data.connections;
-        nextPageToken = res.data.nextPageToken || null;
+        const connections = response.result.connections;
+        nextPageToken = response.result.nextPageToken || null;
 
         if (connections) {
-          for (const contact of connections) {
-            if (!fetchedContacts.has(contact.resourceName!)) {
-              contacts.push(contact);
-              fetchedContacts.add(contact.resourceName!);
-            }
-          }
+          contacts.push(...connections);
         }
       } catch (error) {
         console.error('Error fetching contacts:', error);
@@ -44,39 +40,39 @@ class ApiDataSource extends DataSource {
     return contacts;
   }
 
-  async fetchContact(contactId: string): Promise<people_v1.Schema$Person | null> {
+  async fetchContact(contactId: string): Promise<gapi.client.people.Person | null> {
     try {
-      const res: GaxiosResponse<people_v1.Schema$Person> = await this.people.people.get({
+      const response = await gapi.client.people.people.get({
         resourceName: `people/${contactId}`,
         personFields: 'names,emailAddresses,phoneNumbers,addresses,memberships,genders,birthdays,biographies',
       });
-      return res.data;
+      return response.result;
     } catch (error) {
       console.error('Error fetching contact:', error);
       return null;
     }
   }
 
-  async createContact(contact: people_v1.Schema$Person): Promise<people_v1.Schema$Person | null> {
+  async createContact(contact: gapi.client.people.Person): Promise<gapi.client.people.Person | null> {
     try {
-      const res: GaxiosResponse<people_v1.Schema$Person> = await this.people.people.createContact({
-        requestBody: contact,
+      const response = await gapi.client.people.people.createContact({
+        resource: contact,
       });
-      return res.data;
+      return response.result;
     } catch (error) {
       console.error('Error creating contact:', error);
       return null;
     }
   }
 
-  async updateContact(contactId: string, contact: people_v1.Schema$Person): Promise<people_v1.Schema$Person | null> {
+  async updateContact(contactId: string, contact: gapi.client.people.Person): Promise<gapi.client.people.Person | null> {
     try {
-      const res: GaxiosResponse<people_v1.Schema$Person> = await this.people.people.updateContact({
+      const response = await gapi.client.people.people.updateContact({
         resourceName: `people/${contactId}`,
         updatePersonFields: 'names,emailAddresses,phoneNumbers,addresses,memberships,genders,birthdays,biographies',
-        requestBody: contact,
+        resource: contact,
       });
-      return res.data;
+      return response.result;
     } catch (error) {
       console.error('Error updating contact:', error);
       return null;
@@ -85,7 +81,7 @@ class ApiDataSource extends DataSource {
 
   async deleteContact(contactId: string): Promise<void> {
     try {
-      await this.people.people.deleteContact({
+      await gapi.client.people.people.deleteContact({
         resourceName: `people/${contactId}`,
       });
     } catch (error) {

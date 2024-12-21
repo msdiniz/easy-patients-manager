@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { PatientList } from './PatientList/PatientList'; // Use named import
-import PatientDetails from '././Details/PatientDetails';
+import PatientList from './PatientList/PatientList'; // Use default import
+import PatientDetails from './Details/PatientDetails'; // Correct import path
 import Header from './Header';
-import { setPatients } from '../store';
+import { setPatients } from '../store/patientSlice'; // Correct import path
 import { getPatientsFromStorage, savePatientsToStorage } from '../utils/patientStorage';
 
 export const MainLayout: React.FC = () => {

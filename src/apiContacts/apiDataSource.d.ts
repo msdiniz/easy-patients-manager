@@ -1,12 +1,11 @@
-import { people_v1 } from 'googleapis';
 import DataSource from './dataSource';
 declare class ApiDataSource extends DataSource {
-    private people;
-    constructor(authClient: people_v1.Params$Resource$People$Connections$List['auth']);
-    fetchContacts(): Promise<people_v1.Schema$Person[]>;
-    fetchContact(contactId: string): Promise<people_v1.Schema$Person | null>;
-    createContact(contact: people_v1.Schema$Person): Promise<people_v1.Schema$Person | null>;
-    updateContact(contactId: string, contact: people_v1.Schema$Person): Promise<people_v1.Schema$Person | null>;
+    private authClient;
+    constructor(authClient: gapi.auth2.GoogleUser);
+    fetchContacts(): Promise<gapi.client.people.Person[]>;
+    fetchContact(contactId: string): Promise<gapi.client.people.Person | null>;
+    createContact(contact: gapi.client.people.Person): Promise<gapi.client.people.Person | null>;
+    updateContact(contactId: string, contact: gapi.client.people.Person): Promise<gapi.client.people.Person | null>;
     deleteContact(contactId: string): Promise<void>;
 }
 export default ApiDataSource;
