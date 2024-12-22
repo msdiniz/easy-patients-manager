@@ -13,7 +13,9 @@ const Header: React.FC = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const tokens = useSelector((state: RootState) => state.auth.tokens) as Tokens;
-  const backendPort = process.env.REACT_APP_BACKEND_PORT || '5000';
+  const isMac = process.platform === 'darwin';
+  const backendPort = isMac ? process.env.BACKEND_PORT_MAC : process.env.BACKEND_PORT_WIN || 5000;
+
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
