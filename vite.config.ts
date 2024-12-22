@@ -1,4 +1,3 @@
-// filepath: /C:/Users/Marcelo/source/repos/easy-patients-manager/vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import fs from 'fs';
@@ -15,6 +14,12 @@ for (const k in envConfig) {
 
 export default defineConfig({
   plugins: [react()],
+  server: {
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, 'certs/localhost-key.pem')),
+      cert: fs.readFileSync(path.resolve(__dirname, 'certs/localhost.pem')),
+    },
+  },
   define: {
     'process.env': process.env,
   },

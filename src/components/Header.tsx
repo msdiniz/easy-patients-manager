@@ -13,18 +13,23 @@ const Header: React.FC = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const tokens = useSelector((state: RootState) => state.auth.tokens) as Tokens;
-  const isMac = process.platform === 'darwin';
-  const backendPort = isMac ? process.env.BACKEND_PORT_MAC : process.env.BACKEND_PORT_WIN || 5000;
-
+  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  const backendPort = isMac ? import.meta.env.VITE_BACKEND_PORT_MAC : import.meta.env.VITE_BACKEND_PORT_WIN || 5000;
 
   useEffect(() => {
+    console.log('Initial tokens:', tokens);
+
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
-      const tokens = event.data as Tokens;
-      if (tokens.access_token && tokens.refresh_token && tokens.scope && tokens.token_type && tokens.expiry_date) {
+      const data = event.data;
+      if (data.source && data.source.startsWith('react-devtools')) return; // Ignore messages from React DevTools
+      if (data && typeof data === 'object' && 'access_token' in data && 'refresh_token' in data && 'scope' in data && 'token_type' in data && 'expiry_date' in data) {
+        const tokens = data as Tokens;
+        console.log('Received tokens:', tokens);
         dispatch(setAuthClient(tokens));
         setShowAuthInput(false);
       } else {
+        console.error('Invalid tokens received:', data);
         toast.error('Invalid tokens received');
       }
     };
@@ -38,7 +43,10 @@ const Header: React.FC = () => {
 
   const handleLoginClick = async () => {
     try {
-      const response = await fetch(`http://localhost:${backendPort}/auth-url`);
+      console.log('Backend port:', backendPort);
+      console.log('Environmental variable MAC:', import.meta.env.VITE_BACKEND_PORT_MAC);
+      console.log('Environmental variable: WIN:', import.meta.env.VITE_BACKEND_PORT_WIN);  
+      const response = await fetch(`https://localhost:${backendPort}/auth-url`);
       if (!response.ok) {
         if (response.status >= 500 && response.status < 600) {
           throw new Error(`Server error: ${response.status}`);

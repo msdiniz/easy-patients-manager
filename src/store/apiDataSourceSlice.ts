@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import ApiDataSource from '../apiContacts/apiDataSource';
 
 interface ApiDataSourceState {
-  apiDataSource: ApiDataSource | null;
+  apiDataSource: any | null;
 }
 
 const initialState: ApiDataSourceState = {
@@ -13,7 +12,7 @@ const apiDataSourceSlice = createSlice({
   name: 'apiDataSource',
   initialState,
   reducers: {
-    setApiDataSource(state, action: PayloadAction<ApiDataSource>) {
+    setApiDataSource(state, action: PayloadAction<any>) {
       state.apiDataSource = action.payload;
     },
     clearApiDataSource(state) {
