@@ -33,7 +33,13 @@ describe('ApiDataSource Integration Tests - Fetch Contacts', () => {
     // Exchange the auth code for tokens
     try {
       const { tokens } = await oauth2Client.getToken(authCode);
-      oauth2Client.setCredentials(tokens);
+      oauth2Client.setCredentials({
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token,
+        scope: tokens.scope,
+        token_type: tokens.token_type,
+        expiry_date: tokens.expiry_date
+      });
     } catch (error) {
       if (error.response && error.response.status === 400) {
         console.error('Error: Invalid grant. The auth code may have been used already.');
