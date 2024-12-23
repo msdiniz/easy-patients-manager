@@ -12,17 +12,19 @@ import LogoutButton from './LogoutButton';
 import Greeting from './Greeting';
 import ContactsInfo from './ContactsInfo';
 import { handleAuthMessage, fetchAuthUrl } from '../../utils/authUtils';
+import { saveFilteredContacts } from '../../utils/contactUtils';
+import { getBackendPort } from '../../utils/getBackendPort';
 
 const Header: React.FC = () => {
   const [showAuthInput, setShowAuthInput] = useState(false);
   const [loading, setLoading] = useState(false);
   const [totalContacts, setTotalContacts] = useState<number | null>(null);
+  const [contacts, setContacts] = useState<gapi.client.people.Person[]>([]);
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const tokens = useSelector((state: RootState) => state.auth.tokens) as Tokens;
   const userName = useSelector((state: RootState) => state.auth.userName);
-  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-  const backendPort = isMac ? import.meta.env.VITE_BACKEND_PORT_MAC : import.meta.env.VITE_BACKEND_PORT_WIN || 5000;
+  const backendPort = getBackendPort();
 
   useEffect(() => {
     console.log('Initial tokens:', tokens);
@@ -57,6 +59,10 @@ const Header: React.FC = () => {
     setTotalContacts(null);
   };
 
+  const handleSaveContactsClick = () => {
+    saveFilteredContacts(contacts);
+  };
+
   const apiDataSource = useMemo(() => {
     return tokens ? new ApiDataSource({
       access_token: tokens.access_token!,
@@ -72,6 +78,7 @@ const Header: React.FC = () => {
       setLoading(true);
       apiDataSource.fetchContacts().then((contacts) => {
         console.log(`Total number of patients: ${contacts.length}`);
+        setContacts(contacts);
         setTotalContacts(contacts.length);
         setLoading(false);
       }).catch((error) => {
@@ -91,6 +98,9 @@ const Header: React.FC = () => {
           <div className={styles.contactsInfoContainer}>
             <ContactsInfo loading={loading} totalContacts={totalContacts} />
           </div>
+          {!loading && contacts.length > 0 && (
+            <button onClick={handleSaveContactsClick}>Save Contacts</button>
+          )}
         </>
       )}
       {!isLoggedIn && !showAuthInput && (

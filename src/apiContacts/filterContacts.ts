@@ -1,6 +1,3 @@
-import { people_v1 } from 'googleapis';
-import { contactGroupIds } from './constants';
-
 /**
  * Filters contacts based on the provided filter text and selected groups.
  * @param contacts - The contacts to filter.
@@ -8,13 +5,13 @@ import { contactGroupIds } from './constants';
  * @param selectedGroups - The selected contact group IDs.
  * @returns The filtered contacts.
  */
-function filterContacts(contacts: people_v1.Schema$Person[], filterText: string, selectedGroups: string[]): people_v1.Schema$Person[] {
+function filterContacts(contacts: gapi.client.people.Person[], filterText: string, selectedGroups: string[]): gapi.client.people.Person[] {
   // Filter contacts by selected groups
   let filteredContacts = contacts.filter(person => {
     const memberships = person.memberships || [];
     return memberships.some(membership =>
       membership.contactGroupMembership &&
-      selectedGroups.includes(membership.contactGroupMembership.contactGroupResourceName!)
+      selectedGroups.includes(membership.contactGroupMembership.contactGroupId!)
     );
   });
 
@@ -35,12 +32,12 @@ function filterContacts(contacts: people_v1.Schema$Person[], filterText: string,
  * @param selectedGroups - The selected contact group IDs.
  * @returns The filtered contacts.
  */
-function filterContactsByGroup(contacts: people_v1.Schema$Person[], selectedGroups: string[]): people_v1.Schema$Person[] {
+function filterContactsByGroup(contacts: gapi.client.people.Person[], selectedGroups: string[]): gapi.client.people.Person[] {
   return contacts.filter(person => {
     const memberships = person.memberships || [];
     return memberships.some(membership =>
       membership.contactGroupMembership &&
-      selectedGroups.includes(membership.contactGroupMembership.contactGroupResourceName!)
+      selectedGroups.includes(membership.contactGroupMembership.contactGroupId!)
     );
   });
 }
@@ -50,12 +47,12 @@ function filterContactsByGroup(contacts: people_v1.Schema$Person[], selectedGrou
  * @param contacts - The contacts to filter.
  * @returns The contacts that do not belong to patient groups.
  */
-function returnContactsThatDoNotBelongToPatientGroups(contacts: people_v1.Schema$Person[]): people_v1.Schema$Person[] {
+function returnContactsThatDoNotBelongToPatientGroups(contacts: gapi.client.people.Person[], selectedGroups: string[]): gapi.client.people.Person[] {
   return contacts.filter(person => {
     const memberships = person.memberships || [];
     return !memberships.some(membership =>
       membership.contactGroupMembership &&
-      contactGroupIds.includes(membership.contactGroupMembership.contactGroupResourceName!)
+      selectedGroups.includes(membership.contactGroupMembership.contactGroupId!)
     );
   });
 }
