@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Header from './Header';
+import Header from '../Header';
 import { Provider } from 'react-redux';
-import { store } from '../store';
+import { store } from '../../store';
 
 describe('Header Component Integration Tests', () => {
   it('should handle login and fetch data', async () => {

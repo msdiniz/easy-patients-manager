@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import PatientList from './PatientList/PatientList'; // Use default import
 import PatientDetails from './Details/PatientDetails'; // Correct import path
-import Header from './Header';
+import Header from './Header/Header';
 import { setPatients } from '../store/patientSlice'; // Correct import path
 import { getPatientsFromStorage, savePatientsToStorage } from '../utils/patientStorage';
 

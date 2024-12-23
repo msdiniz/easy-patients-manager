@@ -32,3 +32,9 @@
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+.contactsInfoContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
