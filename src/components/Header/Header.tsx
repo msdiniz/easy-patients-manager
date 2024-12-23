@@ -13,7 +13,7 @@ import Greeting from './Greeting';
 import ContactsInfo from './ContactsInfo';
 import { handleAuthMessage, fetchAuthUrl } from '../../utils/authUtils';
 import { saveFilteredContacts } from '../../utils/contactUtils';
-import { getBackendPort } from '../../utils/getBackendPort';
+import { getBackendPort } from '../../utils/getServerPort';
 
 const Header: React.FC = () => {
   const [showAuthInput, setShowAuthInput] = useState(false);
@@ -55,7 +55,7 @@ const Header: React.FC = () => {
 
   const handleLogoutClick = () => {
     dispatch(clearAuthClient());
-    setShowAuthInput(true);
+    setShowAuthInput(false); // Ensure the login button is shown
     setTotalContacts(null);
   };
 

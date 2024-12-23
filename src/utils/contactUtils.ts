@@ -1,7 +1,7 @@
 import { filterContactsByGroup, returnContactsThatDoNotBelongToPatientGroups } from '../apiContacts/filterContacts';
 import { contactGroupIds } from '../apiContacts/constants';
 import { toast } from 'react-toastify';
-import { getBackendPort } from './getBackendPort';
+import { getFileServerPort } from './getServerPort';
 
 export const saveFilteredContacts = async (contacts: gapi.client.people.Person[]) => {
   if (contacts.length === 0) {
@@ -22,8 +22,8 @@ export const saveFilteredContacts = async (contacts: gapi.client.people.Person[]
 };
 
 const saveToFile = async (filename: string, data: any) => {
-  const backendPort = getBackendPort();
-  const response = await fetch(`https://localhost:${backendPort}/save-file`, {
+  const fileServerPort = getFileServerPort();
+  const response = await fetch(`https://localhost:${fileServerPort}/save-file`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
