@@ -36,3 +36,7 @@ coverage/
 
 # Ignore certificates
 certs/
+
+# Ignore JSON files
+/data/patientsGoogle.json
+/data/contactsGoogle.json
