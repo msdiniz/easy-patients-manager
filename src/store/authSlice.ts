@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Tokens } from '../types/types';
 
-interface AuthState {
+export interface AuthState {
   isLoggedIn: boolean;
   tokens: Tokens | null;
   userName: string | null;

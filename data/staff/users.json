@@ -1,0 +1,35 @@
+[
+  {
+    "fullName": "Marcelo Scofano Diniz",
+    "role": ["IT", "Supervisor", "Physician"],
+    "dob": "1966-07-27",
+    "gender": "Male",
+    "emails": ["msdiniz@gmail.com", "msdiniz@cardiol.br"],
+    "addresses": ["Avenida Nyemeyer, 925, bloco 2, apto 201, Rio de Janeiro, RJ, CEP 22450221"],
+    "phones": ["021996299205"],
+    "specialties": ["Cardiology", "Internal Medicine"],
+    "password": ""
+  },
+  {
+    "fullName": "Júlia da Conceição Pereira",
+    "role": ["Clerk"],
+    "dob": "1975-03-26",
+    "gender": "Female",
+    "emails": ["jujucp1972@gmail.com"],
+    "addresses": [],
+    "phones": ["021998915700"],
+    "specialties": [],
+    "password": ""
+  },
+  {
+    "fullName": "Graziele Cristine Silva Scofano Diniz",
+    "role": ["Supervisor", "Clerk"],
+    "dob": "1980-10-23",
+    "gender": "Female",
+    "emails": ["grazi.diva@gmail.com"],
+    "addresses": ["Avenida Nyemeyer, 925, bloco 2, apto 201, Rio de Janeiro, RJ, CEP 22450221"],
+    "phones": ["021973047516"],
+    "specialties": [],
+    "password": ""
+  }
+]

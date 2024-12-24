@@ -2,6 +2,8 @@ import { Tokens } from '../types/types';
 import { setAuthClient } from '../store/authSlice';
 import { Dispatch } from 'redux';
 import { toast } from 'react-toastify';
+import users from '../../data/staff/users.json';
+import bcrypt from 'bcryptjs';
 
 export const handleAuthMessage = (event: MessageEvent, dispatch: Dispatch<any>) => {
   console.log('Received message event:', event);
@@ -39,7 +41,6 @@ export const handleAuthMessage = (event: MessageEvent, dispatch: Dispatch<any>) 
     }
   }
 };
-
 export const fetchAuthUrl = async (backendPort: number) => {
   console.log('Backend port:', backendPort);
   console.log('Environmental variable MAC:', import.meta.env.VITE_BACKEND_PORT_MAC);
@@ -55,4 +56,26 @@ export const fetchAuthUrl = async (backendPort: number) => {
   const data = await response.json();
   console.log('Auth URL data:', data);
   return data.url;
+};
+
+const defaultPassword = '1234';
+
+export const authenticateUser = async (email: string, password: string) => {
+  const user = users.find(user => user.emails.includes(email));
+  if (user) {
+    if (!user.password) {
+      // First login, set the default password
+      const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+      user.password = hashedPassword;
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (isPasswordValid) {
+      return user;
+    } else {
+      throw new Error('Invalid email or password');
+    }
+  } else {
+    throw new Error('Invalid email or password');
+  }
 };
