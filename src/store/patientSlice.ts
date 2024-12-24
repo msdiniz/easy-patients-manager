@@ -3,7 +3,8 @@ import { Patient } from '../models/PatientModels';
 
 export type PatientState = {
   selectedPatient: Patient | null;
-  patients: Patient[];
+  patientsLocal: Patient[]; // Rename to clarify
+  patientsGoogle: Patient[]; // Add Google patients
   isEditing: boolean;
   isAdding: boolean;
   isTogglingDelete: boolean;
@@ -12,7 +13,8 @@ export type PatientState = {
 
 const initialState: PatientState = {
   selectedPatient: null,
-  patients: [],
+  patientsLocal: [], // Initialize local patients
+  patientsGoogle: [], // Initialize Google patients
   isEditing: false,
   isAdding: false,
   isTogglingDelete: false,
@@ -26,8 +28,11 @@ const patientSlice = createSlice({
     setSelectedPatient(state, action: PayloadAction<Patient | null>) {
       state.selectedPatient = action.payload;
     },
-    setPatients(state, action: PayloadAction<Patient[]>) {
-      state.patients = action.payload;
+    setPatientsLocal(state, action: PayloadAction<Patient[]>) {
+      state.patientsLocal = action.payload;
+    },
+    setPatientsGoogle(state, action: PayloadAction<Patient[]>) {
+      state.patientsGoogle = action.payload;
     },
     setIsEditing(state, action: PayloadAction<boolean>) {
       state.isEditing = action.payload;
@@ -44,6 +49,6 @@ const patientSlice = createSlice({
   },
 });
 
-export const { setSelectedPatient, setPatients, setIsEditing, setIsAdding, setIsTogglingDelete, setShowDeleted } = patientSlice.actions;
+export const { setSelectedPatient, setPatientsLocal, setPatientsGoogle, setIsEditing, setIsAdding, setIsTogglingDelete, setShowDeleted } = patientSlice.actions;
 
 export default patientSlice.reducer;

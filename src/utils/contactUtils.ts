@@ -1,7 +1,21 @@
-import { filterContactsByGroup, returnContactsThatDoNotBelongToPatientGroups } from '../apiContacts/filterContacts';
-import { contactGroupIds } from '../apiContacts/constants';
 import { toast } from 'react-toastify';
+import ApiDataSource from '../apiContacts/apiDataSource';
+import { Tokens } from '../types/types';
+import { filterContactsByGroup, returnContactsThatDoNotBelongToPatientGroups } from '../apiContacts/filterContacts';
+import { patientGroupsIds } from '../apiContacts/constants';
 import { getFileServerPort } from './getServerPort';
+
+export const fetchContacts = async (tokens: Tokens): Promise<gapi.client.people.Person[]> => {
+  const apiDataSource = new ApiDataSource(tokens);
+  try {
+    const contacts = await apiDataSource.fetchContacts();
+    return contacts;
+  } catch (error) {
+    console.error('Error fetching contacts:', error);
+    toast.error('Error fetching contacts');
+    return [];
+  }
+};
 
 export const saveFilteredContacts = async (contacts: gapi.client.people.Person[]) => {
   if (contacts.length === 0) {
@@ -9,8 +23,8 @@ export const saveFilteredContacts = async (contacts: gapi.client.people.Person[]
     return;
   }
 
-  const patientsGoogle = filterContactsByGroup(contacts, contactGroupIds);
-  const contactsGoogle = returnContactsThatDoNotBelongToPatientGroups(contacts, contactGroupIds);
+  const patientsGoogle = filterContactsByGroup(contacts, patientGroupsIds);
+  const contactsGoogle = returnContactsThatDoNotBelongToPatientGroups(contacts, patientGroupsIds);
 
   try {
     await saveToFile('patientsGoogle.json', patientsGoogle);

@@ -1,12 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-
-interface Tokens {
-  access_token: string;
-  refresh_token: string;
-  scope: string;
-  token_type: string;
-  expiry_date: number;
-}
+import { Tokens } from '../types/types'; // Import the centralized Tokens interface
 
 interface PeopleApiResponse {
   connections: gapi.client.people.Person[];

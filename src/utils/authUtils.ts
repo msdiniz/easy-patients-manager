@@ -3,7 +3,7 @@ import { setAuthClient } from '../store/authSlice';
 import { Dispatch } from 'redux';
 import { toast } from 'react-toastify';
 import users from '../../data/staff/users.json';
-import bcrypt from 'bcryptjs';
+import CryptoJS from 'crypto-js';
 
 export const handleAuthMessage = (event: MessageEvent, dispatch: Dispatch<any>) => {
   console.log('Received message event:', event);
@@ -41,6 +41,7 @@ export const handleAuthMessage = (event: MessageEvent, dispatch: Dispatch<any>) 
     }
   }
 };
+
 export const fetchAuthUrl = async (backendPort: number) => {
   console.log('Backend port:', backendPort);
   console.log('Environmental variable MAC:', import.meta.env.VITE_BACKEND_PORT_MAC);
@@ -65,12 +66,12 @@ export const authenticateUser = async (email: string, password: string) => {
   if (user) {
     if (!user.password) {
       // First login, set the default password
-      const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+      const hashedPassword = CryptoJS.SHA256(defaultPassword).toString();
       user.password = hashedPassword;
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (isPasswordValid) {
+    const hashedPassword = CryptoJS.SHA256(password).toString();
+    if (hashedPassword === user.password) {
       return user;
     } else {
       throw new Error('Invalid email or password');

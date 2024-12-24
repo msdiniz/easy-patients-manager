@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import PatientList from './PatientList/PatientList'; // Use default import
-import PatientDetails from './Details/PatientDetails'; // Correct import path
+import { useDispatch, useSelector } from 'react-redux';
+import PatientList from './PatientList/PatientList';
+import PatientDetails from './Details/PatientDetails';
 import Header from './Header/Header';
-import { setPatients } from '../store/patientSlice'; // Correct import path
+import SelectPhysician from './Header/SelectPhysician';
+import { setPatients } from '../store/patientSlice';
+import { RootState } from '../store';
 import { getPatientsFromStorage, savePatientsToStorage } from '../utils/patientStorage';
 
 export const MainLayout: React.FC = () => {
   const dispatch = useDispatch();
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [selectedPatientFullName, setSelectedPatientFullName] = useState<string | null>(null);
+  const [isPhysicianSelectedByUser, setIsPhysicianSelectedByUser] = useState<boolean>(false);
+  const isLoggedIn = useSelector((state: RootState) => state.authUser.isLoggedIn);
+  const roles = useSelector((state: RootState) => state.authUser.roles);
 
   useEffect(() => {
     console.log('MainLayout component mounted');
@@ -35,21 +40,32 @@ export const MainLayout: React.FC = () => {
     setSelectedPatientFullName(fullName);
   };
 
+  const handlePhysicianSelected = () => {
+    setIsPhysicianSelectedByUser(true);
+  };
+
   return (
     <div className="main-layout">
-      <Header />
+      <Header onPhysicianSelected={handlePhysicianSelected} />
       <div className="content">
-        <PatientList
-          onSelectPatient={handleSelectPatient}
-          selectedPatientId={selectedPatientId}
-        />
+        {isLoggedIn && (roles.includes('Physician') || isPhysicianSelectedByUser) && (
+          <PatientList
+            onSelectPatient={handleSelectPatient}
+            selectedPatientId={selectedPatientId}
+          />
+        )}
         {selectedPatientId && selectedPatientFullName && (
           <PatientDetails
             patientId={selectedPatientId}
             fullName={selectedPatientFullName}
           />
         )}
+        {isLoggedIn && !roles.includes('Physician') && !isPhysicianSelectedByUser && (
+          <SelectPhysician onPhysicianSelected={handlePhysicianSelected} />
+        )}
       </div>
     </div>
   );
 };
+
+export default MainLayout;

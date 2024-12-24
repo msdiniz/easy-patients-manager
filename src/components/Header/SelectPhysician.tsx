@@ -6,7 +6,11 @@ import { toast } from 'react-toastify';
 import users from '../../../data/staff/users.json';
 import { authenticateUser } from '../../utils/authUtils';
 
-const SelectPhysician: React.FC = () => {
+interface SelectPhysicianProps {
+  onPhysicianSelected: () => void;
+}
+
+const SelectPhysician: React.FC<SelectPhysicianProps> = ({ onPhysicianSelected }) => {
   const [selectedPhysician, setSelectedPhysician] = useState<string | null>(null);
   const [isManaging, setIsManaging] = useState(false);
   const dispatch = useDispatch();
@@ -63,6 +67,7 @@ const SelectPhysician: React.FC = () => {
         dispatch(setAuthClient({ userName: user.fullName, tokens: {} }));
         toast.success(`Managing ${user.fullName}`);
         setIsManaging(true);
+        onPhysicianSelected(); // Notify parent component
       } catch (error: any) {
         toast.error(error.message);
       }
@@ -84,7 +89,7 @@ const SelectPhysician: React.FC = () => {
         disabled={isManaging}
       >
         <option value="" disabled>Select a physician</option>
-        {users.filter(user => user.role.includes('Physician')).map((user) => (
+        {users.filter(user => user.roles.includes('Physician')).map((user) => (
           <option key={user.fullName} value={user.emails[0]}>{user.fullName}</option>
         ))}
       </select>

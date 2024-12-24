@@ -1,5 +1,21 @@
 import { Patient, DetailedPatient } from '../models/PatientModels';
 
+export const transformContactsToPatients = (contacts: gapi.client.people.Person[]): Patient[] => {
+  return contacts.map(contact => ({
+    id: contact.resourceName || '',
+    fullName: contact.names?.[0]?.displayName || '',
+    dob: contact.birthdays?.[0]?.date ? `${contact.birthdays[0].date.year}-${contact.birthdays[0].date.month}-${contact.birthdays[0].date.day}` : '', // Transform to string
+    gender: contact.genders?.[0]?.value || '',
+    email: contact.emailAddresses?.[0]?.value || '',
+    phone: contact.phoneNumbers?.[0]?.value || '',
+    address: contact.addresses?.[0]?.formattedValue || '',
+    cpf: '', // Default value for cpf
+    dateOfFirstContact: new Date().toISOString(), // Transform to string
+    deleted: false,
+    bookmarks: []
+  }));
+};
+
 export const transformToDetailedPatient = (patient: Patient): DetailedPatient => {
   return {
     ...patient,
