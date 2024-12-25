@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import PatientList from './PatientList/PatientList';
 import PatientDetails from './Details/PatientDetails';
 import Header from './Header/Header';
 import SelectPhysician from './Header/SelectPhysician';
 import { setPatientsLocal } from '../store/patientSlice';
 import { RootState } from '../store';
-import { getPatientsFromStorage, savePatientsToStorage } from '../utils/patientStorage';
+import { setUsers, setPhysicians } from '../store/authUserSlice';
+import { fetchUsers, fetchPhysicians } from '../utils/userUtils';
+import { savePatientsToStorage, getPatientsFromStorage } from '../utils/patientStorage';
+
 
 export const MainLayout: React.FC = () => {
   const dispatch = useDispatch();
@@ -33,6 +36,14 @@ export const MainLayout: React.FC = () => {
           console.error('Error loading patients from JSON file:', error);
         });
     }
+
+    fetchUsers().then(users => {
+      dispatch(setUsers(users));
+    });
+
+    fetchPhysicians().then(physicians => {
+      dispatch(setPhysicians(physicians));
+    });
   }, [dispatch]);
 
   const handleSelectPatient = (patientId: string, fullName: string) => {

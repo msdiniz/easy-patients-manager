@@ -6,6 +6,16 @@ import { Patient } from '../models/PatientModels';
 const selectPatientState = (state: RootState) => state.patient;
 const selectAuthUserState = (state: RootState) => state.authUser;
 
+export const selectUsers = createSelector(
+  [selectAuthUserState],
+  (authUserState) => authUserState.users
+);
+
+export const selectPhysicians = createSelector(
+  [selectAuthUserState],
+  (authUserState) => authUserState.physicians
+);
+
 const selectPatientsLocal = createSelector(
   [selectPatientState],
   (patientState) => patientState.patientsLocal || [] // Ensure patientsLocal is an array
