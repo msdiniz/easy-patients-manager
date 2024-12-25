@@ -5,7 +5,7 @@ import PatientList from './PatientList/PatientList';
 import PatientDetails from './Details/PatientDetails';
 import Header from './Header/Header';
 import SelectPhysician from './Header/SelectPhysician';
-import { setPatients } from '../store/patientSlice';
+import { setPatientsLocal } from '../store/patientSlice';
 import { RootState } from '../store';
 import { getPatientsFromStorage, savePatientsToStorage } from '../utils/patientStorage';
 
@@ -21,12 +21,12 @@ export const MainLayout: React.FC = () => {
     console.log('MainLayout component mounted');
     const parsedPatients = getPatientsFromStorage();
     if (parsedPatients.length > 0) {
-      dispatch(setPatients(parsedPatients));
+      dispatch(setPatientsLocal(parsedPatients));
     } else {
       axios.get('/data/patients.json')
         .then(response => {
           const patients = response.data;
-          dispatch(setPatients(patients));
+          dispatch(setPatientsLocal(patients));
           savePatientsToStorage(patients); // Save to local storage
         })
         .catch(error => {

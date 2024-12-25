@@ -1,8 +1,9 @@
 import { RootState } from '../store';
 import { Patient } from '../models/PatientModels';
-export declare const getPatients: ((state: {
+export declare const getPatientsLocal: ((state: {
     patient: import("./patientSlice").PatientState;
     auth: import("./authSlice").AuthState;
+    authUser: import("./authUserSlice").AuthUserState;
     apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
 }) => import("../models/PatientModels").DetailedPatient[]) & {
     clearCache: () => void;
@@ -19,6 +20,58 @@ export declare const getPatients: ((state: {
     dependencies: [((state: {
         patient: import("./patientSlice").PatientState;
         auth: import("./authSlice").AuthState;
+        authUser: import("./authUserSlice").AuthUserState;
+        apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
+    }) => Patient[]) & {
+        clearCache: () => void;
+        resultsCount: () => number;
+        resetResultsCount: () => void;
+    } & {
+        resultFunc: (resultFuncArgs_0: import("./patientSlice").PatientState) => Patient[];
+        memoizedResultFunc: ((resultFuncArgs_0: import("./patientSlice").PatientState) => Patient[]) & {
+            clearCache: () => void;
+            resultsCount: () => number;
+            resetResultsCount: () => void;
+        };
+        lastResult: () => Patient[];
+        dependencies: [(state: RootState) => import("./patientSlice").PatientState];
+        recomputations: () => number;
+        resetRecomputations: () => void;
+        dependencyRecomputations: () => number;
+        resetDependencyRecomputations: () => void;
+    } & {
+        memoize: typeof import("reselect").weakMapMemoize;
+        argsMemoize: typeof import("reselect").weakMapMemoize;
+    }];
+    recomputations: () => number;
+    resetRecomputations: () => void;
+    dependencyRecomputations: () => number;
+    resetDependencyRecomputations: () => void;
+} & {
+    memoize: typeof import("reselect").weakMapMemoize;
+    argsMemoize: typeof import("reselect").weakMapMemoize;
+};
+export declare const getPatientsGoogle: ((state: {
+    patient: import("./patientSlice").PatientState;
+    auth: import("./authSlice").AuthState;
+    authUser: import("./authUserSlice").AuthUserState;
+    apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
+}) => import("../models/PatientModels").DetailedPatient[]) & {
+    clearCache: () => void;
+    resultsCount: () => number;
+    resetResultsCount: () => void;
+} & {
+    resultFunc: (resultFuncArgs_0: Patient[]) => import("../models/PatientModels").DetailedPatient[];
+    memoizedResultFunc: ((resultFuncArgs_0: Patient[]) => import("../models/PatientModels").DetailedPatient[]) & {
+        clearCache: () => void;
+        resultsCount: () => number;
+        resetResultsCount: () => void;
+    };
+    lastResult: () => import("../models/PatientModels").DetailedPatient[];
+    dependencies: [((state: {
+        patient: import("./patientSlice").PatientState;
+        auth: import("./authSlice").AuthState;
+        authUser: import("./authUserSlice").AuthUserState;
         apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
     }) => Patient[]) & {
         clearCache: () => void;
@@ -52,6 +105,7 @@ export declare const getPatients: ((state: {
 export declare const getSelectedPatient: ((state: {
     patient: import("./patientSlice").PatientState;
     auth: import("./authSlice").AuthState;
+    authUser: import("./authUserSlice").AuthUserState;
     apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
 }) => Patient | null) & {
     clearCache: () => void;
@@ -68,6 +122,7 @@ export declare const getSelectedPatient: ((state: {
     dependencies: [((state: {
         patient: import("./patientSlice").PatientState;
         auth: import("./authSlice").AuthState;
+        authUser: import("./authUserSlice").AuthUserState;
         apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
     }) => Patient | null) & {
         clearCache: () => void;
@@ -101,6 +156,7 @@ export declare const getSelectedPatient: ((state: {
 export declare const getIsEditing: ((state: {
     patient: import("./patientSlice").PatientState;
     auth: import("./authSlice").AuthState;
+    authUser: import("./authUserSlice").AuthUserState;
     apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
 }) => boolean) & {
     clearCache: () => void;
@@ -117,6 +173,7 @@ export declare const getIsEditing: ((state: {
     dependencies: [((state: {
         patient: import("./patientSlice").PatientState;
         auth: import("./authSlice").AuthState;
+        authUser: import("./authUserSlice").AuthUserState;
         apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
     }) => boolean) & {
         clearCache: () => void;
@@ -150,6 +207,7 @@ export declare const getIsEditing: ((state: {
 export declare const getIsAdding: ((state: {
     patient: import("./patientSlice").PatientState;
     auth: import("./authSlice").AuthState;
+    authUser: import("./authUserSlice").AuthUserState;
     apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
 }) => boolean) & {
     clearCache: () => void;
@@ -166,6 +224,7 @@ export declare const getIsAdding: ((state: {
     dependencies: [((state: {
         patient: import("./patientSlice").PatientState;
         auth: import("./authSlice").AuthState;
+        authUser: import("./authUserSlice").AuthUserState;
         apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
     }) => boolean) & {
         clearCache: () => void;
@@ -199,6 +258,7 @@ export declare const getIsAdding: ((state: {
 export declare const getIsTogglingDelete: ((state: {
     patient: import("./patientSlice").PatientState;
     auth: import("./authSlice").AuthState;
+    authUser: import("./authUserSlice").AuthUserState;
     apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
 }) => boolean) & {
     clearCache: () => void;
@@ -215,6 +275,7 @@ export declare const getIsTogglingDelete: ((state: {
     dependencies: [((state: {
         patient: import("./patientSlice").PatientState;
         auth: import("./authSlice").AuthState;
+        authUser: import("./authUserSlice").AuthUserState;
         apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
     }) => boolean) & {
         clearCache: () => void;
@@ -248,6 +309,7 @@ export declare const getIsTogglingDelete: ((state: {
 export declare const getShowDeleted: ((state: {
     patient: import("./patientSlice").PatientState;
     auth: import("./authSlice").AuthState;
+    authUser: import("./authUserSlice").AuthUserState;
     apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
 }) => boolean) & {
     clearCache: () => void;
@@ -264,6 +326,7 @@ export declare const getShowDeleted: ((state: {
     dependencies: [((state: {
         patient: import("./patientSlice").PatientState;
         auth: import("./authSlice").AuthState;
+        authUser: import("./authUserSlice").AuthUserState;
         apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
     }) => boolean) & {
         clearCache: () => void;

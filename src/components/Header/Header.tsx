@@ -13,6 +13,7 @@ import GoogleContacts from './GoogleContacts';
 import ContactsInfo from './ContactsInfo';
 import { fetchContacts } from '../../utils/contactUtils';
 import { transformContactsToPatients } from '../../utils/transformPatient';
+import { userIsPhysician } from '../../store/selectors';
 import { Tokens } from '../../types/types';
 
 interface HeaderProps {
@@ -28,6 +29,7 @@ const Header: React.FC<HeaderProps> = ({ onPhysicianSelected }) => {
   const userName = useSelector((state: RootState) => state.authUser.userName);
   const roles = useSelector((state: RootState) => state.authUser.roles);
   const tokens = useSelector((state: RootState) => state.auth.tokens) as Tokens;
+  const isPhysician = useSelector(userIsPhysician);
 
   const handleLogoutClick = () => {
     dispatch(clearAuthUser());
@@ -69,13 +71,10 @@ const Header: React.FC<HeaderProps> = ({ onPhysicianSelected }) => {
       {isLoggedIn && (
         <button onClick={handleLogoutClick}>Logout</button>
       )}
-      {isLoggedIn && roles.includes('Clerk') && (
+      {isLoggedIn && (roles.includes('Clerk') || roles.includes('Supervisor')) && (
         <SelectPhysician onPhysicianSelected={onPhysicianSelected} />
       )}
-      {isLoggedIn && roles.includes('Supervisor') && (
-        <SelectPhysician onPhysicianSelected={onPhysicianSelected} />
-      )}
-      {isLoggedIn && roles.includes('Physician') && (
+      {isLoggedIn && isPhysician && (
         <GoogleContacts />
       )}
     </header>

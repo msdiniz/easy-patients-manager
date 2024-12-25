@@ -4,8 +4,8 @@ import { Patient } from '../../models/PatientModels';
 import { PatientFactory } from '../../models/PatientFactory';
 import './PatientList.css'; // Ensure component-specific styles are imported
 import { PatientUtils } from '../../models/PatientUtils';
-import { setSelectedPatient, setIsEditing, setIsAdding, setPatients, setShowDeleted } from '../../store/patientSlice'; // Correct import path
-import { getPatients } from '../../store/selectors';
+import { setSelectedPatient, setIsEditing, setIsAdding, setPatientsLocal, setShowDeleted } from '../../store/patientSlice'; // Correct import path
+import { getPatientsLocal } from '../../store/selectors';
 import { getPatientsFromStorage } from '../../utils/patientStorage';
 import useOptions from '../../hooks/useOptions';
 import FilterByBookmarks from './FilterByBookmarks'; // Import the new component
@@ -17,7 +17,7 @@ interface PatientListProps {
 
 const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPatientId }) => {
   const dispatch = useDispatch();
-  const patients = useSelector(getPatients) as Patient[]; // Ensure the correct type is used
+  const patients = useSelector(getPatientsLocal) as Patient[]; // Ensure the correct type is used
   const [searchTerm, setSearchTerm] = useState('');
   const [useProperCase, setUseProperCase] = useState(true);
   const [showSelectedText, setShowSelectedText] = useState(false); // New state for showing selected text
@@ -30,7 +30,7 @@ const PatientList: React.FC<PatientListProps> = ({ onSelectPatient, selectedPati
     console.log('PatientList component mounted');
     const storedPatients = getPatientsFromStorage();
     if (storedPatients.length > 0) {
-      dispatch(setPatients(storedPatients));
+      dispatch(setPatientsLocal(storedPatients));
     }
   }, [dispatch]);
 

@@ -1,6 +1,7 @@
+import { Tokens } from '../types/types';
 declare class ApiDataSource {
-    private authClient;
-    constructor(authClient: gapi.auth2.GoogleAuth);
+    private tokens;
+    constructor(tokens: Tokens);
     fetchContacts(): Promise<gapi.client.people.Person[]>;
     fetchContact(contactId: string): Promise<gapi.client.people.Person | null>;
     createContact(contact: gapi.client.people.Person): Promise<gapi.client.people.Person | null>;

@@ -1,4 +1,7 @@
 import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-declare const Header: React.FC;
+interface HeaderProps {
+    onPhysicianSelected: () => void;
+}
+declare const Header: React.FC<HeaderProps>;
 export default Header;

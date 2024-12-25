@@ -4,10 +4,16 @@ import { transformToDetailedPatient } from '../utils/transformPatient';
 import { Patient } from '../models/PatientModels';
 
 const selectPatientState = (state: RootState) => state.patient;
+const selectAuthUserState = (state: RootState) => state.authUser;
 
-const selectPatients = createSelector(
+const selectPatientsLocal = createSelector(
   [selectPatientState],
-  (patientState) => patientState.patients
+  (patientState) => patientState.patientsLocal || [] // Ensure patientsLocal is an array
+);
+
+const selectPatientsGoogle = createSelector(
+  [selectPatientState],
+  (patientState) => patientState.patientsGoogle || [] // Ensure patientsGoogle is an array
 );
 
 const selectSelectedPatient = createSelector(
@@ -35,7 +41,11 @@ const selectShowDeleted = createSelector(
   (patientState) => patientState.showDeleted
 );
 
-export const getPatients = createSelector([selectPatients], (patients: Patient[]) => 
+export const getPatientsLocal = createSelector([selectPatientsLocal], (patients: Patient[]) => 
+  patients.map((patient: Patient) => transformToDetailedPatient(patient))
+);
+
+export const getPatientsGoogle = createSelector([selectPatientsGoogle], (patients: Patient[]) => 
   patients.map((patient: Patient) => transformToDetailedPatient(patient))
 );
 
@@ -46,6 +56,11 @@ export const getIsTogglingDelete = createSelector([selectIsTogglingDelete], (isT
 export const getShowDeleted = createSelector([selectShowDeleted], (showDeleted: boolean) => showDeleted);
 
 export const selectPatientDeletedState = (state: RootState, patientId: string): boolean => {
-  const patient = state.patient.patients.find(p => p.id === patientId);
+  const patient = state.patient.patientsLocal.find(p => p.id === patientId) || state.patient.patientsGoogle.find(p => p.id === patientId);
   return patient ? patient.deleted || false : false;
 };
+
+export const userIsPhysician = createSelector(
+  [selectAuthUserState],
+  (authUserState) => authUserState.roles.includes('physician')
+);

@@ -4,7 +4,7 @@ import PatientInfo from '../PatientInfo/PatientInfo';
 import PatientForm from '../Form/PatientForm';
 import TabPanel from '../Tabs/TabPanel';
 import { getIsEditing, getIsAdding, getSelectedPatient, getIsTogglingDelete, getShowDeleted, selectPatientDeletedState } from '../../store/selectors';
-import { setIsEditing, setSelectedPatient, setIsAdding, setPatients, setIsTogglingDelete } from '../../store/patientSlice';
+import { setIsEditing, setSelectedPatient, setIsAdding, setPatientsLocal, setIsTogglingDelete } from '../../store/patientSlice';
 import { RootState } from '../../store';
 import { DetailedPatient, Email, Address, Phone, Bookmark } from '../../models/PatientModels';
 import { PatientFactory } from '../../models/PatientFactory';
@@ -145,7 +145,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
       console.log('Patient saved:', patient);
   
       // Ensure PatientList updates
-      dispatch(setPatients(updatedPatients));
+      dispatch(setPatientsLocal(updatedPatients));
     }
   };
 
@@ -171,7 +171,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({ patientId, fullName }) 
           p.id === patient.id ? { ...p, deleted: !p.deleted } : p
         );
         savePatientsToStorage(updatedPatients);
-        dispatch(setPatients(updatedPatients));
+        dispatch(setPatientsLocal(updatedPatients));
         dispatch(setSelectedPatient(null)); // Clear the selected patient
         dispatch(setIsTogglingDelete(false)); // Set isTogglingDelete to false
 

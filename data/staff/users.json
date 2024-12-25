@@ -1,13 +1,24 @@
 [
   {
     "fullName": "Marcelo Scofano Diniz",
-    "roles": ["IT", "Supervisor", "Physician"],
+    "roles": ["Physician"],
     "dob": "1966-07-27",
     "gender": "Male",
     "emails": ["msdiniz@gmail.com", "msdiniz@cardiol.br"],
     "addresses": ["Avenida Nyemeyer, 925, bloco 2, apto 201, Rio de Janeiro, RJ, CEP 22450221"],
     "phones": ["021996299205"],
     "specialties": ["Cardiology", "Internal Medicine"],
+    "password": ""
+  },
+  {
+    "fullName": "Marcelo FDBP",
+    "roles": ["IT", "Supervisor"],
+    "dob": "1966-07-27",
+    "gender": "Male",
+    "emails": ["msdiniz@gmail.com", "msdiniz@cardiol.br"],
+    "addresses": ["Avenida Nyemeyer, 925, bloco 2, apto 201, Rio de Janeiro, RJ, CEP 22450221"],
+    "phones": ["021996299205"],
+    "specialties": [],
     "password": ""
   },
   {
