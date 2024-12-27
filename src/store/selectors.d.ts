@@ -1,5 +1,57 @@
 import { RootState } from '../store';
 import { Patient } from '../models/PatientModels';
+export declare const selectUsers: ((state: {
+    patient: import("./patientSlice").PatientState;
+    auth: import("./authSlice").AuthState;
+    authUser: import("./authUserSlice").AuthUserState;
+    apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
+}) => import("../models/UserModels").User[]) & {
+    clearCache: () => void;
+    resultsCount: () => number;
+    resetResultsCount: () => void;
+} & {
+    resultFunc: (resultFuncArgs_0: import("./authUserSlice").AuthUserState) => import("../models/UserModels").User[];
+    memoizedResultFunc: ((resultFuncArgs_0: import("./authUserSlice").AuthUserState) => import("../models/UserModels").User[]) & {
+        clearCache: () => void;
+        resultsCount: () => number;
+        resetResultsCount: () => void;
+    };
+    lastResult: () => import("../models/UserModels").User[];
+    dependencies: [(state: RootState) => import("./authUserSlice").AuthUserState];
+    recomputations: () => number;
+    resetRecomputations: () => void;
+    dependencyRecomputations: () => number;
+    resetDependencyRecomputations: () => void;
+} & {
+    memoize: typeof import("reselect").weakMapMemoize;
+    argsMemoize: typeof import("reselect").weakMapMemoize;
+};
+export declare const selectPhysicians: ((state: {
+    patient: import("./patientSlice").PatientState;
+    auth: import("./authSlice").AuthState;
+    authUser: import("./authUserSlice").AuthUserState;
+    apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
+}) => import("../models/UserModels").User[]) & {
+    clearCache: () => void;
+    resultsCount: () => number;
+    resetResultsCount: () => void;
+} & {
+    resultFunc: (resultFuncArgs_0: import("./authUserSlice").AuthUserState) => import("../models/UserModels").User[];
+    memoizedResultFunc: ((resultFuncArgs_0: import("./authUserSlice").AuthUserState) => import("../models/UserModels").User[]) & {
+        clearCache: () => void;
+        resultsCount: () => number;
+        resetResultsCount: () => void;
+    };
+    lastResult: () => import("../models/UserModels").User[];
+    dependencies: [(state: RootState) => import("./authUserSlice").AuthUserState];
+    recomputations: () => number;
+    resetRecomputations: () => void;
+    dependencyRecomputations: () => number;
+    resetDependencyRecomputations: () => void;
+} & {
+    memoize: typeof import("reselect").weakMapMemoize;
+    argsMemoize: typeof import("reselect").weakMapMemoize;
+};
 export declare const getPatientsLocal: ((state: {
     patient: import("./patientSlice").PatientState;
     auth: import("./authSlice").AuthState;
@@ -358,3 +410,29 @@ export declare const getShowDeleted: ((state: {
     argsMemoize: typeof import("reselect").weakMapMemoize;
 };
 export declare const selectPatientDeletedState: (state: RootState, patientId: string) => boolean;
+export declare const userIsPhysician: ((state: {
+    patient: import("./patientSlice").PatientState;
+    auth: import("./authSlice").AuthState;
+    authUser: import("./authUserSlice").AuthUserState;
+    apiDataSource: import("./apiDataSourceSlice").ApiDataSourceState;
+}) => boolean) & {
+    clearCache: () => void;
+    resultsCount: () => number;
+    resetResultsCount: () => void;
+} & {
+    resultFunc: (resultFuncArgs_0: import("./authUserSlice").AuthUserState) => boolean;
+    memoizedResultFunc: ((resultFuncArgs_0: import("./authUserSlice").AuthUserState) => boolean) & {
+        clearCache: () => void;
+        resultsCount: () => number;
+        resetResultsCount: () => void;
+    };
+    lastResult: () => boolean;
+    dependencies: [(state: RootState) => import("./authUserSlice").AuthUserState];
+    recomputations: () => number;
+    resetRecomputations: () => void;
+    dependencyRecomputations: () => number;
+    resetDependencyRecomputations: () => void;
+} & {
+    memoize: typeof import("reselect").weakMapMemoize;
+    argsMemoize: typeof import("reselect").weakMapMemoize;
+};

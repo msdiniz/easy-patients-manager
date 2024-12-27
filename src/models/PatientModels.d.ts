@@ -1,19 +1,4 @@
-export interface Email {
-    note: string;
-    email: string;
-    type: string;
-}
-export interface Address {
-    note: string;
-    address: string;
-    type: string;
-}
-export interface Phone {
-    note: string;
-    phone: string;
-    type: string;
-}
-export type ContactItem = Email | Address | Phone;
+import { Email, Address, Phone } from './ValueObjects';
 export interface Bookmark {
     id: string;
     name: string;
