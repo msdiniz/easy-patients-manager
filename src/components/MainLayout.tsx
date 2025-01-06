@@ -4,7 +4,6 @@ import axios from 'axios';
 import PatientList from './PatientList/PatientList';
 import PatientDetails from './Details/PatientDetails';
 import Header from './Header/Header';
-import SelectPhysician from './Header/SelectPhysician';
 import { setPatientsLocal } from '../store/patientSlice';
 import { RootState } from '../store';
 import { setUsers, setPhysicians } from '../store/authUserSlice';
@@ -65,14 +64,11 @@ export const MainLayout: React.FC = () => {
             selectedPatientId={selectedPatientId}
           />
         )}
-        {selectedPatientId && selectedPatientFullName && (
+        {isLoggedIn && selectedPatientId && selectedPatientFullName && (
           <PatientDetails
             patientId={selectedPatientId}
             fullName={selectedPatientFullName}
           />
-        )}
-        {isLoggedIn && !roles.includes('Physician') && !isPhysicianSelectedByUser && (
-          <SelectPhysician onPhysicianSelected={handlePhysicianSelected} />
         )}
       </div>
     </div>

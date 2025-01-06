@@ -13,7 +13,6 @@ import GoogleContacts from './GoogleContacts';
 import ContactsInfo from './ContactsInfo';
 import { fetchContacts } from '../../utils/contactUtils';
 import { transformContactsToPatients } from '../../utils/transformPatient';
-import { userIsPhysician } from '../../store/selectors';
 import { Tokens } from '../../types/types';
 
 interface HeaderProps {
@@ -29,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ onPhysicianSelected }) => {
   const userName = useSelector((state: RootState) => state.authUser.userName);
   const roles = useSelector((state: RootState) => state.authUser.roles);
   const tokens = useSelector((state: RootState) => state.auth.tokens) as Tokens;
-  const isPhysician = useSelector(userIsPhysician);
+  const [selectedPhysicianTokens, setSelectedPhysicianTokens] = useState<Tokens | null>(null);
 
   const handleLogoutClick = () => {
     dispatch(clearAuthUser());
@@ -37,20 +36,32 @@ const Header: React.FC<HeaderProps> = ({ onPhysicianSelected }) => {
   };
 
   useEffect(() => {
-    if (isLoggedIn && roles.includes('Physician') && tokens && tokens.access_token) {
+    const fetchPhysicianContacts = async (tokens: Tokens) => {
       setLoading(true);
-      fetchContacts(tokens as Tokens).then((contacts) => {
+      try {
+        const contacts = await fetchContacts(tokens);
         console.log(`Total number of contacts: ${contacts.length}`);
         setTotalContacts(contacts.length);
         const patients = transformContactsToPatients(contacts);
         dispatch(setPatientsGoogle(patients));
-        setLoading(false);
-      }).catch((error) => {
+      } catch (error) {
         console.error('Error fetching contacts:', error);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    if (isLoggedIn && roles.includes('Physician') && tokens && tokens.access_token) {
+      fetchPhysicianContacts(tokens);
+    } else if (selectedPhysicianTokens && selectedPhysicianTokens.access_token) {
+      fetchPhysicianContacts(selectedPhysicianTokens);
     }
-  }, [isLoggedIn, roles, tokens, dispatch]);
+  }, [isLoggedIn, roles, tokens, selectedPhysicianTokens, dispatch]);
+
+  const handlePhysicianSelected = (tokens: Tokens) => {
+    setSelectedPhysicianTokens(tokens);
+    onPhysicianSelected();
+  };
 
   return (
     <header className={styles.header}>
@@ -71,10 +82,10 @@ const Header: React.FC<HeaderProps> = ({ onPhysicianSelected }) => {
       {isLoggedIn && (
         <button onClick={handleLogoutClick}>Logout</button>
       )}
-      {isLoggedIn && (roles.includes('Clerk') || roles.includes('Supervisor')) && (
-        <SelectPhysician onPhysicianSelected={onPhysicianSelected} />
+      {isLoggedIn && !roles.includes('Physician') && (
+        <SelectPhysician onPhysicianSelected={handlePhysicianSelected} />
       )}
-      {isLoggedIn && isPhysician && (
+      {isLoggedIn && roles.includes('Physician') && (
         <GoogleContacts />
       )}
     </header>

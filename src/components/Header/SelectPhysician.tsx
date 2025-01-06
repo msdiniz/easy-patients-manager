@@ -7,7 +7,7 @@ import users from '../../../data/staff/users.json';
 import { authenticateUser } from '../../utils/authUtils';
 
 interface SelectPhysicianProps {
-  onPhysicianSelected: () => void;
+  onPhysicianSelected: (tokens: Tokens) => void;
 }
 
 const SelectPhysician: React.FC<SelectPhysicianProps> = ({ onPhysicianSelected }) => {
@@ -21,6 +21,7 @@ const SelectPhysician: React.FC<SelectPhysicianProps> = ({ onPhysicianSelected }
       const data = event.data;
       console.log('Event data:', data);
       if (data.source && data.source.startsWith('react-devtools')) return; // Ignore messages from React DevTools
+      console.log('Processing data:', data);
       if (data && typeof data === 'object') {
         const hasRequiredFields = 'access_token' in data && 'scope' in data && 'token_type' in data && 'expiry_date' in data;
         console.log('Has required fields:', hasRequiredFields);
@@ -41,6 +42,7 @@ const SelectPhysician: React.FC<SelectPhysicianProps> = ({ onPhysicianSelected }
               console.log('Dispatching setAuthClient with tokens and userName');
               dispatch(setAuthClient({ tokens, userName }));
               console.log('Dispatched setAuthClient with tokens and userName');
+              onPhysicianSelected(tokens); // Pass tokens to parent component
             })
             .catch((error) => {
               console.error('Error fetching user info:', error);
@@ -58,7 +60,7 @@ const SelectPhysician: React.FC<SelectPhysicianProps> = ({ onPhysicianSelected }
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, [dispatch]);
+  }, [dispatch, onPhysicianSelected]);
 
   const handleManageClick = async () => {
     if (selectedPhysician) {
@@ -67,7 +69,6 @@ const SelectPhysician: React.FC<SelectPhysicianProps> = ({ onPhysicianSelected }
         dispatch(setAuthClient({ userName: user.fullName, tokens: {} }));
         toast.success(`Managing ${user.fullName}`);
         setIsManaging(true);
-        onPhysicianSelected(); // Notify parent component
       } catch (error: any) {
         toast.error(error.message);
       }
